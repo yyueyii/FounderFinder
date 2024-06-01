@@ -7,7 +7,7 @@ const port = 5001;
 // app.use(express.json());
 app.use(cors()); 
 
-const mongoUrl = "mongodb+srv://gabriellegtw:Gabrielle1705!@cluster0.dek3rxf.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0"
+const mongoUrl = "mongodb+srv://gabriellegtw:Gabrielle1705!@cluster0.dek3rxf.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0";
 
 mongoose.connect(mongoUrl).then(() => {
     console.log("Connected to MongoDB");
