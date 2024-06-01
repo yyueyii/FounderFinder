@@ -45,6 +45,17 @@ app.post('/sign-up', async(req,res) => {
     }
 });
 
+app.post("/login-user", async(req, res) => {
+    const {email, password} = req.body;
+    const oldUser = await User.findOne({ email: email });
+
+    if (!oldUser) {
+        return res.send("User does not exist")
+    } 
+    
+
+})
+
 app.listen(port, () => {
     console.log("NodeJS started");
 })

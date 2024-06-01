@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import { Alert, Button, Image, Pressable, SafeAreaView, StyleSheet, Switch, Text, TextInput, View } from 'react-native'
+import { useNavigation } from '@react-navigation/native';
 import 'react-native-gesture-handler'
 import { Link } from 'expo-router';
 import axios from 'axios';
@@ -15,6 +16,7 @@ const SignUpPage = () => {
   const [register, setRegister] = useState(false);
     const [email, setEmail] =  useState("");
     const [password,setPassword] =  useState("");
+    const navigation = useNavigation();
 
     function handleSubmit() {
       const userData = {
@@ -22,7 +24,17 @@ const SignUpPage = () => {
         password,
       };
       axios.post("http://192.168.1.5:5001/sign-up", userData)
-      .then((res) => console.log(res.data))
+      .then((res) => {console.log(res.data);
+        console.log(res.data.status);
+        if (res.data.status == "ok") {
+          alert("Registered successfully!");
+          Alert.alert("Registered successfully!");
+          // navigation.navigate('Login');
+        } else {
+          alert(JSON.stringify(res.data));
+          Alert.alert(JSON.stringify(res.data));
+        }
+      })
       .catch(e => console.log(e.message));
     }
 
