@@ -18,7 +18,7 @@ export default function App() {
         source={require('../assets/images/logo.png')}
         style={{width:200, height:25}}/> 
       <StatusBar style="auto" />
-      <Link href="/home" style={{color: 'purple', top: 50, left: -5}} > Sign up </Link>
+      <Link href="/log-in" style={{color: 'purple', top: 50, left: -5}}> Log in </Link>
     </View>
   );
 };
