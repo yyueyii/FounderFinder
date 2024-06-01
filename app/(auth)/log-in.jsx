@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import { Alert, Button, Image, Pressable, SafeAreaView, StyleSheet, Switch, Text, TextInput, View } from 'react-native'
 import 'react-native-gesture-handler'
 import { Link } from 'expo-router';
+import axios from 'axios';
 
 
 // const facebook = require("../../assets/facebook.png")
@@ -13,6 +14,27 @@ const LoginPage = () => {
     const [click,setClick] = useState(false);
     const [email, setEmail] =  useState("");
     const [password,setPassword] =  useState("");
+
+    function handleSubmit() {
+      const userData = {
+        email,
+        password,
+      };
+
+      axios.post("http://192.168.1.5:5001/log-in", userData)
+      .then(res => {console.log(res.data);
+        if (res.data.status == "ok") {
+          alert("Logged in successfully!");
+          Alert.alert("Logged in successfully!");
+          // navigation.navigate('Login');
+        } else {
+          alert("Seems like the wrong email or password");
+          alert(JSON.stringify(res.data));
+          Alert.alert(JSON.stringify(res.data));
+        }
+      })
+      .catch(e => console.log(e.message));
+    }
 
   return (
     <SafeAreaView style={styles.container}>
@@ -37,14 +59,7 @@ const LoginPage = () => {
         </View>
 
         <View style={styles.buttonView}>
-        <Pressable style={styles.button} onPress={() => {
-              try {
-                  console.log("Login button pressed");
-                  Alert.alert("Login Successfully!");
-              } catch (error) {
-                  console.error("Error occurred while logging in:", error);
-              }
-          }}>
+        <Pressable style={styles.button} onPress={() => handleSubmit()}>
               <Text style={styles.buttonText}>Log In</Text>
           </Pressable>
             {/* <Pressable style={styles.button} onPress={() => Alert.alert("Login Successfuly!")}>
