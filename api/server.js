@@ -4,7 +4,7 @@ const cors = require("cors"); // Import the cors package
 const app = express();
 const port = 5001;
 
-// app.use(express.json());
+app.use(express.json());
 app.use(cors()); 
 
 const mongoUrl = "mongodb+srv://gabriellegtw:Gabrielle1705!@cluster0.dek3rxf.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0";
