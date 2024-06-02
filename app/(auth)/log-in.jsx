@@ -1,6 +1,5 @@
 import React, { useState } from 'react'
 import { Alert, Button, Image, Pressable, SafeAreaView, StyleSheet, Switch, Text, TextInput, View } from 'react-native'
-import { useNavigation } from '@react-navigation/native';
 import 'react-native-gesture-handler'
 import { Link } from 'expo-router';
 import axios from 'axios';
@@ -10,27 +9,26 @@ import axios from 'axios';
 // const linkedin = require("../../assets/linkedin.png")
 // const tiktok = require("../../assets/tiktok.png")
 
+const LoginPage = () => {
 
-const SignUpPage = () => {
-
-  const [register, setRegister] = useState(false);
+    const [click,setClick] = useState(false);
     const [email, setEmail] =  useState("");
     const [password,setPassword] =  useState("");
-    const navigation = useNavigation();
 
     function handleSubmit() {
       const userData = {
         email,
         password,
       };
-      axios.post("http://192.168.1.5:5001/sign-up", userData)
-      .then((res) => {console.log(res.data);
-        console.log(res.data.status);
+
+      axios.post("http://192.168.1.5:5001/log-in", userData)
+      .then(res => {console.log(res.data);
         if (res.data.status == "ok") {
-          alert("Registered successfully!");
-          Alert.alert("Registered successfully!");
+          alert("Logged in successfully!");
+          Alert.alert("Logged in successfully!");
           // navigation.navigate('Login');
         } else {
+          alert("Seems like the wrong email or password");
           alert(JSON.stringify(res.data));
           Alert.alert(JSON.stringify(res.data));
         }
@@ -38,31 +36,36 @@ const SignUpPage = () => {
       .catch(e => console.log(e.message));
     }
 
-    function handleEmail(e) {
-      setEmail(e);
-    }
-
-    function handlePassword(e) {
-      setPassword(e);
-    }
-
   return (
     <SafeAreaView style={styles.container}>
         
-        <Text style={styles.title}>Sign up</Text>
+        <Text style={styles.title}>Log in</Text>
         <View style={styles.inputView}>
-            <TextInput style={styles.input} placeholder='Email' value={email} onChangeText={e => handleEmail(e)} autoCorrect={false}
+            <TextInput style={styles.input} placeholder='Email' value={email} onChangeText={setEmail} autoCorrect={false}
         autoCapitalize='none' />
-            <TextInput style={styles.input} placeholder='Password' secureTextEntry value={password} onChangeText={e => handlePassword(e)} autoCorrect={false}
+            <TextInput style={styles.input} placeholder='Password' secureTextEntry value={password} onChangeText={setPassword} autoCorrect={false}
         autoCapitalize='none'/>
-          {/* <TextInput style={styles.input} placeholder='Confirm Password' secureTextEntry value={password} onChange={e => handlePassword(e)} autoCorrect={false}
-        autoCapitalize='none'/> */}
+        </View>
+        <View style={styles.rememberView}>
+            {/* <View style={styles.switch}>
+                <Switch  value={click} onValueChange={setClick} trackColor={{true : "#4A0AFF" , false : "gray"}} />
+                <Text style={styles.rememberText}>Remember Me</Text>
+            </View> */}
+            <View>
+                <Pressable onPress={() => Alert.alert("Forget Password!")}>
+                    <Text style={styles.forgetText}>Forgot Password?</Text>
+                </Pressable>
+            </View>
         </View>
 
         <View style={styles.buttonView}>
         <Pressable style={styles.button} onPress={() => handleSubmit()}>
-              <Text style={styles.buttonText}>Register</Text>
+              <Text style={styles.buttonText}>Log In</Text>
           </Pressable>
+            {/* <Pressable style={styles.button} onPress={() => Alert.alert("Login Successfuly!")}>
+                <Text style={styles.buttonText}>Log In</Text>
+            </Pressable> */}
+            {/* <Text style={styles.optionsText}>OR LOGIN WITH</Text> */}
         </View>
         
         {/* <View style={styles.mediaIcons}>
@@ -71,7 +74,7 @@ const SignUpPage = () => {
                 <Image source={linkedin} style={styles.icons}  />
         </View> */}
 
-        <Text style={styles.footerText}>Already have an account?<Link style={styles.signup} href="/log-in">  Log in</Link></Text>
+        <Text style={styles.footerText}>Don't Have Account?<Link style={styles.signup} href="/sign-up">  Sign Up</Link></Text>
         
   </SafeAreaView>
     
@@ -177,4 +180,4 @@ const styles = StyleSheet.create({
   }
 });
 
-export default SignUpPage;
+export default LoginPage;
