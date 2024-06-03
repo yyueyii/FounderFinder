@@ -1,9 +1,8 @@
 # FounderFinder
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
 
 ## Description
-FounderFinder is a dating-app style application that offers a convenient and efficient way for users to find their start-up partners. 
+FounderFinder is a dating-app style application that offers a convenient and efficient way for users to find their start-up partners. Through this app, users can view the profile cards of other users and express interest in collaborating. When both users are interested in working with each other, a successful match is made and the users can communicate via our chat feature.
 
 ## Core Features
 1. Comprehensive profile cards of users to better understand their sectoral focus/themselves as a person
