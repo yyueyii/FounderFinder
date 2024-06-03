@@ -10,10 +10,27 @@ This is an [Expo](https://expo.dev) project created with [`create-expo-app`](htt
    npm install
    ```
 
-2. Start the app
-
+2. Start the backend
+Change the directory to the backend
    ```bash
-    npx expo start
+    cd api
+   ```
+Install dependencies
+   ```bash
+    npm install
+   ```
+Start the backend. It is alright if it crashes. Just proceed on to the next step 
+   ```bash
+    npm start
+   ```
+3. Start the frontend
+Open a different terminal to run the frontend and install dependencies (if not already done so in step 1)
+```bash
+   npm install
+   ```
+Start the frontend
+```bash
+    npm start
    ```
 
 In the output, you'll find options to open the app in a
