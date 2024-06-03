@@ -26,7 +26,7 @@ const LoginPage = () => {
         if (res.data.status == "ok") {
           alert("Logged in successfully!");
           Alert.alert("Logged in successfully!");
-          // navigation.navigate('Login');
+          navigation.navigate('/home');
         } else {
           alert("Seems like the wrong email or password");
           alert(JSON.stringify(res.data));

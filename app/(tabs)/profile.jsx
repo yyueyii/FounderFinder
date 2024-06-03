@@ -1,7 +1,6 @@
 import { ScrollView, StyleSheet, Text, View, Button, TouchableOpacity, Dimensions} from 'react-native'
 import React, { useState, useEffect } from 'react';
 import { Link } from 'expo-router';
-import { useNavigation } from 'expo-router';
                                                                                     
 const windowDimensions = Dimensions.get('window');
 const width = windowDimensions.width;
