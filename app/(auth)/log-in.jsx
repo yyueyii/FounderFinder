@@ -20,8 +20,8 @@ const LoginPage = () => {
         email,
         password,
       };
-
-      axios.post("http://192.168.1.5:5001/log-in", userData)
+      // 192.168.1.5
+      axios.post("http://localhost:5001/log-in", userData)
       .then(res => {console.log(res.data);
         if (res.data.status == "ok") {
           alert("Logged in successfully!");
@@ -51,11 +51,11 @@ const LoginPage = () => {
                 <Switch  value={click} onValueChange={setClick} trackColor={{true : "#4A0AFF" , false : "gray"}} />
                 <Text style={styles.rememberText}>Remember Me</Text>
             </View> */}
-            <View>
+            {/* <View>
                 <Pressable onPress={() => Alert.alert("Forget Password!")}>
                     <Text style={styles.forgetText}>Forgot Password?</Text>
                 </Pressable>
-            </View>
+            </View> */}
         </View>
 
         <View style={styles.buttonView}>

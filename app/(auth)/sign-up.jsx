@@ -23,7 +23,8 @@ const SignUpPage = () => {
         email,
         password,
       };
-      axios.post("http://192.168.1.5:5001/sign-up", userData)
+      // "http://192.168.1.5:5001/sign-up"
+      axios.post("http://localhost:5001/sign-up", userData)
       .then((res) => {console.log(res.data);
         console.log(res.data.status);
         if (res.data.status == "ok") {
