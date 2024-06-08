@@ -7,7 +7,8 @@ const port = 5001;
 
 app.use(express.json());
 app.use(cors()); 
-// const bcrypt = require("bcryptjs");
+const bcrypt = require('bcrypt');
+
 const jwt = require('jsonwebtoken');
 const mongoUrl = "mongodb+srv://gabriellegtw:Gabrielle1705!@cluster0.dek3rxf.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0";
 const JWT_SECRET = "eyJhbGciOiJIUzI1NiJ9.eyJSb2xlIjoiQWRtaW4iLCJJc3N1ZXIiOiJJc3N1ZXIiLCJVc2VybmFtZSI6IkphdmFJblVzZSIsImV4cCI6MTcxNzI0ODA5OCwiaWF0IjoxNzE3MjQ4MDk4fQ.5TmHSOY8_04iv--a0qjXmsQ0AqtrK9fxCSmn8pGoIFw";
@@ -35,12 +36,12 @@ app.post('/sign-up', async(req,res) => {
     if (oldUser) {
         return res.send({data: "User already exists!"});
     }
-    // const encryptedPassword = await bcrypt.hash(password, 10);
+    const encryptedPassword = await bcrypt.hash(password, 10);
 
     try {
         await User.create({
             email: email,
-            password,
+            password: encryptedPassword,
         });
         res.send({status: "ok", data: "User Created"});
     } catch (error) {
@@ -56,7 +57,7 @@ app.post("/log-in", async(req, res) => {
         return res.send("User does not exist");
     } 
 
-    if (await password == oldUser.password) {
+    if (await bcrypt.compare(password, oldUser.password)) {
         const token = jwt.sign({email:oldUser.email}, JWT_SECRET);
 
         if (res.status(201)) {

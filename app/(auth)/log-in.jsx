@@ -20,7 +20,7 @@ const LoginPage = () => {
         email,
         password,
       };
-      // 192.168.1.5
+
       axios.post("http://localhost:5001/log-in", userData)
       .then(res => {console.log(res.data);
         if (res.data.status == "ok") {
