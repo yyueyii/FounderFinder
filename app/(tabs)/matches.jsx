@@ -8,19 +8,24 @@ const width = Dimensions.get('window').width;
 
 const Matches = () => {
   return (
-    <ScrollView contentContainerStyle={{backgroundColor:'white'}}>
       <View style={styles.container}>
         <Text style={styles.title}>Successful Matches</Text>
-        <View style={{height:50, backgroundColor:'lightblue', alignItems:'center'}}>
-          <Text> insert search bar </Text>
-        </View>
-        <View style={{height:1, left:100, width: width, backgroundColor:'purple'}}></View>
-        <MatchedProfileDisplay/>
-        <MatchedProfileDisplay/>
+        <View style={{height:20}}/>
+        <View style={{height:1, backgroundColor:'#E1E6E8', left: -20, width:'120%'}}/>
 
-      <View style={styles.empty}></View>
+        <ScrollView contentContainerStyle={{flexGrow:1}}>
+          <View>
+
+        <MatchedProfileDisplay/>
+        <MatchedProfileDisplay/>
+        <MatchedProfileDisplay/>
+        <MatchedProfileDisplay/>
+        <MatchedProfileDisplay/>
+        
+        </View>
+        </ScrollView>
+
       </View>
-    </ScrollView>
   )
 }
 
@@ -32,7 +37,6 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-start',
     paddingTop: 30,
     paddingLeft: 20,
-    paddingRight:20,
     backgroundColor:'white',
   },
   title: {
@@ -43,6 +47,7 @@ const styles = StyleSheet.create({
   },
   empty: {
     height:100,
-  }
+  }, 
+  
 
 })

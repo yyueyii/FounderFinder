@@ -3,11 +3,20 @@ import React, { useState } from 'react'
 import DropDownPicker from 'react-native-dropdown-picker';
 import * as ImagePicker from 'expo-image-picker';
 
+
 const windowDimensions = Dimensions.get('window');
 const width = windowDimensions.width;
 const height = windowDimensions.height;
 
-const EditProfile = () => {
+const EditProfile = (  { route  }) => {
+
+  const handleSaveAndBack = () => {
+    navigation.navigate('/profile', {  })
+  }
+
+  
+
+
   const [picture, setPicture] = useState(null);
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
@@ -20,6 +29,10 @@ const EditProfile = () => {
   ]);
   const [LCI, setLCI] = useState(''); //Let's Connect If...
 
+  //navigation 
+  const handleGoBack = () => {
+    navigation.navigate('/profile');
+  };
 
   //profile pic
   const selectImage = async () => {
@@ -287,7 +300,7 @@ const EditProfile = () => {
           onChangeText={text => setLCI(text)}
       />
        
-       <TouchableOpacity  onPress={() => {}}style={styles.backButton}>
+       <TouchableOpacity  onPress={handleGoBack}style={styles.backButton}>
           <Text style={styles.addButtonText}>Back</Text>
        </TouchableOpacity>
 
