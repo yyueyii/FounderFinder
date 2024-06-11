@@ -17,7 +17,7 @@ const MatchedProfileDisplay = ( { name, image, onPressMessage, onPressViewProfil
             </TouchableOpacity>
 
             <TouchableOpacity onPress={onPressViewProfile} style={styles.viewProfileButton}>
-                <Text>View Profile</Text>
+                <Text style={{fontSize:12}}>View Profile</Text>
             </TouchableOpacity>
             <View style={styles.line}></View>
             <View style={{height:3}}></View>
@@ -31,7 +31,7 @@ export default MatchedProfileDisplay;
 const styles = StyleSheet.create({
     container: {
         backgroundColor:'white',
-        height: 120,
+        height: 80,
         width: '100%',
         justifyContent:'center',
         paddingRight:20,
@@ -44,22 +44,22 @@ const styles = StyleSheet.create({
         left: 100,
         top:0,
         position:'absolute',
-        top:119,
+        top:79,
     },
     name:{
-        fontSize:20,
+        fontSize:18,
         fontWeight:'bold',
-        left: 120,
-        top:30,
+        left: 70,
+        top:15,
         position:'absolute',
 
     },
     picture: {
-        height:80,
-        width:80,
+        height:50,
+        width:50,
         backgroundColor:'purple',
         borderRadius:40,
-        top:20,
+        top:15,
         left:width*0.02,
         position:'absolute',
     },
@@ -67,9 +67,9 @@ const styles = StyleSheet.create({
 
     },
     messageButton:{
-        left: '100%' - 120,
-        height:35,
-        width:120,
+        left:30,
+        height:30,
+        width:90,
         borderColor:'#4A0AFF',
         borderWidth:1.5,
         borderRadius:5, 
@@ -77,21 +77,21 @@ const styles = StyleSheet.create({
         backgroundColor:'#4A0AFF',   
         justifyContent:'center',
         alignItems:'center', 
-        top:60,
-        left: 300,
+        top:25,
+        left: width - 140,
         position:'absolute',
     }, 
     viewProfileButton:{
-        height:35,
-        width:150,
+        height:20,
+        width:90,
         borderColor:'#4A0AFF',
         borderWidth:1.5,
         borderRadius:5, 
         backgroundColor:'white',   
         justifyContent:'center',
         alignItems:'center',
-        left: 120,
-        top:60,
+        left: 70,
+        top:42,
         position:'absolute',   
     }
 });

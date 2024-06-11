@@ -15,7 +15,7 @@ export default function Index() {
       <Image 
         source={require('../assets/images/logo.png')}
         style={{width:200, height:25}}/> 
-      <StatusBar style="auto" />
+      <StatusBar style="auto"  />
       {/* <Link href="/log-in" style={{color: 'purple', top: 50, left: -5}}> Log in </Link> */}
       <Pressable style={{color: 'purple', top: 50, left: -5}}
        onPress={() =>

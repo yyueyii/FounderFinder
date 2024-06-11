@@ -1,6 +1,6 @@
 import { View, Text, StyleSheet } from 'react-native'
 import React from 'react'
-import ChatPreview from '../../components/MatchesPage/chat-preview'
+import ChatPreview from '../../components/Chat/chat-preview'
 import { ScrollView } from 'react-native-gesture-handler'
 
 const Chat  = () => {
@@ -14,10 +14,7 @@ const Chat  = () => {
           <ChatPreview/>
           <ChatPreview/>
           <ChatPreview/>
-          <ChatPreview/>
-          <ChatPreview/>
-          <ChatPreview/>
-          <ChatPreview/>  
+           
           </View>
           </ScrollView>
     </View>
@@ -31,14 +28,15 @@ const styles = StyleSheet.create({
   container: {
     flex:1,
     justifyContent: 'flex-start',paddingTop: 30,
-    paddingLeft:20,
+    paddingLeft:0,
     backgroundColor:'white',
   }, 
   title: {
     fontSize: 24,
-    marginBottom: 5,
+    marginBottom: 0,
     color:'#4A0AFF',
     fontWeight: 'bold',
+    left: 15,
   }, 
   scroll: {
     flexGrow: 1,

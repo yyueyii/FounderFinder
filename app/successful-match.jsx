@@ -21,7 +21,7 @@ const MatchedPopUp = ({ name, image, visible, onLater, onMessage }) => {
           <Text style={[styles.messageText, {fontSize: 24}]}>Annabelle Farber</Text>
 
           {/* temp image */}
-          <View style={{width:styles.modalContainer.height*0.5, height:styles.modalContainer.height*0.5, backgroundColor:'gray', margin:10, marginBotton:30}}></View>
+          <View style={styles.image}></View>
           
           <TouchableOpacity onPress={onLater} style={styles.laterButton}>
             <Text style={[styles.buttonText, {color:'#4A0AFF'}]}>Later</Text>
@@ -41,7 +41,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: 'rgba(255, 255, 255, 0.5)', 
+    backgroundColor: 'rgba(0, 0, 0, 0.5)', 
   },
   modalContainer: {
     width: width*0.7,
@@ -52,10 +52,18 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     alignItems: 'center',
   },
+  image: {
+    width:height*0.8*0.4, 
+    height:height*0.8*0.4, 
+    backgroundColor:'gray', 
+    margin:10, 
+    marginBotton:30,
+    borderRadius:5,
+  },
   messageText: {
     fontSize: 20,
     fontWeight:'bold',
-    marginBottom: 20,
+    marginBottom: 10,
   },
   laterButton: {
     backgroundColor: 'white',
@@ -68,7 +76,7 @@ const styles = StyleSheet.create({
     alignItems:'center',
     justifyContent:'center',
     top:15,
-    left:80,
+    left:75,
   },
   messageButton: {
     backgroundColor:'#4A0AFF',
@@ -79,7 +87,7 @@ const styles = StyleSheet.create({
     alignItems:'center',
     justifyContent:'center',
     top:-20,
-    left:-80,
+    left:-65,
   },
   buttonText: {
     color: 'black',
