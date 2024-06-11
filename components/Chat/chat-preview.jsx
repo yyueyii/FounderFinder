@@ -13,7 +13,7 @@ const ChatPreview = ( { name, image, onPressChat, lastMessage, date }) => {
             <View style={styles.picture}></View>
             
             <Text style={styles.name}>Annabelle Faber</Text>
-            <Text style={styles.date}> 10/06/2024</Text>
+            <Text style={styles.date}> 10/06/24</Text>
             <View style={styles.messageContainer}>
               <Text style={styles.message} numberOfLines={2} ellipsizeMode="tail">
                 Hi Annabelle, lets collabbb aplsplsp lsplspl spsldfsjdgjks fhdsk jdksa; f sadf sdfashfuiaasdfsdfsshdfiash ashuflisahudfil
@@ -33,12 +33,12 @@ export default ChatPreview;
 const styles = StyleSheet.create({
     container: {
         backgroundColor:'purple',
-        height: 120,
+        height: 80,
         width: '100%',
     },
     box: {
       backgroundColor:'white',
-      height: 120,
+      height: 80,
       width: '100%',
       justifyContent:'flex-start',
     },
@@ -54,37 +54,37 @@ const styles = StyleSheet.create({
         position:'absolute',
         width: '100%',
         left: 100,
-        top:119,
+        top:79,
     },
     name:{
-        fontSize:20,
+        fontSize:18,
         fontWeight:'bold',
-        left: 120,
-        top:25,
+        left: 70,
+        top:12,
         position:'absolute',
     },
     date: {
-        fontSize:15,
+        fontSize:14,
         color:'gray',
         position:'absolute',
         right:20,
-        top: 28,
+        top: 16,
     },
     picture: {
-        height:80,
-        width:80,
+        height:50,
+        width:50,
         backgroundColor:'purple',
         borderRadius:40,
-        top:20,
+        top:15,
         left:width*0.02,
     }, 
     image: {
 
     },
     message:{
-      fontSize:16,
-      left: 120,
-      top:-45,
+      fontSize:14,
+      left: 70,
+      top:-63,
       position:'absolute',
       paddingRight:15,
           

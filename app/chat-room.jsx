@@ -1,9 +1,8 @@
 import React, { useState } from 'react';
 import { Text, View, ScrollView, TextInput, Button, StyleSheet, TouchableOpacity, Dimensions } from 'react-native';
 import Ionicons from '@expo/vector-icons/Ionicons';
-import OtherMessageBubble from '../components/other-message-bubble';
-import UserMessageBubble from '../components/user-message-bubble';
-
+import OtherMessageBubble from '../components/Chat/other-message-bubble';
+import UserMessageBubble from '../components/Chat/user-message-bubble';
 const width = Dimensions.get('window').width;
 
 const ChatRoom = ( { id } ) => {

@@ -4,12 +4,11 @@ import { Tabs, Redirect } from 'expo-router'
 import Entypo from 'react-native-vector-icons/Entypo'
 import FontAwesome from 'react-native-vector-icons/FontAwesome'
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
-//test
 
 const TabsLayout = () => {
   return (
     <>
-        <Tabs>
+        <Tabs >
             <Tabs.Screen 
                 name="home"
                 options={{
