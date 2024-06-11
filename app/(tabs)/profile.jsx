@@ -1,33 +1,33 @@
 import { ScrollView, StyleSheet, Text, View, Button, TouchableOpacity, Dimensions} from 'react-native'
 import React, { useState, useEffect } from 'react';
 import { Link } from 'expo-router';
+import { useNavigation } from '@react-navigation/native';
+
                                                                                     
 const windowDimensions = Dimensions.get('window');
 const width = windowDimensions.width;
 
-const Profile = ( { navigation }) => {
-  const profileData = {
-    picture: null,
+const Profile = ( ) => {
+  const [profileData, setProfileData] = useState({
+    //picture: //require placeholder
     name: 'Your Name', 
-    description: 'insert description',
-    interestedSectors: 'int sectors',
-    skills:'skilsss',
-    education: {
-      institution:'nus',
-      duration:'2020-present',
-      description:'sch descr'
-    },
-    workExperience: {
-      organisation:'compName',
-      duration:'3030-present',
-      description:'idk',
-    },
-    LCI:'lci',
-  }  
+    description: 'descr test',
+    interestSectors: 'int sectors', 
+    skills: 'skills', 
+    education: 'education',
+    workExperience:'workExp',
+    LCI: 'lci', 
+  })
 
-  const handleEditProfile = () => {
-    navigation.navigate('EditProfile', {profileData});
-  };
+
+  console.log('Profile screen rendered with profile:', profileData);
+
+  const handleEditProfile= () => {
+    console.log('Navigating to EditProfile with profileData:', profileData);
+
+    navigation.navigate('/edit-profile');
+  }
+  
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
@@ -64,7 +64,7 @@ const Profile = ( { navigation }) => {
         <Link href="/edit-profile" style={[styles.text, {color: 'purple'}]}> click here to Edit Profile</Link>
         <Link href="successful-match" style = {[styles.text, {color:'pink'}]}>successful match pop up</Link>
 
-        <TouchableOpacity onPress={() => {}} style={styles.button}>
+        <TouchableOpacity onPress={handleEditProfile} style={styles.button}>
           <Text style={[styles.buttonText, {color:'white', textAlign:'center'}]}>Edit Profile</Text>
         </TouchableOpacity>
         
@@ -104,8 +104,8 @@ const styles = StyleSheet.create({
     left:15,
   },
   profilePicture: {
-    width: width * 0.9,
-    height: width * 0.9,
+    width: '100%' * 0.9,
+    aspectRatio: 1,    
     borderRadius: 20, 
     marginBottom: 20,
   }, 
