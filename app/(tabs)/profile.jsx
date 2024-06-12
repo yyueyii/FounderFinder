@@ -2,7 +2,8 @@ import { ScrollView, StyleSheet, Text, View, Button, TouchableOpacity, Dimension
 import React, { useState, useEffect } from 'react';
 import { Link } from 'expo-router';
 import { useNavigation } from '@react-navigation/native';
-
+import ProfileCard from '../../components/Profile/profile-card';
+import axios from 'axios';
                                                                                     
 const windowDimensions = Dimensions.get('window');
 const width = windowDimensions.width;
@@ -11,16 +12,38 @@ const Profile = ( ) => {
   const [profileData, setProfileData] = useState({
     //picture: //require placeholder
     name: 'Your Name', 
-    description: 'descr test',
-    interestSectors: 'int sectors', 
-    skills: 'skills', 
-    education: 'education',
-    workExperience:'workExp',
-    LCI: 'lci', 
+    description: 'Harvard Business School Graduate',
+    sectors: ['Finance', 'Susainability', 'Tech', 'Data Science'], 
+    skills: ['Communication', 'Business Analytics', 'ReactNative', 'Python', 'Teamwork','Java', 'C++'], 
+    aboutMe:'abtmeee',
+    education: 
+      [{institution: 'MBA, Harvard University', duration:'2021-2022', 
+          description:'Lorem ipsum ute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.    '},
+        {institution:'BBA', duration:'2017-2020', 
+          description:'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim oe dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidant in culpa qui officia deserunt mollit anim id est laborum.  '}
+      ],
+    workExperience:
+      [{organisation: 'Google', duration:'2020', description:'goooooooooooooooooooogle'}],
+    LCI: 'You are a technical co-founder in the FinTech space looking for a non-technical co-founder to handle all things business. You are a technical co-founder in the FinTech space looking for a non-technical co-founder to handle all things business', 
   })
 
+  // const [profileData, setProfileData] = useState(null);
 
-  console.log('Profile screen rendered with profile:', profileData);
+  // useEffect(() => {
+  //   const fetchProfileData = async () => {
+  //       try {
+  //           const response = await axios.get('/profile');
+
+  //           setProfileData(response.data.profileData);
+  //       } catch (error) {
+  //           console.error('Error fetching profile data:', error);
+  //       }
+  //   };
+  //   fetchProfileData();
+  //       return () => {
+  //       };
+  //   }, []); 
+
 
   const handleEditProfile= () => {
     console.log('Navigating to EditProfile with profileData:', profileData);
@@ -34,42 +57,16 @@ const Profile = ( ) => {
       <View style={styles.content}>
         <Text style={styles.title}>Your Profile</Text>
 
-        {profileData.picture ? (
-          <Image source={{ uri: profilePicture }} style={styles.profilePicture} resizeMode="cover"/>
-        ) : (
-          <View style={[styles.profilePicture, styles.blankProfilePicture]} />
-        )}
-        
-        <Text style={styles.name}> {profileData.name} </Text>
+        <ProfileCard profileData={profileData}/> 
 
-        <Text style={styles.description}>{profileData.description}</Text> 
-
-        <Text style={styles.subheadings}>Interested Sectors</Text>
-        <Text style={styles.text}>{profileData.interestedSectors}</Text> 
-
-
-        <Text style={styles.subheadings}>Skills</Text>
-
-        <Text style={styles.subheadings}>Education</Text>
-        <View style={styles.educationContainer}>
-
-        </View>
-          
-
-        <Text style={styles.subheadings}>Work Experience</Text>
-
-        <Text style={styles.subheadings}>Let's Connect If...</Text>
-        <Text style={styles.text}> {profileData.LCI} </Text>
-        
-        <Link href="/edit-profile" style={[styles.text, {color: 'purple'}]}> click here to Edit Profile</Link>
-        <Link href="successful-match" style = {[styles.text, {color:'pink'}]}>successful match pop up</Link>
-
-        <TouchableOpacity onPress={handleEditProfile} style={styles.button}>
+        <TouchableOpacity onPress={handleEditProfile} style={styles.editButton}>
           <Text style={[styles.buttonText, {color:'white', textAlign:'center'}]}>Edit Profile</Text>
         </TouchableOpacity>
-        
-        <View style={styles.empty}></View>
 
+        <TouchableOpacity onPress={()=>{}} style={styles.publisButton}>
+          <Text style={[styles.buttonText, {color:'white', textAlign:'center'}]}>Publish Profile</Text>
+        </TouchableOpacity>
+        
       </View>
     </ScrollView>
   );
@@ -91,7 +88,7 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 24,
-    marginBottom: 5,
+    paddingBottom: 10,
     color:'#4A0AFF',
     fontWeight: 'bold',
   },
@@ -132,22 +129,32 @@ const styles = StyleSheet.create({
     fontWeight: 'bold', 
     marginBottom: 10,
   },
-  button: {
+  editButton: {
     backgroundColor: '#4A0AFF',
-    width: 120,
+    width: 110,
     borderRadius:10,
     top:10,
     height: 35,
     alignItems:'center',
     justifyContent:'center',
-    marginBottom: 20,
-    marginTop:50,
+    marginBottom:20,
+    marginTop:20,
+  },
+  publisButton: {
+    backgroundColor: '#4A0AFF',
+    width: 120,
+    borderRadius:10,
+    top:-65,
+    height: 35,
+    alignItems:'center',
+    justifyContent:'center',
+    marginBottom:0,
+    marginTop:20,
+    left: width-170,
   },
   buttonText: {
     color: 'white',
   },
-  empty: {
-    height:40, 
-  },
+ 
 });
 
