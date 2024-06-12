@@ -71,6 +71,18 @@ app.post("/log-in", async(req, res) => {
 
 })
 
+app.get('/profile', async(req, res) => {
+    try {
+        const profileData = await User.findOne({ userId: req.user.id }, {email: 0, password:0});
+        
+        res.json({ profileData });
+      } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Server Error' });
+      }
+})
+
 app.listen(port, () => {
     console.log("NodeJS started");
 })
+
