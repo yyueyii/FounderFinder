@@ -1,31 +1,43 @@
-import { View, Text, StyleSheet } from 'react-native'
+import { View, Text, StyleSheet, FlatList } from 'react-native'
 import React from 'react'
 import EducationBadge from './education-badge'
+import SkillBubble from './skill-bubble'
 
-const ProfileCard = () => {
+const ProfileCard = ( { profileData}) => {
   return (
     <View style={styles.container}>
         <View style={styles.image}/>
         <View style={styles.wordContainer}>
-            <Text style={styles.name}>Name</Text>
-            <Text style={styles.description}>Harvard Business School Graduate</Text>
+            <Text style={styles.name}> {profileData.name} </Text>
+            <Text style={styles.description}>{profileData.description}</Text>
             <Text style={styles.subheading}>Interested Sectors</Text>
+            <SkillBubble skills={profileData.sectors}/>
             <Text style={styles.subheading}>Skills</Text>
-            <Text style={styles.subheading}>About Me</Text>
-            <Text style={styles.text}> 
-            Hi, I’m Annabelle! I’m interested in the blend of finance and technology. I’m a driven and passionate individual who is open to learning anything and everything financial related! 
-            </Text>
-            <Text style={styles.subheading}>Education</Text>
-            <EducationBadge/>
-            <EducationBadge/>
-            <Text style={[styles.subheading,{paddingTop:15}]}>Work Experience</Text>
-            <EducationBadge/>
-            <EducationBadge/>
+            <SkillBubble skills={profileData.skills} />
 
+            <Text style={styles.subheading}>About Me</Text>
+            <Text style={styles.text}>{profileData.aboutMe}</Text>
+            <Text style={styles.subheading}>Education</Text>
+            {profileData.education.map((education, index) => (
+                <EducationBadge
+                    key={index}
+                    institution={education.institution}
+                    duration={education.duration}
+                    description={education.description}
+                />
+            ))}
+            
+            <Text style={[styles.subheading,{paddingTop:15}]}>Work Experience</Text>
+            {profileData.workExperience.map((workExperience, index) => (
+                <EducationBadge
+                    key={index}
+                    institution={workExperience.organisation}
+                    duration={workExperience.duration}
+                    description={workExperience.description}
+                />
+            ))}
             <Text style={[styles.subheading,{paddingTop:15}]}>Let's Connect If...</Text>
-            <Text style={styles.text}> 
-            You are a technical co-founder in the FinTech space looking for a non-technical co-founder to handle all things business
-            </Text>
+            <Text style={styles.text}> {profileData.LCI} </Text>
             <View style={{height:40}}/>
         </View>
 
@@ -75,5 +87,9 @@ const styles = StyleSheet.create({
     text: {
         paddingBottom:15,
         lineHeight:18,
+    },
+    skillBubble: {
+        padding:5,
+        backgroundColor:'gray',
     }
 })

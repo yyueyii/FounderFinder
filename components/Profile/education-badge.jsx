@@ -5,12 +5,9 @@ const EducationBadge = ( {institution, duration, description}) => {
   return (
     <View style={styles.container}>
     <View style={styles.box}>
-      <Text style={{fontWeight:'bold', paddingTop:5, paddingBottom:5}}>Master of Business Administration</Text>
-      <Text style={{fontSize:13, paddingBottom:5}}>JAN 2022 - JAN 2024</Text>
-      <Text style={{fontSize:12, paddingBottom:5}}>
-        President of Harvard Finance Club asdjfk asdf sdfa sd sd jks lj 
-        asdfklsfjksldfjlk
-      </Text>
+      <Text style={{fontWeight:'bold', paddingTop:5, paddingBottom:5}}>{institution}</Text>
+      <Text style={{fontSize:13, paddingBottom:5}}>{duration}</Text>
+      <Text style={{fontSize:12, paddingBottom:5}}>{description}</Text>
 
 
         </View>

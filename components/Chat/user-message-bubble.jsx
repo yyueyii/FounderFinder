@@ -8,11 +8,11 @@ const width = Dimensions.get('window').width;
 const UserMessageBubble = ( { message, time, lastMessage } ) => {
     return (
     <View style={styles.container}>
-        <View style={[styles.bubble, {width:(message.length+time.length) *10 }]}>
+        <View style={[styles.bubble]}>
             <Text style={styles.messageText}>
                 {message}
             </Text>
-            <Text style={[styles.time, {left:Math.min((message.length+time.length)*10 - 50, width*0.7-60)}]}>{time}</Text>
+            <Text style={[styles.time]}>{time}</Text>
             <View style={styles.triangle}/>
         </View>
     </View>
@@ -35,10 +35,10 @@ const styles = StyleSheet.create({
     },
     bubble: {
         backgroundColor:'#4A0AFF',
-        borderRadius:20,
+        borderRadius:15,
         padding:10,
         maxWidth:'100%',
-
+        alignItems:'flex-start'
     }, 
     triangle: {
         width: 0,
@@ -58,15 +58,20 @@ const styles = StyleSheet.create({
     messageText: {
         color:'white',
         paddingLeft:2,
+        marginRight:20,
         fontSize:14,
         padding:2,
-        marginBottom:-12,
-        lineHeight:17
+        marginBottom:-10,
+        lineHeight:17,
+        paddingBottom:20,
     }, 
     time: {
         fontSize: 11,
         bottom:-5,
         color:'lightgray',
+        right: 12,
+        bottom:5,
+        position:'absolute',
     }
 })
 
