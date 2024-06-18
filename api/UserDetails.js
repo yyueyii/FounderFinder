@@ -1,39 +1,62 @@
 const mongoose = require("mongoose");
 
-const ProfileDataSchema = new mongoose.Schema({
-    name: {type: String, required: true},
-    picture:String, 
-    description: String, 
-    sectors:[String],
-    skills:[String],
-    education:[{
-        institution: String,
-        duration: String,
-        description: String
-    }],
-    workExperience:[{
-        organisation: String, 
-        duration: String,
-        description: String,
-    }],
-    LCI:String,
-})
-
 const UserDetailSchema = new mongoose.Schema({
     email: {type: String, unique: true},
     password: String,
-    draftProfile:ProfileDataSchema,
-    publishedProfile: {...ProfileDataSchema.obj,
-        published_at: { type:Date, default:Date.now }
-    },
-    created_at: {type: Date, default: Date.now},
-    updated_at: {type: Date, default: Date.now},
+    pic: {
+        type: "String",
+        required: true,
+        default:
+          "https://icon-library.com/images/anonymous-avatar-icon/anonymous-avatar-icon-25.jpg",
+      },
+      name: {
+        type: "String",
+        default: "",
+      },
+      description: {
+        type: "String",
+        default: "",
+      },
+      skills: {
+        type:["String"],
+        default: [],
+      },
+      sectors: {
+        type:["String"],
+        default: [],
+      },
+      aboutMe: {
+        type:"String",
+        default:""
+      },
+      education: {
+        type: [
+            {
+                institution: {type: "String", default:""},
+                duration: {type: "String", default:""},
+                description: {type: "String", default:""}
+            }],
+        default: [],
+      },
+      workExperience: {
+        type: [
+        {
+            organisation: {type: "String", default:""},
+            duration: {type: "String", default:""},
+            description: {type: "String", default:""}
+        }],
+        
+        default: [],
+      },
+      LCI: {
+        type:"String",
+        default:"",
+      }
 }, 
-
 {
-    collection: "UserInfo",
+    timestamps: true,
+    collection: "UserInfo"
 });
+const User = mongoose.model("UserInfo", UserDetailSchema);
 
-
-
-mongoose.model("UserInfo", UserDetailSchema);
+module.exports = User;

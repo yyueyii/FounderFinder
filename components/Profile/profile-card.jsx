@@ -3,32 +3,40 @@ import React from 'react'
 import EducationBadge from './education-badge'
 import SkillBubble from './skill-bubble'
 
-const ProfileCard = ( { profileData}) => {
+const ProfileCard = ( {profileData}) => {
+
+    const educationList = [ 
+        {institution: "hi", 
+            duration:"ee",
+            description:"ss"
+        },
+
+    ]
   return (
     <View style={styles.container}>
         <View style={styles.image}/>
         <View style={styles.wordContainer}>
-            <Text style={styles.name}> {profileData.name} </Text>
-            <Text style={styles.description}>{profileData.description}</Text>
+            <Text style={styles.name}> {profileData["name"] } </Text>
+            <Text style={styles.description}>{profileData["description"]}</Text>
             <Text style={styles.subheading}>Interested Sectors</Text>
-            <SkillBubble skills={profileData.sectors}/>
+            <SkillBubble skills={profileData["sectors"]}/> 
             <Text style={styles.subheading}>Skills</Text>
-            <SkillBubble skills={profileData.skills} />
+            <SkillBubble skills={profileData["skills"]} /> 
 
             <Text style={styles.subheading}>About Me</Text>
-            <Text style={styles.text}>{profileData.aboutMe}</Text>
+            <Text style={styles.text}>{profileData["aboutMe"]}</Text>
             <Text style={styles.subheading}>Education</Text>
-            {profileData.education.map((education, index) => (
+            {profileData["education"].map((education, index) => (
                 <EducationBadge
                     key={index}
                     institution={education.institution}
                     duration={education.duration}
                     description={education.description}
                 />
-            ))}
+            ))} 
             
             <Text style={[styles.subheading,{paddingTop:15}]}>Work Experience</Text>
-            {profileData.workExperience.map((workExperience, index) => (
+            {profileData["workExperience"].map((workExperience, index) => (
                 <EducationBadge
                     key={index}
                     institution={workExperience.organisation}
@@ -37,7 +45,7 @@ const ProfileCard = ( { profileData}) => {
                 />
             ))}
             <Text style={[styles.subheading,{paddingTop:15}]}>Let's Connect If...</Text>
-            <Text style={styles.text}> {profileData.LCI} </Text>
+            <Text style={styles.text}> {profileData["LCI"]} </Text>
             <View style={{height:40}}/>
         </View>
 

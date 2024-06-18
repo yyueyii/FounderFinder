@@ -62,25 +62,46 @@ app.post("/log-in", async(req, res) => {
         const token = jwt.sign({email:oldUser.email}, JWT_SECRET);
 
         if (res.status(201)) {
+
             return res.send({status: "ok", data: token});
         } else {
             return res.send({error: "error"});
         }
     }
     
-
 })
 
-app.get('/profile', async(req, res) => {
+
+app.put('/edit-profile/:id', async (req, res) => {
     try {
-        const profileData = await User.findOne({ userId: req.user.id }, {email: 0, password:0});
-        
-        res.json({ profileData });
-      } catch (error) {
-        console.error(error);
-        res.status(500).json({ message: 'Server Error' });
-      }
+        const {id} = req.params;
+        const user = await User.findByIdAndUpdate(id, req.body);
+        if (!user) {
+            return res.status(404).json({message: "Not found"});
+        }
+
+        const updatedUser = await User.findById(id);
+        res.status(200).json(updatedUser);
+
+    } catch (error) {
+        res.status(500).json({message: error.message});
+    }
+});
+
+app.get('/profile/:id', async(req, res) => {
+    try {
+        const {id} = req.params;
+        const user = await User.findById(id);
+        res.status(200).json(user);
+
+    } catch {
+        res.status(500).json({message:error.message});
+    }
 })
+
+
+
+
 
 app.listen(port, () => {
     console.log("NodeJS started");

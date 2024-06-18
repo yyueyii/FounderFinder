@@ -1,31 +1,127 @@
-import { View, Text, StyleSheet, TextInput, Dimensions, ScrollView, TouchableOpacity, Button, Platform, Link, Image, FlatListComponent } from 'react-native'
+import { View, Text, StyleSheet, TextInput, Dimensions, ScrollView, TouchableOpacity, Button, Platform, Link, Image, FlatListComponent, Alert, ActivityIndicator } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import DropDownPicker from 'react-native-dropdown-picker';
 import * as ImagePicker from 'expo-image-picker';
 import axios from 'axios';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const windowDimensions = Dimensions.get('window');
 const width = windowDimensions.width;
-const height = windowDimensions.height;
 
-const EditProfile = (  {   }) => {
-    const [user, setUser]  = useState([])
+const EditProfile = () => {
+    const [profileData, setProfileData] = useState({
+      picture:null,
+      name:'',
+      description:'',
+      aboutMe:'',
+      educationList:[{
+        institution:'', duration:'', description:''
+      }],
+      workExperienceList:[{
+        organisation:'', duration:'', description:''
+      }],
+      LCI:'',
+      
+    });
+    const[initData, setInitData] = useState(null);
+    const [loading, setLoading] = useState(true);
+    const [sectors, setSectors] = useState([]);
+    const [skills, setSkills] = useState([]);
+     //interested sectors - dropdown picker
+  const [open1, setOpen1] = useState(false);
+  const [items1, setItems1] = useState([
+   
+    {label: 'Tech', value: 'Tech'},
+    {label: 'Finance', value: 'Finance'},
+    {label: 'Semiconductors', value: 'Semiconductor'},
+    {label: 'Sustainability', value: 'Sustainability'},
+
+  ]);
+
+  //dropdown picker - skills
+  const [open2, setOpen2] = useState(false);
+  const [items2, setItems2] = useState([
+    { label: 'React Native', value: 'React Native' },
+    { label: 'Data Analytics', value: 'Data Analytics' },
+    { label: 'Software Development', value: 'Software Development' },
+  ]);
+  
+    useEffect(() => {
+      const fetchProfileData = async () => {
+          try {
+              const response = await fetch('http://localhost:5001/profile/667040d88b96980d46246162'); 
+              const json = await response.json();
+              setInitData(json);
+              console.log("fetched data:", initData);
+              setProfileData({...profileData, 
+                name:initData["name"],
+                description:initData["description"],
+                educationList:initData["education"],
+                workExperienceList:initData["workExperience"],
+                aboutMe:initData["aboutMe"],
+                LCI:initData["LCI"]
+                }); 
+              setSectors(initData["sectors"]);
+              setSkills(initData["skills"]);
+
+          } catch (error) {
+              console.error('Error fetching profile data:', error);
+          } finally {
+            setLoading(false);
+          }
+      };
+  
+      fetchProfileData(); 
+  }, []); 
+  
+  if (loading) {
+    return (
+        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+            <ActivityIndicator size="large" color="#0000ff" />
+        </View>
+    );
+  }
+
+
+    const handleUpdateProfile = async () => {
+      try {
+        const response = await fetch(`http://localhost:5001/edit-profile/667040d88b96980d46246162`, {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            "name": profileData.name,
+            "description": profileData.description,
+            "aboutMe": profileData.aboutMe,
+            "LCI": profileData.LCI,
+            "workExperience": profileData.workExperienceList.filter(work =>
+              work.organisation || work.duration || work.description
+            ),
+            "education":profileData.educationList.filter(education => 
+              education.institution || education.duration || education.description
+            ),
+            "sectors": sectors,
+            "skills": skills,
+          }),
+        });
+  
+        if (!response.ok) {
+          throw new Error('Failed to update profile');
+        }
+        const updatedUser = await response.json();
+        console.log('Updated profileData:', updatedUser);
+        
+        navigation.navigate('/profile');    
+      } catch (error) {
+        console.error('Error updating profile:', error);
+        Alert.alert('Error', 'Failed to update profile');
+      }
+    };
 
 
 
-  const [profileData, setProfileData] = useState({
-    picture:null,
-    name: '',
-    description:'',
-    aboutMe:'',
-    educationList:[ 
-      {institution:'', duration:'', description:''}
-    ],
-    workExperienceList:[
-      {organisation:'', duration:'', description:''}
-    ],
-    sectors:[],
-  })
+ 
 
 
 
@@ -56,27 +152,9 @@ const EditProfile = (  {   }) => {
     }
   };
 
-  //interested sectors - dropdown picker
-  const [open1, setOpen1] = useState(false);
-  const [value1, setValue1] = useState([]);
-  const [items1, setItems1] = useState([
-   
-    {label: 'Tech', value: 'tech'},
-    {label: 'Finance', value: 'finance'},
-    {label: 'Semiconductors', value: 'semiconductor'},
-    {label: 'Sustainability', value: 'sustainability'},
-
-  ]);
   
 
-  //dropdown picker - skills
-  const [open2, setOpen2] = useState(false);
-  const [value2, setValue2] = useState([]);
-  const [items2, setItems2] = useState([
-    { label: 'React Native', value: 'react-native' },
-    { label: 'Data Analytics', value: 'data-analytics' },
-    { label: 'Software Development', value: 'software-development' },
-  ]);
+ 
 
   const handleInputChange = (index, field, value) => {
     const updatedEducationList = [...profileData.educationList];
@@ -104,15 +182,17 @@ const EditProfile = (  {   }) => {
 
 
   const addWorkExperienceEntry = () => {
-    setProfileData({...profileData, workExperienceList: [...profileData.educationList, { organisation: '', duration: '', description: '' }]})
+    setProfileData({...profileData, workExperienceList: [...profileData.workExperienceList, { organisation: '', duration: '', description: '' }]})
+    console.log(profileData.workExperienceList);
   };
 
   const removeWorkExperiencePrompt = (index) => {
     const updatedWorkExperienceList = [...profileData.workExperienceList];
     updatedWorkExperienceList.splice(index, 1);
-    setProfiledata({...profileData, workExperienceList:(updatedWorkExperienceList)});
+    setProfileData({...profileData, workExperienceList:(updatedWorkExperienceList)});
   };
 
+  
 
 
   return (
@@ -123,17 +203,17 @@ const EditProfile = (  {   }) => {
         <Text style={styles.subheadings}>Profile Picture</Text>
 
         <TouchableOpacity onPress={selectImage} style={styles.pictureContainer}>
-        {profileData.picture ? (
+         {profileData.picture ? (
           <Image source={{ uri: profileData.picture }} style={styles.picture} />
-        ) : (
+        ) : ( 
           <Text style={styles.picturePlaceholder}>Set Profile Picture</Text>
-        )}
+         )}
       </TouchableOpacity>
 
         <Text style={styles.subheadings}>Name</Text>
         <TextInput
           style={[styles.input, {marginTop:0, height:30, borderColor:'black'}]}
-          value={user.name}
+          value={profileData["name"]}
           placeholder="Name"
           onChangeText={text => setProfileData({...profileData, name:(text)})}
 
@@ -153,10 +233,10 @@ const EditProfile = (  {   }) => {
         <Text style={[styles.subheadings, {}]}>Interested Sector(s)</Text>
         <DropDownPicker
           open={open1}
-          value={value1}
+          value={sectors}
           items={items1}
           setOpen={setOpen1}
-          setValue={setValue1}
+          setValue={setSectors}
           setItems={setItems1}
           multiple={true}
           style={styles.sectors}
@@ -165,17 +245,17 @@ const EditProfile = (  {   }) => {
           stickyHeader={true}
           zIndex={3000}
           zIndexInverse={1000}
+        
           //badgeDotColors={["#e76f51", "#00b4d8", "#e9c46a", "#e76f51", "#8ac926", "#00b4d8", "#e9c46a"]}
         
           />
-
         <Text style={[styles.subheadings, {}]}>Skill(s)</Text>
         <DropDownPicker
           open={open2}
-          value={value2}
+          value={skills}
           items={items2}
           setOpen={setOpen2}
-          setValue={setValue2}
+          setValue={setSkills}
           setItems={setItems2}
           multiple={true}
           style={styles.skills}
@@ -183,6 +263,7 @@ const EditProfile = (  {   }) => {
           maxHeight={200}
           zIndex={1000}
           zIndexInverse={3000}
+          
           //badgeDotColors={["#e76f51", "#00b4d8", "#e9c46a", "#e76f51", "#8ac926", "#00b4d8", "#e9c46a"]}
         
           />
@@ -300,7 +381,7 @@ const EditProfile = (  {   }) => {
           <Text style={[styles.addButtonText, {color:'#4A0AFF'}]}>Back</Text>
        </TouchableOpacity>
 
-       <TouchableOpacity  onPress={() =>{}} style={styles.saveButton}>
+       <TouchableOpacity  onPress={handleUpdateProfile} style={styles.saveButton}>
           <Text style={styles.addButtonText}>Save and Back</Text>
        </TouchableOpacity>
 
@@ -310,7 +391,7 @@ const EditProfile = (  {   }) => {
     )
   }
 
-export default EditProfile
+export default EditProfile;
 
 const styles = StyleSheet.create({
   container: {
@@ -358,6 +439,7 @@ const styles = StyleSheet.create({
   picturePlaceholder: {
     borderRadius:5,
     textAlign:'center',
+    padding:5,
   },
   subheadings: {
     fontSize:18, 

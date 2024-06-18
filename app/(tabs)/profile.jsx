@@ -1,48 +1,42 @@
-import { ScrollView, StyleSheet, Text, View, Button, TouchableOpacity, Dimensions} from 'react-native'
+import { ScrollView, StyleSheet, Text, View, Button, TouchableOpacity, Dimensions, ActivityIndicator} from 'react-native'
 import React, { useState, useEffect } from 'react';
 import { Link } from 'expo-router';
 import { useNavigation } from '@react-navigation/native';
 import ProfileCard from '../../components/Profile/profile-card';
 import axios from 'axios';
+
                                                                                     
 const windowDimensions = Dimensions.get('window');
 const width = windowDimensions.width;
 
 const Profile = ( ) => {
-  const [profileData, setProfileData] = useState({
-    //picture: //require placeholder
-    name: 'Your Name', 
-    description: 'Harvard Business School Graduate',
-    sectors: ['Finance', 'Susainability', 'Tech', 'Data Science'], 
-    skills: ['Communication', 'Business Analytics', 'ReactNative', 'Python', 'Teamwork','Java', 'C++'], 
-    aboutMe:'abtmeee',
-    education: 
-      [{institution: 'MBA, Harvard University', duration:'2021-2022', 
-          description:'Lorem ipsum ute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.    '},
-        {institution:'BBA', duration:'2017-2020', 
-          description:'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim oe dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidant in culpa qui officia deserunt mollit anim id est laborum.  '}
-      ],
-    workExperience:
-      [{organisation: 'Google', duration:'2020', description:'goooooooooooooooooooogle'}],
-    LCI: 'You are a technical co-founder in the FinTech space looking for a non-technical co-founder to handle all things business. You are a technical co-founder in the FinTech space looking for a non-technical co-founder to handle all things business', 
-  })
+  const [profileData, setProfileData] = useState(null);
+  const [loading, setLoading] = useState(true);
 
-  // const [profileData, setProfileData] = useState(null);
+  useEffect(() => {
+    const fetchProfileData = async () => {
+        try {
+            const response = await fetch('http://localhost:5001/profile/667040d88b96980d46246162'); 
+            const json = await response.json();
+            setProfileData(json); 
+            console.log("profileData:", profileData);
+        } catch (error) {
+            console.error('Error fetching profile data:', error);
+        } finally {
+          setLoading(false);
+        }
+    };
 
-  // useEffect(() => {
-  //   const fetchProfileData = async () => {
-  //       try {
-  //           const response = await axios.get('/profile');
+    fetchProfileData(); 
+}, []); 
 
-  //           setProfileData(response.data.profileData);
-  //       } catch (error) {
-  //           console.error('Error fetching profile data:', error);
-  //       }
-  //   };
-  //   fetchProfileData();
-  //       return () => {
-  //       };
-  //   }, []); 
+if (loading) {
+  return (
+      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+          <ActivityIndicator size="large" color="#0000ff" />
+      </View>
+  );
+}
 
 
   const handleEditProfile= () => {
