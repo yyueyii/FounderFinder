@@ -4,29 +4,33 @@ import DropDownPicker from 'react-native-dropdown-picker';
 import * as ImagePicker from 'expo-image-picker';
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useFocusEffect, useLocalSearchParams } from 'expo-router';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import * as FileSystem from 'expo-file-system';
+
+
 
 const windowDimensions = Dimensions.get('window');
 const width = windowDimensions.width;
 
 const EditProfile = () => {
-    const [profileData, setProfileData] = useState({
-      picture:null,
-      name:'',
-      description:'',
-      aboutMe:'',
-      educationList:[{
-        institution:'', duration:'', description:''
-      }],
-      workExperienceList:[{
-        organisation:'', duration:'', description:''
-      }],
-      LCI:'',
-      
-    });
-    const[initData, setInitData] = useState(null);
-    const [loading, setLoading] = useState(true);
-    const [sectors, setSectors] = useState([]);
-    const [skills, setSkills] = useState([]);
+  const params = useLocalSearchParams();
+
+  const [profileData, setProfileData] = useState({
+    picture:params.pictureURI,
+    name:params.name,
+    description:params.description, 
+    aboutMe:params.aboutMe,
+    educationList:JSON.parse(params.education),
+    workExperienceList:JSON.parse(params.workExperience),
+    LCI: params.LCI
+  });
+  const [base64Image, setBase64Image] = useState(params.pictureBase64); //params.picture is BASE64
+
+  console.log(profileData);
+  console.log(base64Image)
+    const [sectors, setSectors] = useState(JSON.parse(params.sectors));
+    const [skills, setSkills] = useState(JSON.parse(params.skills));
      //interested sectors - dropdown picker
   const [open1, setOpen1] = useState(false);
   const [items1, setItems1] = useState([
@@ -46,41 +50,6 @@ const EditProfile = () => {
     { label: 'Software Development', value: 'Software Development' },
   ]);
   
-    useEffect(() => {
-      const fetchProfileData = async () => {
-          try {
-              const response = await fetch('http://localhost:5001/profile/667040d88b96980d46246162'); 
-              const json = await response.json();
-              setInitData(json);
-              console.log("fetched data:", initData);
-              setProfileData({...profileData, 
-                name:initData["name"],
-                description:initData["description"],
-                educationList:initData["education"],
-                workExperienceList:initData["workExperience"],
-                aboutMe:initData["aboutMe"],
-                LCI:initData["LCI"]
-                }); 
-              setSectors(initData["sectors"]);
-              setSkills(initData["skills"]);
-
-          } catch (error) {
-              console.error('Error fetching profile data:', error);
-          } finally {
-            setLoading(false);
-          }
-      };
-  
-      fetchProfileData(); 
-  }, []); 
-  
-  if (loading) {
-    return (
-        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-            <ActivityIndicator size="large" color="#0000ff" />
-        </View>
-    );
-  }
 
 
     const handleUpdateProfile = async () => {
@@ -91,6 +60,7 @@ const EditProfile = () => {
             'Content-Type': 'application/json',
           },
           body: JSON.stringify({
+            "pic":base64Image,
             "name": profileData.name,
             "description": profileData.description,
             "aboutMe": profileData.aboutMe,
@@ -144,11 +114,25 @@ const EditProfile = () => {
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
       allowsEditing: true,
       aspect: [1, 1],
-      quality: 1,
+      quality: 0.5,
     });
 
     if (!result.canceled) {
       setProfileData({...profileData, picture:(result.assets[0].uri)});
+      if (Platform.OS === 'web') {
+        const response = await fetch(result.assets[0].uri);
+        const blob = await response.blob();
+        const reader = new FileReader();
+        reader.onloadend = () => {
+          setBase64Image(reader.result.split(',')[1]); 
+        };
+        reader.readAsDataURL(blob);
+      } else {
+        const base64 = await FileSystem.readAsStringAsync(result.assets[0].uri, {
+          encoding: FileSystem.EncodingType.Base64,
+        });
+        setBase64Image(base64);
+      }
     }
   };
 
@@ -197,7 +181,7 @@ const EditProfile = () => {
 
   return (
     <ScrollView contentContainerStyle={styles.container}> 
-      <View style={styles.content}>
+      <SafeAreaView style={styles.content}>
         <Text style={styles.title}>Edit Profile</Text>
 
         <Text style={styles.subheadings}>Profile Picture</Text>
@@ -208,6 +192,14 @@ const EditProfile = () => {
         ) : ( 
           <Text style={styles.picturePlaceholder}>Set Profile Picture</Text>
          )}
+
+      {base64Image && (
+        <>
+          <Text></Text>
+          
+        </>
+      )}
+
       </TouchableOpacity>
 
         <Text style={styles.subheadings}>Name</Text>
@@ -382,11 +374,11 @@ const EditProfile = () => {
        </TouchableOpacity>
 
        <TouchableOpacity  onPress={handleUpdateProfile} style={styles.saveButton}>
-          <Text style={styles.addButtonText}>Save and Back</Text>
+          <Text style={styles.addButtonText}>Publish</Text>
        </TouchableOpacity>
 
         <View style={styles.empty}></View>
-      </View>
+      </SafeAreaView>
     </ScrollView>
     )
   }
@@ -429,7 +421,6 @@ const styles = StyleSheet.create({
     borderRadius:5,
     alignItems:'center',
     justifyContent:'center',
-    paddingBottom:15,
   },
   picture: {
     width: width * 0.3,
@@ -539,7 +530,7 @@ const styles = StyleSheet.create({
   },
   saveButton: {
     backgroundColor: '#4A0AFF',
-    width: 140,
+    width: 100,
     borderRadius:10,
     borderWidth:1.5,
     borderColor:'#4A0AFF',

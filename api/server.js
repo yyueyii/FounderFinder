@@ -94,10 +94,32 @@ app.get('/profile/:id', async(req, res) => {
         const user = await User.findById(id);
         res.status(200).json(user);
 
-    } catch {
+    } catch(error) {
         res.status(500).json({message:error.message});
     }
 })
+
+
+app.get('/matches/:id', async (req, res) => {
+    try {
+        const {id} = req.params;
+        const user = await User.findById(id).populate('matches.userId').exec();
+  
+      if (!user) {
+        return res.status(404).json({ error: 'User not found' });
+      }
+  
+      const sortedMatches = user.matches.sort((a, b) => b.matchedAt - a.matchedAt);
+      const matchedProfiles = sortedMatches.map(match => match.userId);
+      res.status(200).json(matchedProfiles);
+
+    } catch (error) {
+      console.error('Error fetching matched profiles:', error);
+      res.status(500).json({ error: 'Failed to fetch matched profiles' });
+    }
+  });
+
+
 
 
 

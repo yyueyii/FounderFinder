@@ -1,20 +1,27 @@
-import { View, Text, StyleSheet, FlatList } from 'react-native'
+import { View, Text, StyleSheet, FlatList, Image } from 'react-native'
 import React from 'react'
 import EducationBadge from './education-badge'
 import SkillBubble from './skill-bubble'
+import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
 
-const ProfileCard = ( {profileData}) => {
 
-    const educationList = [ 
-        {institution: "hi", 
-            duration:"ee",
-            description:"ss"
-        },
+const ProfileCard = ( {profileData, onSwipeLeft, onSwipeRight}) => {
 
-    ]
   return (
     <View style={styles.container}>
-        <View style={styles.image}/>
+        <View style={styles.shadowContainer}>  
+           {profileData["pic"] ? (
+        <Image
+          source={{ uri: `data:image/jpeg;base64,${profileData["pic"]}` }}
+          style={styles.image}
+        />
+      ) : (
+        <View style={styles.image}>
+                <FontAwesome6 name="user-large" size={200} color="#b5b5b5" style={{top:-15}} />           
+        </View>
+      )}
+           
+        </View>
         <View style={styles.wordContainer}>
             <Text style={styles.name}> {profileData["name"] } </Text>
             <Text style={styles.description}>{profileData["description"]}</Text>
@@ -64,12 +71,18 @@ const styles = StyleSheet.create({
     image:{
         width:'100%',
         aspectRatio:1,
-        backgroundColor:'gray',
+        borderRadius:25,
+        alignItems:'center',
+        justifyContent:'center'
+    },
+    shadowContainer:{
         borderRadius:25,
         shadowColor:'#000',
-        shadowOffset: { width: 0, height: 2 },
-        shadowOpacity: 0.5,
-        shadowRadius: 3.84,  
+        shadowOffset: { width: 0, height: 5},
+        shadowOpacity: 0.25,
+        shadowRadius: 3.84,
+        backgroundColor:'#E1E6E8'
+
     },
     wordContainer: {
         padding:20,

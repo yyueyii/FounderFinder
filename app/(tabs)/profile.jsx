@@ -4,6 +4,8 @@ import { Link } from 'expo-router';
 import { useNavigation } from '@react-navigation/native';
 import ProfileCard from '../../components/Profile/profile-card';
 import axios from 'axios';
+import * as FileSystem from 'expo-file-system';
+
 
                                                                                     
 const windowDimensions = Dimensions.get('window');
@@ -12,13 +14,19 @@ const width = windowDimensions.width;
 const Profile = ( ) => {
   const [profileData, setProfileData] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [uri, setURI] = useState(null);
 
   useEffect(() => {
     const fetchProfileData = async () => {
         try {
             const response = await fetch('http://localhost:5001/profile/667040d88b96980d46246162'); 
             const json = await response.json();
+             
+            const imageUri = `data:image/jpeg;base64,${json["pic"]}`; //converts str to URI
+            setURI(imageUri);
             setProfileData(json); 
+            console.log(profileData["pic"]);
+      
             console.log("profileData:", profileData);
         } catch (error) {
             console.error('Error fetching profile data:', error);
@@ -46,6 +54,7 @@ if (loading) {
   }
   
 
+
   return (
     <ScrollView contentContainerStyle={styles.container}>
       <View style={styles.content}>
@@ -53,13 +62,28 @@ if (loading) {
 
         <ProfileCard profileData={profileData}/> 
 
-        <TouchableOpacity onPress={handleEditProfile} style={styles.editButton}>
-          <Text style={[styles.buttonText, {color:'white', textAlign:'center'}]}>Edit Profile</Text>
+        <TouchableOpacity  style={styles.publishButton}>
+          <Link 
+            href={{
+              pathname:'/edit-profile',
+              params:{
+                  pictureBase64:profileData["pic"],  
+                  pictureURI:encodeURIComponent(uri),  // profileData["pic"] is a uri
+                  name:profileData["name"], 
+                  description:profileData["description"],
+                  sectors:JSON.stringify(profileData["sectors"]),
+                  skills:JSON.stringify(profileData["skills"]),
+                  aboutMe:profileData["aboutMe"],
+                  workExperience:JSON.stringify(profileData["workExperience"]),
+                  education:JSON.stringify(profileData["education"]),
+                  LCI:profileData["LCI"]
+
+              }
+                
+            }} style={{color:'white'}}>Edit Profile</Link>
         </TouchableOpacity>
 
-        <TouchableOpacity onPress={()=>{}} style={styles.publisButton}>
-          <Text style={[styles.buttonText, {color:'white', textAlign:'center'}]}>Publish Profile</Text>
-        </TouchableOpacity>
+      
         
       </View>
     </ScrollView>
@@ -134,17 +158,18 @@ const styles = StyleSheet.create({
     marginBottom:20,
     marginTop:20,
   },
-  publisButton: {
+  publishButton: {
     backgroundColor: '#4A0AFF',
-    width: 120,
+    width: 100,
     borderRadius:10,
-    top:-65,
     height: 35,
     alignItems:'center',
     justifyContent:'center',
     marginBottom:0,
-    marginTop:20,
-    left: width-170,
+    marginTop:30,
+    left:0,
+    marginBottom:50,
+    
   },
   buttonText: {
     color: 'white',

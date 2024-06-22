@@ -2,6 +2,7 @@
   "expo": {
     "name": "FounderFinder",
     "slug": "FounderFinder",
+    "entryPoint": "./app/index.jsx",
     "scheme": "myapp",
     "version": "1.0.0",
     "orientation": "portrait",

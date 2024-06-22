@@ -24,6 +24,7 @@ const LoginPage = () => {
       axios.post("http://localhost:5001/log-in", userData)
       .then(res => {console.log(res.data);
         if (res.data.status == "ok") {
+          
           alert("Logged in successfully!");
           Alert.alert("Logged in successfully!");
           navigation.navigate('/home');

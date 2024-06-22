@@ -1,23 +1,42 @@
-import React, { useState } from 'react';
-import { Text, View, ScrollView, TextInput, Button, StyleSheet, TouchableOpacity, Dimensions } from 'react-native';
+import React, { useState , useEffect} from 'react';
+import { Text, View, ScrollView, TextInput, Button, StyleSheet, TouchableOpacity, Platform, Dimensions, KeyboardAvoidingView } from 'react-native';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import OtherMessageBubble from '../components/Chat/other-message-bubble';
 import UserMessageBubble from '../components/Chat/user-message-bubble';
+import { useLocalSearchParams, Link } from 'expo-router';
 const width = Dimensions.get('window').width;
+const mongoose = require('mongoose'); 
+const { ObjectId } = mongoose.Types;
+import { useNavigation } from '@react-navigation/native';
 
-const ChatRoom = ( { id } ) => {
+const ChatRoom = ( ) => {
 
 const [inputHeight, setInputHeight] = useState(40); 
+
+const params = useLocalSearchParams();
+const navigation = useNavigation();
+console.log("userId:", params);
+
+
+
 const handleContentSizeChange = (event) => {
-    setInputHeight(event.nativeEvent.contentSize.height); 
+    setInputHeight(event.nativeEvent.contentSize.height);
   };
   return (
-    <View style={styles.container}>
-        <TouchableOpacity style={styles.header}>
-            <TouchableOpacity>
+    <KeyboardAvoidingView style={styles.container} behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
+        <TouchableOpacity style={styles.header} onPress={() =>{}}>
+        <Link
+                href={{
+                    pathname:'/view-profile', 
+                    params: {
+                       id: new ObjectId(params)
+                    }
+                  }}
+                 style={styles.name}> name
+                </Link>
+            <TouchableOpacity onPress={()=>{navigation.goBack()}}>
                 <Ionicons name="chevron-back-outline" size={30} color="#4A0AFF"style={styles.back}/>            </TouchableOpacity>
             <View style={styles.image}/>
-            <Text style={styles.name}>Annabelle Faber</Text>
         </TouchableOpacity>
         
 
@@ -47,7 +66,7 @@ const handleContentSizeChange = (event) => {
          </TouchableOpacity>
       </View>
 
-    </View>
+    </KeyboardAvoidingView>
   );
 };
 

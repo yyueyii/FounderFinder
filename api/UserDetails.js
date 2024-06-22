@@ -6,8 +6,7 @@ const UserDetailSchema = new mongoose.Schema({
     pic: {
         type: "String",
         required: true,
-        default:
-          "https://icon-library.com/images/anonymous-avatar-icon/anonymous-avatar-icon-25.jpg",
+        default: "",
       },
       name: {
         type: "String",
@@ -51,7 +50,13 @@ const UserDetailSchema = new mongoose.Schema({
       LCI: {
         type:"String",
         default:"",
-      }
+      }, 
+      matches: [
+        {
+            userId: { type:mongoose.Schema.Types.ObjectId, ref: 'UserInfo'},
+            matchedAt: { type: Date, default: Date.now }
+        }
+    ]
 }, 
 {
     timestamps: true,
