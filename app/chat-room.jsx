@@ -25,7 +25,6 @@ const handleContentSizeChange = (event) => {
   };
   return (
     <KeyboardAvoidingView style={{backgroundColor:'white', flex:1}} behavior={Platform.OS === 'ios' ? 'padding'  : 'height'}>
-      <SafeAreaView style={{backgroundColor:'white', justifyContent:'flex-end', paddingBottom:-36}}>
 
         <Pressable style={styles.header} onPress={() =>{}}>
         <Link
@@ -53,6 +52,8 @@ const handleContentSizeChange = (event) => {
             <UserMessageBubble message={'long message asdhfuis ish ish fshf kshf ksjhfkshf kjshfkjshf kjs kfsa jkshf ksj hfjks fkds fhjksfhkds'} time={'12:23'}/>
             <OtherMessageBubble  message={'Long mes ashfskdlhf sk fslfj klsdasdfhjksf ks fhsk hfskdh fskdjh fksdhf skldh  hjkhfskj fksdhf ksdjhf skjdhf ks djk hsjk fhjkash fksjhf ksj jdsk hfjska fhksjdhf kjsdhf ksj njk djksa fnjks fjskj fksda fjksjkajkjsfd'} time={'03:12'}/>
             <OtherMessageBubble  message={'Long mes ashfskdlhf sk fslfj klsdasdfhjksf ks fhsk hfskdh fskdjh fksdhf skldh  hjkhfskj fksdhf ksdjhf skjdhf ks djk hsjk fhjkash fksjhf ksj jdsk hfjska fhksjdhf kjsdhf ksj njk djksa fnjks fjskj fksda fjksjkajkjsfd'} time={'03:12'}/>
+            <OtherMessageBubble  message={'Long mes ashfskdlhf sk fslfj klsdasdfhjksf ks fhsk hfskdh fskdjh fksdhf skldh  hjkhfskj fksdhf ksdjhf skjdhf ks djk hsjk fhjkash fksjhf ksj jdsk hfjska fhksjdhf kjsdhf ksj njk djksa fnjks fjskj fksda fjksjkajkjsfd'} time={'03:12'}/>
+
             {/* if next is other person's message, add a gap */}
       </ScrollView>
 
@@ -70,7 +71,6 @@ const handleContentSizeChange = (event) => {
         <Ionicons name="send" size={18} color="white" style={{left:2}}/>       
          </TouchableOpacity>
       </View>
-      </SafeAreaView>
     </KeyboardAvoidingView>
   );
 };
@@ -144,7 +144,7 @@ const styles = StyleSheet.create({
     borderColor: '#ccc',
     borderRadius: 20,
     paddingHorizontal:10,
-    paddingVertical:17,
+    paddingVertical:10,
     fontSize:15,
   },
   sendButton: {

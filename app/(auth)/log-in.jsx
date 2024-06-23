@@ -25,9 +25,9 @@ const LoginPage = () => {
       axios.post("http://localhost:5001/log-in", userData)
       .then(res => {console.log(res.data);
         if (res.data.status == "ok") {
-
-
           router.replace('/home');
+          return fetchUserId(email);
+          
         } else {
           alert("Seems like the wrong email or password");
           alert(JSON.stringify(res.data));
@@ -38,7 +38,19 @@ const LoginPage = () => {
       .catch(e => console.log(e.message));
     }
 
- 
+    const fetchUserId = async (email) => {
+      try {
+        const response = await axios.get(`http://localhost:5001/getId/${email}`);
+  
+        console.log('User ID:', response.data.userId);
+        setUser(response.data.userId);
+        console.log('userId stored');
+  
+      } catch (error) {
+        console.error('Error fetching user ID:', error.message);
+        alert('Failed to fetch user ID. Please try again later.'); // Handle error in fetching user ID
+      }
+    };
 
   return (
     <SafeAreaView style={styles.container}>

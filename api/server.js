@@ -71,7 +71,23 @@ app.post("/log-in", async(req, res) => {
     
 })
 
-
+app.get('/getId/:email', async(req, res) => {
+    const { email } = req.params;
+    try {
+        // Find user by email in database
+        const user = await User.findOne({ email });
+    
+        if (!user) {
+          return res.status(404).json({ error: 'User not found' });
+        }
+    
+        res.json({ userId: user._id });
+      } catch (error) {
+        console.error('Error retrieving user:', error);
+        res.status(500).json({ error: 'Internal server error' });
+      }
+    
+})
 
 
 app.use(express.json({ limit: '50mb' }));
