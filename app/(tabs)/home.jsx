@@ -69,7 +69,7 @@ const styles = StyleSheet.create({
     backgroundColor:'white',
     position:'absolute',
     bottom:30,
-    right:10,
+    right:20,
     shadowColor:'#000',
     shadowOpacity: 0.5,
     shadowOffset: { width: 0, height: 3 },

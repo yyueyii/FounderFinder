@@ -1,34 +1,49 @@
-import { View, Text, StyleSheet, FlatList } from 'react-native'
+import { View, Text, StyleSheet, FlatList, Image } from 'react-native'
 import React from 'react'
 import EducationBadge from './education-badge'
 import SkillBubble from './skill-bubble'
+import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
 
-const ProfileCard = ( { profileData}) => {
+
+const ProfileCard = ( {profileData, onSwipeLeft, onSwipeRight}) => {
+
   return (
     <View style={styles.container}>
-        <View style={styles.image}/>
+        <View style={styles.shadowContainer}>  
+           {profileData["pic"] ? (
+        <Image
+          source={{ uri: `data:image/jpeg;base64,${profileData["pic"]}` }}
+          style={styles.image}
+        />
+      ) : (
+        <View style={styles.image}>
+                <FontAwesome6 name="user-large" size={200} color="#b5b5b5" style={{top:-15}} />           
+        </View>
+      )}
+           
+        </View>
         <View style={styles.wordContainer}>
-            <Text style={styles.name}> {profileData.name} </Text>
-            <Text style={styles.description}>{profileData.description}</Text>
+            <Text style={styles.name}> {profileData["name"] } </Text>
+            <Text style={styles.description}>{profileData["description"]}</Text>
             <Text style={styles.subheading}>Interested Sectors</Text>
-            <SkillBubble skills={profileData.sectors}/>
+            <SkillBubble skills={profileData["sectors"]}/> 
             <Text style={styles.subheading}>Skills</Text>
-            <SkillBubble skills={profileData.skills} />
+            <SkillBubble skills={profileData["skills"]} /> 
 
             <Text style={styles.subheading}>About Me</Text>
-            <Text style={styles.text}>{profileData.aboutMe}</Text>
+            <Text style={styles.text}>{profileData["aboutMe"]}</Text>
             <Text style={styles.subheading}>Education</Text>
-            {profileData.education.map((education, index) => (
+            {profileData["education"].map((education, index) => (
                 <EducationBadge
                     key={index}
                     institution={education.institution}
                     duration={education.duration}
                     description={education.description}
                 />
-            ))}
+            ))} 
             
             <Text style={[styles.subheading,{paddingTop:15}]}>Work Experience</Text>
-            {profileData.workExperience.map((workExperience, index) => (
+            {profileData["workExperience"].map((workExperience, index) => (
                 <EducationBadge
                     key={index}
                     institution={workExperience.organisation}
@@ -37,7 +52,7 @@ const ProfileCard = ( { profileData}) => {
                 />
             ))}
             <Text style={[styles.subheading,{paddingTop:15}]}>Let's Connect If...</Text>
-            <Text style={styles.text}> {profileData.LCI} </Text>
+            <Text style={styles.text}> {profileData["LCI"]} </Text>
             <View style={{height:40}}/>
         </View>
 
@@ -56,12 +71,18 @@ const styles = StyleSheet.create({
     image:{
         width:'100%',
         aspectRatio:1,
-        backgroundColor:'gray',
+        borderRadius:25,
+        alignItems:'center',
+        justifyContent:'center'
+    },
+    shadowContainer:{
         borderRadius:25,
         shadowColor:'#000',
-        shadowOffset: { width: 0, height: 2 },
-        shadowOpacity: 0.5,
-        shadowRadius: 3.84,  
+        shadowOffset: { width: 0, height: 5},
+        shadowOpacity: 0.25,
+        shadowRadius: 3.84,
+        backgroundColor:'#E1E6E8'
+
     },
     wordContainer: {
         padding:20,

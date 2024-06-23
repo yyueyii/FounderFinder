@@ -7,23 +7,34 @@ import Index from './app/index';
 import LoginPage from './app/(auth)/log-in';
 import Profile from './app/(tabs)/profile';
 import EditProfile from './app/(auth)/edit-profile';
+import Matches from './app/(tabs)/matches';
+import ViewProfile from './app/view-profile';
 
 const LogInStack = createNativeStackNavigator();
 const EditProfileStack = createNativeStackNavigator();
+const ViewProfileStack = createNativeStackNavigator();
 
 const App = () => {
     return (
         <NavigationContainer>
-            <LogInStack.Navigator>
+            <LogInStack.Navigator initialRouteName='Index'>
                 <Stack.Screen name="Index" component={Index} />
                 <Stack.Screen name="Login" component={LoginPage} />
             </LogInStack.Navigator>
+
+            
 
 
             <EditProfileStack.Navigator initialRouteName="Profile">
                 <Stack.Screen name="Profile" component={Profile} />
                 <Stack.Screen name="EditProfile" component={EditProfile} />
             </EditProfileStack.Navigator>
+
+            <ViewProfileStack.Navigator>
+                <Stack.Screen name = "Matches" component={Matches}/>
+                <Stack.Screen name="ViewProfile" component={ViewProfile}/>
+            </ViewProfileStack.Navigator>
+
         </NavigationContainer>
     );
 };

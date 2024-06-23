@@ -2,11 +2,11 @@
   "expo": {
     "name": "FounderFinder",
     "slug": "FounderFinder",
-    "scheme": "FounderFinder",
+    "entryPoint": "./app/index.jsx",
+    "scheme": "myapp",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
-    "scheme": "myapp",
     "userInterfaceStyle": "automatic",
     "splash": {
       "image": "./assets/images/splash.png",
@@ -14,7 +14,8 @@
       "backgroundColor": "#ffffff"
     },
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "idk"
     },
     "android": {
       "adaptiveIcon": {
