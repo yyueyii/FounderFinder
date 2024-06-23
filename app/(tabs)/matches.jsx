@@ -2,19 +2,21 @@ import { View, Text, StyleSheet, Dimensions, FlatList, ScrollView } from 'react-
 import React, {useState, useEffect} from 'react'
 import MatchedProfileDisplay from '../../components/MatchesPage/matched-profile'
 import { SafeAreaView } from 'react-native-safe-area-context';
+import useUserStore from '../store/userStore';
 
 const width = Dimensions.get('window').width;
 
 
 
 const Matches = () => {
+  const userId = useUserStore(state => state.userId);
   const [matches, setMatches] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchMatches = async () => {
       try {
-        const response = await fetch(`http://localhost:5001/matches/6673ea5eb2cc17eca589fb0a`);
+        const response = await fetch(`http://localhost:5001/matches/${userId}`);
         const json = await response.json();
           setMatches(json); 
           console.log("matched profile datan fetched:", matches);

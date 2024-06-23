@@ -200,10 +200,12 @@ const EditProfile = () => {
         <Text style={styles.subheadings}>Profile Picture</Text>
 
         <TouchableOpacity onPress={selectImage} style={styles.pictureContainer}>
-         {profileData.picture ? (
+         {base64Image ? (
           <Image source={{ uri: profileData.picture }} style={styles.picture} />
         ) : ( 
-          <Text style={styles.picturePlaceholder}>Set Profile Picture</Text>
+          <View style={styles.picturePlaceholder}>
+          <Text style={{textAlign:'center'}}>Set Profile Picture</Text>
+          </View>
          )}
 
       {base64Image && (
@@ -444,8 +446,11 @@ const styles = StyleSheet.create({
   },
   picturePlaceholder: {
     borderRadius:5,
-    textAlign:'center',
-    padding:5,
+    justifyContent:'center',
+    alignItems:'center',
+    padding:20,
+    backgroundColor:'lightgray',
+    aspectRatio:1,
   },
   subheadings: {
     fontSize:18, 
