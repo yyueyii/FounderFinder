@@ -1,8 +1,9 @@
 import React, { useState } from 'react'
-import { Alert, Button, Image, Pressable, SafeAreaView, StyleSheet, Switch, Text, TextInput, View } from 'react-native'
+import { Alert, Button, Image, Pressable, KeyboardAvoidingView, SafeAreaView, StyleSheet, Switch, Text, TextInput, View } from 'react-native'
 import 'react-native-gesture-handler'
-import { Link } from 'expo-router';
+import { Link, router } from 'expo-router';
 import axios from 'axios';
+import useUserStore from '../store/userStore';
 
 
 // const facebook = require("../../assets/facebook.png")
@@ -10,7 +11,7 @@ import axios from 'axios';
 // const tiktok = require("../../assets/tiktok.png")
 
 const LoginPage = () => {
-
+  const setUser = useUserStore(state => state.setUserId); 
     const [click,setClick] = useState(false);
     const [email, setEmail] =  useState("");
     const [password,setPassword] =  useState("");
@@ -24,18 +25,20 @@ const LoginPage = () => {
       axios.post("http://localhost:5001/log-in", userData)
       .then(res => {console.log(res.data);
         if (res.data.status == "ok") {
-          
-          alert("Logged in successfully!");
-          Alert.alert("Logged in successfully!");
-          navigation.navigate('/home');
+
+
+          router.replace('/home');
         } else {
           alert("Seems like the wrong email or password");
           alert(JSON.stringify(res.data));
           Alert.alert(JSON.stringify(res.data));
         }
       })
+     
       .catch(e => console.log(e.message));
     }
+
+ 
 
   return (
     <SafeAreaView style={styles.container}>
@@ -98,13 +101,15 @@ const styles = StyleSheet.create({
     textTransform : "uppercase",
     textAlign: "center",
     paddingVertical : 40,
-    color : "#4A0AFF"
+    color : "#4A0AFF",
+    top:-50,
   },
   inputView : {
     gap : 15,
     width : "100%",
     paddingHorizontal : 40,
-    marginBottom  :5
+    marginBottom  :5,
+    top:-50,
   },
   input : {
     height : 50,
@@ -119,14 +124,14 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     alignItems : "center",
     flexDirection : "row",
-    marginBottom : 8
+    marginBottom : 8,
+    top: -50,
   },
   switch :{
     flexDirection : "row",
     gap : 1,
     justifyContent : "center",
     alignItems : "center"
-    
   },
   rememberText : {
     fontSize: 13
@@ -142,7 +147,8 @@ const styles = StyleSheet.create({
     borderWidth  : 1,
     borderRadius : 5,
     alignItems : "center",
-    justifyContent : "center"
+    justifyContent : "center",
+    top:-50,
   },
   buttonText : {
     color : "white"  ,
@@ -174,6 +180,7 @@ const styles = StyleSheet.create({
   footerText : {
     textAlign: "center",
     color : "gray",
+    top:-45,
   },
   signup : {
     color : "#4A0AFF",

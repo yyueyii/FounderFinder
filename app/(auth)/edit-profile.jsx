@@ -1,12 +1,16 @@
-import { View, Text, StyleSheet, TextInput, Dimensions, ScrollView, TouchableOpacity, Button, Platform, Link, Image, FlatListComponent, Alert, ActivityIndicator } from 'react-native'
+import { View, Text, StyleSheet, TextInput, Dimensions, ScrollView, KeyboardAvoidingView, TouchableOpacity, Button, Platform, Link, Image, FlatListComponent, Alert, ActivityIndicator } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import DropDownPicker from 'react-native-dropdown-picker';
 import * as ImagePicker from 'expo-image-picker';
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { useFocusEffect, useLocalSearchParams } from 'expo-router';
+import { useFocusEffect, useLocalSearchParams, router } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import * as FileSystem from 'expo-file-system';
+import useUserStore from '../store/userStore';
+
+
+
 
 
 
@@ -14,6 +18,8 @@ const windowDimensions = Dimensions.get('window');
 const width = windowDimensions.width;
 
 const EditProfile = () => {
+  const userId = useUserStore(state => state.userId);
+
   const params = useLocalSearchParams();
 
   const [profileData, setProfileData] = useState({
@@ -54,7 +60,7 @@ const EditProfile = () => {
 
     const handleUpdateProfile = async () => {
       try {
-        const response = await fetch(`http://localhost:5001/edit-profile/667040d88b96980d46246162`, {
+        const response = await fetch(`http://localhost:5001/edit-profile/${userId}`, {
           method: 'PUT',
           headers: {
             'Content-Type': 'application/json',
@@ -73,16 +79,18 @@ const EditProfile = () => {
             ),
             "sectors": sectors,
             "skills": skills,
+            "published":true,
           }),
         });
-  
+        
         if (!response.ok) {
           throw new Error('Failed to update profile');
         }
         const updatedUser = await response.json();
         console.log('Updated profileData:', updatedUser);
         
-        navigation.navigate('/profile');    
+        
+        router.replace('/profile');    
       } catch (error) {
         console.error('Error updating profile:', error);
         Alert.alert('Error', 'Failed to update profile');
@@ -97,7 +105,7 @@ const EditProfile = () => {
 
   //navigation 
   const handleGoBack = () => {
-    navigation.navigate('/profile');
+     router.replace('/profile');
   };
 
   //profile pic
@@ -114,7 +122,7 @@ const EditProfile = () => {
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
       allowsEditing: true,
       aspect: [1, 1],
-      quality: 0.5,
+      quality: 0.05,
     });
 
     if (!result.canceled) {
@@ -180,7 +188,12 @@ const EditProfile = () => {
 
 
   return (
+    <KeyboardAvoidingView
+      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+      style={{flex:1}}
+    >
     <ScrollView contentContainerStyle={styles.container}> 
+
       <SafeAreaView style={styles.content}>
         <Text style={styles.title}>Edit Profile</Text>
 
@@ -204,7 +217,7 @@ const EditProfile = () => {
 
         <Text style={styles.subheadings}>Name</Text>
         <TextInput
-          style={[styles.input, {marginTop:0, height:30, borderColor:'black'}]}
+          style={[styles.input, {marginTop:0, borderColor:'black'}]}
           value={profileData["name"]}
           placeholder="Name"
           onChangeText={text => setProfileData({...profileData, name:(text)})}
@@ -380,6 +393,8 @@ const EditProfile = () => {
         <View style={styles.empty}></View>
       </SafeAreaView>
     </ScrollView>
+    </KeyboardAvoidingView>
+
     )
   }
 
@@ -417,7 +432,7 @@ const styles = StyleSheet.create({
   pictureContainer: {
     width: width * 0.3,
     height: width * 0.3,
-    backgroundColor: '#e0e0e0',
+    backgroundColor: 'white',
     borderRadius:5,
     alignItems:'center',
     justifyContent:'center',

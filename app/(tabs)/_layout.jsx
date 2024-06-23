@@ -18,6 +18,8 @@ const TabsLayout = () => {
                         <Entypo name="home" size={size} color={color} />
                     ),
                     tabBarActiveTintColor: '#4A0AFF',
+                    tabBarStyle:{paddingTop:10,}
+
                 }}
                 
             />
@@ -28,9 +30,10 @@ const TabsLayout = () => {
                     title:'',
                     headerShown:false,
                     tabBarIcon: ({color, size}) => (
-                        <FontAwesome name="envelope" size={22} color={color}/>
+                        <FontAwesome name="envelope" size={20} color={color}/>
                     ),
                     tabBarActiveTintColor: '#4A0AFF',
+                    tabBarStyle:{paddingTop:10,}
 
                 }}
             />
@@ -43,6 +46,8 @@ const TabsLayout = () => {
                         <MaterialIcons name="handshake" size={28} color={color}/>
                     ),
                     tabBarActiveTintColor: '#4A0AFF',
+                    tabBarStyle:{paddingTop:10,}
+
 
                 }}
             />
@@ -55,6 +60,8 @@ const TabsLayout = () => {
                         <FontAwesome name="user-circle-o" size={22} color={color}/>
                     ),
                                         tabBarActiveTintColor: '#4A0AFF',
+                                        tabBarStyle:{paddingTop:10,}
+
 
                 }}
             />

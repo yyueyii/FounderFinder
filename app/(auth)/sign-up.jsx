@@ -31,7 +31,6 @@ const SignUpPage = () => {
         console.log(res.data.status);
         if (res.data.status == "ok") {
           alert("Registered successfully!");
-          Alert.alert("Registered successfully!");
           // navigation.navigate('Login');
         } else {
           alert(JSON.stringify(res.data));

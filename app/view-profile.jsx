@@ -5,6 +5,7 @@ import { useLocalSearchParams } from 'expo-router'
 import { useNavigation } from '@react-navigation/native';
 const mongoose = require('mongoose'); 
 const { ObjectId } = mongoose.Types;
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 
 const ViewProfile = () => {
@@ -20,7 +21,7 @@ const ViewProfile = () => {
   useEffect(() => {
     const fetchProfileData = async () => {
         try {
-            const response = await fetch(`http://localhost:5001/profile/${id}`); 
+            const response = await fetch(`http://192.168.101.16:5001/profile/${id}`); 
             const json = await response.json();
             setBase64Pic(json["pic"]);
             const imageUri = `data:image/jpeg;base64,${json["pic"]}`; //converts str to URI
@@ -51,7 +52,7 @@ console.log("data fetched: ", profileData);
 
 
   return (
-    <View style={{flex:1}}>
+    <SafeAreaView style={{flex:1}}>
     <ScrollView contentContainerStyle={styles.cardContainer}>
       <ProfileCard profileData={profileData}/>
       <View style={{height:30, backgroundColor:'transparent'}}/>
@@ -61,7 +62,7 @@ console.log("data fetched: ", profileData);
     <TouchableOpacity style={styles.backButton} onPress={() => {navigation.goBack()}}>
       <Text style={{color:'white'}}>Back</Text>
     </TouchableOpacity>
-  </View>
+  </SafeAreaView>
   );
 }
 
@@ -70,11 +71,11 @@ export default ViewProfile
 const styles = StyleSheet.create({
   container: {
     paddingBottom:50,
-    alignItems:'flex-start'
+    alignItems:'flex-start',
+    flex:1
 
   }, 
   cardContainer: {
-    flex:1,
     paddingVertical:20,
     padding:20,
   }, 

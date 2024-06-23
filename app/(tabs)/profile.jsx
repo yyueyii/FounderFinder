@@ -1,10 +1,12 @@
 import { ScrollView, StyleSheet, Text, View, Button, TouchableOpacity, Dimensions, ActivityIndicator} from 'react-native'
 import React, { useState, useEffect } from 'react';
 import { Link } from 'expo-router';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { useNavigation } from '@react-navigation/native';
 import ProfileCard from '../../components/Profile/profile-card';
 import axios from 'axios';
 import * as FileSystem from 'expo-file-system';
+import useUserStore from '../store/userStore';
 
 
                                                                                     
@@ -15,11 +17,14 @@ const Profile = ( ) => {
   const [profileData, setProfileData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [uri, setURI] = useState(null);
+  const userId = useUserStore(state => state.userId);
+
 
   useEffect(() => {
     const fetchProfileData = async () => {
         try {
-            const response = await fetch('http://localhost:5001/profile/667040d88b96980d46246162'); 
+          console.log(userId);
+            const response = await fetch(`http://localhost:5001/profile/${userId}`); 
             const json = await response.json();
              
             const imageUri = `data:image/jpeg;base64,${json["pic"]}`; //converts str to URI
@@ -47,17 +52,13 @@ if (loading) {
 }
 
 
-  const handleEditProfile= () => {
-    console.log('Navigating to EditProfile with profileData:', profileData);
-
-    navigation.navigate('/edit-profile');
-  }
+ 
   
 
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
-      <View style={styles.content}>
+      <SafeAreaView style={styles.content}>
         <Text style={styles.title}>Your Profile</Text>
 
         <ProfileCard profileData={profileData}/> 
@@ -85,7 +86,7 @@ if (loading) {
 
       
         
-      </View>
+      </SafeAreaView>
     </ScrollView>
   );
 };

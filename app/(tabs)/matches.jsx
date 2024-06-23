@@ -1,7 +1,7 @@
-import { View, Text, StyleSheet, Dimensions, FlatList } from 'react-native'
+import { View, Text, StyleSheet, Dimensions, FlatList, ScrollView } from 'react-native'
 import React, {useState, useEffect} from 'react'
-import { ScrollView } from 'react-native-gesture-handler'
 import MatchedProfileDisplay from '../../components/MatchesPage/matched-profile'
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 const width = Dimensions.get('window').width;
 
@@ -30,7 +30,7 @@ const Matches = () => {
   console.log(matches);
 
   return (
-      <View style={styles.container}>
+      <SafeAreaView style={styles.container}>
         <Text style={styles.title}>Successful Matches</Text>
         <View style={{height:20}}/>
         <View style={{height:1, backgroundColor:'#E1E6E8', left: -20, width:'120%'}}/>
@@ -46,7 +46,7 @@ const Matches = () => {
         </View>
         </ScrollView>
 
-      </View>
+      </SafeAreaView>
   )
 }
 

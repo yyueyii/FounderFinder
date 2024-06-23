@@ -72,6 +72,10 @@ app.post("/log-in", async(req, res) => {
 })
 
 
+
+
+app.use(express.json({ limit: '50mb' }));
+app.use(express.urlencoded({ limit: '50mb', extended: true }));
 app.put('/edit-profile/:id', async (req, res) => {
     try {
         const {id} = req.params;
