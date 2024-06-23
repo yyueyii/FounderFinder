@@ -32,7 +32,7 @@ export default ChatPreview;
 
 const styles = StyleSheet.create({
     container: {
-        backgroundColor:'purple',
+        backgroundColor:'white',
         height: 80,
         width: '100%',
     },
@@ -40,11 +40,11 @@ const styles = StyleSheet.create({
       backgroundColor:'white',
       height: 80,
       width: '100%',
-      justifyContent:'flex-start',
+      justifyContent:'center',
     },
     messageContainer:{
         width:'100%',
-        paddingRight:15,
+        paddingRight:100,
         position:'absolute',
         top:98,
     },
@@ -52,7 +52,7 @@ const styles = StyleSheet.create({
         height: 1,
         backgroundColor:'#E1E6E8',
         position:'absolute',
-        width: '100%',
+        width: '130%',
         left: 100,
         top:79,
     },
@@ -74,10 +74,13 @@ const styles = StyleSheet.create({
         height:50,
         width:50,
         backgroundColor:'purple',
-        borderRadius:40,
+        borderRadius:25,
         top:15,
         left:width*0.02,
-    }, 
+        position:'absolute',
+        alignItems:'center',
+        justifyContent:'center',
+    },
     image: {
 
     },

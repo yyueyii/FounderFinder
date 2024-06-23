@@ -20,25 +20,35 @@ const SignUpPage = () => {
     const [verifyPassword, setVerifyPassword] = useState(false);
     const navigation = useNavigation();
 
-    function handleSubmit() {
+    async function handleSubmit() {
       const userData = {
         email,
         password,
+        pic: "https://icon-library.com/images/anonymous-avatar-icon/anonymous-avatar-icon-25.jpg", 
+        name: "",
+        description: "",
+        skills: [],
+        sectors: [],
+        education: "",
       };
-      // "http://192.168.1.5:5001/sign-up"
-      axios.post("http://localhost:5001/sign-up", userData)
-      .then((res) => {console.log(res.data);
+
+      try {
+        const res = await axios.post("http://localhost:5001/sign-up", userData);
+        console.log(res.data);
         console.log(res.data.status);
+        
         if (res.data.status == "ok") {
           alert("Registered successfully!");
           Alert.alert("Registered successfully!");
-          // navigation.navigate('Login');
+          // navigation.navigate('/log-in');
         } else {
           alert(JSON.stringify(res.data));
           Alert.alert(JSON.stringify(res.data));
         }
-      })
-      .catch(e => console.log(e.message));
+      } catch {
+        console.log(error.message);
+      }
+
     }
 
     function handleEmail(e) {

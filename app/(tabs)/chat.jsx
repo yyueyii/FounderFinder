@@ -1,11 +1,11 @@
-import { View, Text, StyleSheet } from 'react-native'
+import { View, Text, StyleSheet, ScrollView } from 'react-native'
 import React from 'react'
 import ChatPreview from '../../components/Chat/chat-preview'
-import { ScrollView } from 'react-native-gesture-handler'
+import { SafeAreaView } from 'react-native-safe-area-context'
 
 const Chat  = () => {
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
       <Text style={styles.title}>Messages</Text>
       <View style={{height:20}}/>
       <View style={{height:1, backgroundColor:'#E1E6E8', left: -20, width:'120%'}}/>
@@ -17,7 +17,7 @@ const Chat  = () => {
            
           </View>
           </ScrollView>
-    </View>
+    </SafeAreaView>
   )
 }
 
@@ -28,7 +28,7 @@ const styles = StyleSheet.create({
   container: {
     flex:1,
     justifyContent: 'flex-start',paddingTop: 30,
-    paddingLeft:0,
+    paddingLeft:20,
     backgroundColor:'white',
   }, 
   title: {

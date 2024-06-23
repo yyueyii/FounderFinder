@@ -1,5 +1,5 @@
 import React, { useState , useEffect} from 'react';
-import { Text, View, ScrollView, TextInput, Button, StyleSheet, TouchableOpacity, Platform, Dimensions, KeyboardAvoidingView } from 'react-native';
+import { Text, View, ScrollView, TextInput,Keyboard, Button, StyleSheet, TouchableOpacity, Platform, Dimensions, KeyboardAvoidingView, Pressable } from 'react-native';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import OtherMessageBubble from '../components/Chat/other-message-bubble';
 import UserMessageBubble from '../components/Chat/user-message-bubble';
@@ -8,10 +8,11 @@ const width = Dimensions.get('window').width;
 const mongoose = require('mongoose'); 
 const { ObjectId } = mongoose.Types;
 import { useNavigation } from '@react-navigation/native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 const ChatRoom = ( ) => {
 
-const [inputHeight, setInputHeight] = useState(40); 
+const [inputHeight, setInputHeight] = useState(30); 
 
 const params = useLocalSearchParams();
 const navigation = useNavigation();
@@ -23,8 +24,10 @@ const handleContentSizeChange = (event) => {
     setInputHeight(event.nativeEvent.contentSize.height);
   };
   return (
-    <KeyboardAvoidingView style={styles.container} behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
-        <TouchableOpacity style={styles.header} onPress={() =>{}}>
+    <KeyboardAvoidingView style={{backgroundColor:'white', flex:1}} behavior={Platform.OS === 'ios' ? 'padding'  : 'height'}>
+      <SafeAreaView style={{backgroundColor:'white', justifyContent:'flex-end', paddingBottom:-36}}>
+
+        <Pressable style={styles.header} onPress={() =>{}}>
         <Link
                 href={{
                     pathname:'/view-profile', 
@@ -34,10 +37,11 @@ const handleContentSizeChange = (event) => {
                   }}
                  style={styles.name}> name
                 </Link>
-            <TouchableOpacity onPress={()=>{navigation.goBack()}}>
-                <Ionicons name="chevron-back-outline" size={30} color="#4A0AFF"style={styles.back}/>            </TouchableOpacity>
+            <Pressable onPress={()=>{navigation.goBack()}}>
+                <Ionicons name="chevron-back-outline" size={30} color="#4A0AFF"style={styles.back}/>   
+            </Pressable>
             <View style={styles.image}/>
-        </TouchableOpacity>
+        </Pressable>
         
 
       <ScrollView contentContainerStyle={styles.messagesContainer}>
@@ -57,6 +61,7 @@ const handleContentSizeChange = (event) => {
         <TextInput   
           style={[styles.input, {height:Math.min(200, inputHeight)}]}
           placeholder="Type your message..."
+          placeholderTextColor={'gray'}
           multiline={true}
           numberOfLines={1}
           onContentSizeChange={handleContentSizeChange}
@@ -65,7 +70,7 @@ const handleContentSizeChange = (event) => {
         <Ionicons name="send" size={18} color="white" style={{left:2}}/>       
          </TouchableOpacity>
       </View>
-
+      </SafeAreaView>
     </KeyboardAvoidingView>
   );
 };
@@ -73,7 +78,8 @@ const handleContentSizeChange = (event) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'flex-start',
+    justifyContent: 'flex-end',
+    backgroundColor:'white'
   },
   header: {
     width:width,
@@ -104,7 +110,7 @@ const styles = StyleSheet.create({
   },
   messagesContainer: {
     flexGrow: 1,
-    padding:0,
+    paddingBottom:5,
     backgroundColor:'white',
 
     
@@ -137,7 +143,9 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: '#ccc',
     borderRadius: 20,
-    padding:10,
+    paddingHorizontal:10,
+    paddingVertical:17,
+    fontSize:15,
   },
   sendButton: {
     height:35, 
@@ -148,6 +156,7 @@ const styles = StyleSheet.create({
     alignItems:'center',
     justifyContent:'center',
     position:'absolute',
+    top:12
 
   }
 });

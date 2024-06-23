@@ -5,7 +5,6 @@ const UserDetailSchema = new mongoose.Schema({
     password: String,
     pic: {
         type: "String",
-        required: true,
         default: "",
       },
       name: {
@@ -51,12 +50,18 @@ const UserDetailSchema = new mongoose.Schema({
         type:"String",
         default:"",
       }, 
+      published: {
+        type:"Boolean",
+        default:false,
+
+      },
       matches: [
         {
             userId: { type:mongoose.Schema.Types.ObjectId, ref: 'UserInfo'},
             matchedAt: { type: Date, default: Date.now }
         }
-    ]
+      ]
+     
 }, 
 {
     timestamps: true,

@@ -21,8 +21,8 @@ const MatchedProfileDisplay = ( { profileData }) => {
                         style={styles.picture}
                 />
                 ) : (
-                    <View style={styles.picture}>
-                        <Ionicons name="person-circle" size={59} color="#b5b5b5" />                   
+                    <View >
+                        <Ionicons name="person-circle" size={59} color="#b5b5b5" style={{}}/>                   
                     </View>
                     )}
            
@@ -70,7 +70,6 @@ const styles = StyleSheet.create({
         width: '100%',
         justifyContent:'center',
         paddingRight:20,
-        paddingRight:20,
     },
     line:{
         height: 1,
@@ -92,7 +91,7 @@ const styles = StyleSheet.create({
     picture: {
         height:50,
         width:50,
-        backgroundColor:'white',
+        backgroundColor:'pink',
         borderRadius:25,
         top:15,
         left:width*0.02,
