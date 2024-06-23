@@ -53,7 +53,7 @@ const ProfileCard = ( {profileData, onSwipeLeft, onSwipeRight}) => {
             ))}
             <Text style={[styles.subheading,{paddingTop:15}]}>Let's Connect If...</Text>
             <Text style={styles.text}> {profileData["LCI"]} </Text>
-            <View style={{height:40}}/>
+            <View style={{height:60}}/>
         </View>
 
     </View>

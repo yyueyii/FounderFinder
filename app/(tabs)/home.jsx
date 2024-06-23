@@ -1,28 +1,68 @@
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity} from 'react-native'
-import React, {useState} from 'react'
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity, ActivityIndicator} from 'react-native'
+import React, {useState, useEffect} from 'react'
 import { LinearGradient } from 'expo-linear-gradient';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
 import ProfileCard from '../../components/Profile/profile-card';
+import useUserStore from '../store/userStore';
+
 
 const Home = () => {
+  const userId = useUserStore(state => state.userId);
 
-  const [profileData, setProfileData] = useState({
-    //picture: //require placeholder
-    name: 'Your Name', 
-    description: 'Harvard Business School Graduate',
-    sectors: ['Finance', 'Susainability', 'Tech', 'Data Science'], 
-    skills: ['Communication', 'Business Analytics', 'ReactNative', 'Python', 'Teamwork','Java', 'C++'], 
-    aboutMe:'abtmeee',
-    education: 
-      [{institution: 'MBA, Harvard University', duration:'2021-2022', 
-          description:'Lorem ipsum ute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.    '},
-        {institution:'BBA', duration:'2017-2020', 
-          description:'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim oe dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidant in culpa qui officia deserunt mollit anim id est laborum.  '}
-      ],
-    workExperience:
-      [{organisation: 'Google', duration:'2020', description:'goooooooooooooooooooogle'}],
-    LCI: 'You are a technical co-founder in the FinTech space looking for a non-technical co-founder to handle all things business. You are a technical co-founder in the FinTech space looking for a non-technical co-founder to handle all things business', 
-  })
+
+  const [profileData, setProfileData] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+
+  useEffect(() => {
+    const fetchProfileData = async () => {
+        try {
+            const response = await fetch('http://localhost:5001/profile/667040d88b96980d46246162'); 
+            const json = await response.json();
+            setProfileData(json); 
+            console.log("profileData:", profileData);
+        } catch (error) {
+            console.error('Error fetching profile data:', error);  
+        } finally {
+          setLoading(false);
+        }
+    };
+
+    fetchProfileData(); 
+}, []); 
+
+if (loading) {
+  return (
+      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+          <ActivityIndicator size="large" color="#0000ff" />
+      </View>
+  );
+}
+
+
+const handleMatchButtonPress = async () => {
+  const fetchProfileData = async () => {
+    try {
+      const response = await fetch(`http://localhost:5001/match/${userId}/667040d88b96980d46246162`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+      const json = await response.json();
+      if (json["matched"]) {
+        console.log("A matched is made");
+        return;
+      }
+      console.log("match status:", json.matched);
+    } catch (error) {
+      console.error('Error fetching profile data:', error);
+    }
+  };
+
+  fetchProfileData();
+};
+
 
   return (
     <View style={{flex:1}}>
@@ -33,7 +73,7 @@ const Home = () => {
 
       </ScrollView>
       
-      <TouchableOpacity style={styles.matchButton}>
+      <TouchableOpacity onPress={handleMatchButtonPress} style={styles.matchButton}>
         <MaterialIcons name="handshake" size={45} color={'#4A0AFF'}/>
       </TouchableOpacity>
     </View>

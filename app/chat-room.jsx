@@ -34,7 +34,7 @@ const handleContentSizeChange = (event) => {
                        id: new ObjectId(params)
                     }
                   }}
-                 style={styles.name}> name
+                 style={styles.name}>MatchedPerson2
                 </Link>
             <Pressable onPress={()=>{navigation.goBack()}}>
                 <Ionicons name="chevron-back-outline" size={30} color="#4A0AFF"style={styles.back}/>   
@@ -45,14 +45,14 @@ const handleContentSizeChange = (event) => {
 
       <ScrollView contentContainerStyle={styles.messagesContainer}>
             {/* //render previous messages */}
-            <OtherMessageBubble  message={'Hi Annabelle'} time={'01:22'}/>
-            <OtherMessageBubble  message={'Long mes ashfskdlhf sk fslfj klsdasdfhjksf ks fhsk hfskdh fskdjh fksdhf skldh  hjkhfskj fksdhf ksdjhf skjdhf ks djk hsjk fhjkash fksjhf ksj jdsk hfjska fhksjdhf kjsdhf ksj njk djksa fnjks fjskj fksda fjksjkajkjsfd'} time={'03:12'}/>
-            <UserMessageBubble message={'hey'} time={'12:23'}/>
-            <UserMessageBubble message={'long message asdhfuis ish ish fshf kshf ksjhfkshf kjshfkjshf kjs kfsa jkshf ksj hfjks fkds fhjksfhkds'} time={'12:23'}/>
-            <UserMessageBubble message={'long message asdhfuis ish ish fshf kshf ksjhfkshf kjshfkjshf kjs kfsa jkshf ksj hfjks fkds fhjksfhkds'} time={'12:23'}/>
-            <OtherMessageBubble  message={'Long mes ashfskdlhf sk fslfj klsdasdfhjksf ks fhsk hfskdh fskdjh fksdhf skldh  hjkhfskj fksdhf ksdjhf skjdhf ks djk hsjk fhjkash fksjhf ksj jdsk hfjska fhksjdhf kjsdhf ksj njk djksa fnjks fjskj fksda fjksjkajkjsfd'} time={'03:12'}/>
-            <OtherMessageBubble  message={'Long mes ashfskdlhf sk fslfj klsdasdfhjksf ks fhsk hfskdh fskdjh fksdhf skldh  hjkhfskj fksdhf ksdjhf skjdhf ks djk hsjk fhjkash fksjhf ksj jdsk hfjska fhksjdhf kjsdhf ksj njk djksa fnjks fjskj fksda fjksjkajkjsfd'} time={'03:12'}/>
-            <OtherMessageBubble  message={'Long mes ashfskdlhf sk fslfj klsdasdfhjksf ks fhsk hfskdh fskdjh fksdhf skldh  hjkhfskj fksdhf ksdjhf skjdhf ks djk hsjk fhjkash fksjhf ksj jdsk hfjska fhksjdhf kjsdhf ksj njk djksa fnjks fjskj fksda fjksjkajkjsfd'} time={'03:12'}/>
+            <UserMessageBubble  message={'That’s a great idea! Financial literacy is so important. I’m currently prototyping an app that uses machine learning to optimize personal finance management. It helps users create budgets, track expenses, and identify saving opportunities.'} time={'03:12'}/>
+
+            <OtherMessageBubble  message={'Wow, that sounds like it could complement my idea really well! We could potentially integrate features from both our apps to offer a comprehensive financial education and management tool.'} time={'03:12'}/>
+            <UserMessageBubble  message={'I love that idea! Combining our projects could definitely create a more robust solution. Would you be interested in discussing this further and maybe brainstorming some more?'} time={'03:12'}/>
+            <OtherMessageBubble  message={'Absolutely! Let’s schedule a meeting to dive deeper into our ideas. I’m excited about the potential collaboration!'} time={'03:12'}/>
+            <UserMessageBubble  message={'Me too! I’ll send you a calendar invite with a few time slots. Looking forward to our meeting!'} time={'03:12'}/>
+            <OtherMessageBubble  message={'Perfect, I’ll keep an eye out for it. Talk soon!'} time={'03:12'}/>
+            <UserMessageBubble  message={'See you, Annabelle!'} time={'03:12'}/>
 
             {/* if next is other person's message, add a gap */}
       </ScrollView>

@@ -446,6 +446,7 @@ const styles = StyleSheet.create({
   },
   picturePlaceholder: {
     borderRadius:5,
+    width:width * 0.3,
     justifyContent:'center',
     alignItems:'center',
     padding:20,

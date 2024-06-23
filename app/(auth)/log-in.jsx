@@ -27,7 +27,6 @@ const LoginPage = () => {
         if (res.data.status == "ok") {
           router.replace('/home');
           return fetchUserId(email);
-          
         } else {
           alert("Seems like the wrong email or password");
           alert(JSON.stringify(res.data));
@@ -40,7 +39,7 @@ const LoginPage = () => {
 
     const fetchUserId = async (email) => {
       try {
-        const response = await axios.get(`http://localhost:5001/getId/${email}`);
+        const response = await axios.get(`http://192.168.101.16:5001/getId/${email}`);
   
         console.log('User ID:', response.data.userId);
         setUser(response.data.userId);

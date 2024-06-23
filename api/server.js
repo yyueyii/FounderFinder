@@ -20,6 +20,7 @@ mongoose.connect(mongoUrl).then(() => {
 })
 
 require('./UserDetails');
+require('./MatchModel');
 
 const User = mongoose.model("UserInfo");
 
@@ -119,7 +120,7 @@ app.get('/profile/:id', async(req, res) => {
     }
 })
 
-
+//get userId
 app.get('/matches/:id', async (req, res) => {
     try {
         const {id} = req.params;
@@ -138,6 +139,49 @@ app.get('/matches/:id', async (req, res) => {
       res.status(500).json({ error: 'Failed to fetch matched profiles' });
     }
   });
+
+
+  //matching, if matching is successful, append userInfo matches arr
+  const Match = mongoose.model("Matches");
+    app.post('/match/:myId/:otherUserId', async (req, res) => {
+        const { myId, otherUserId } = req.params;
+        try {
+            let match = await Match.findOne({
+                  
+                     user1: otherUserId, user2: myId , matched: false
+                    
+            });
+            if (match) {
+                match.matched = true;
+                await match.save();
+                res.status(200).json(match);
+
+                const other = { userId: otherUserId, matchedAt: new Date() };
+                const me = { userId: myId, matchedAt: new Date() };
+
+                await User.findByIdAndUpdate(myId, { $addToSet: { matches: other } });
+                await User.findByIdAndUpdate(otherUserId, { $addToSet: { matches: me } });
+
+
+
+            } else {
+                match = new Match({
+                    user1: myId,
+                    user2: otherUserId,
+                    matched: false
+                });
+                await match.save();
+                res.status(200).json(match);
+            }
+        } catch (error) {
+            console.error('Error creating or updating match:', error);
+            res.status(500).json({ error: 'Internal server error' });
+        }
+    });
+             
+
+    
+
 
 
 
