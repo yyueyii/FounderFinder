@@ -3,6 +3,7 @@ import React, {useState, useEffect} from 'react'
 import MatchedProfileDisplay from '../../components/MatchesPage/matched-profile'
 import { SafeAreaView } from 'react-native-safe-area-context';
 import useUserStore from '../store/userStore';
+import { Link, useNavigation } from 'expo-router';
 
 const width = Dimensions.get('window').width;
 
@@ -12,6 +13,8 @@ const Matches = () => {
   const userId = useUserStore(state => state.userId);
   const [matches, setMatches] = useState([]);
   const [loading, setLoading] = useState(true);
+
+  const navigation = useNavigation();
 
   useEffect(() => {
     const fetchMatches = async () => {

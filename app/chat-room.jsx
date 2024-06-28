@@ -1,4 +1,4 @@
-import React, { useState , useEffect} from 'react';
+import React, { useState , useEffect, useRef } from 'react';
 import { Text, View, ScrollView, TextInput,Keyboard, Button, StyleSheet, TouchableOpacity, Platform, Dimensions, KeyboardAvoidingView, Pressable } from 'react-native';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import OtherMessageBubble from '../components/Chat/other-message-bubble';
@@ -10,12 +10,31 @@ const { ObjectId } = mongoose.Types;
 import { useNavigation } from '@react-navigation/native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
+import { uniqBy } from "lodash";
+import axios from "axios";
+import io from "socket.io-client";
+import useUserStore from './store/userStore';
+import useGetMessages from './hooks/useGetMessages';
+import useSendMessage from './hooks/useSendMessages';
+
 const ChatRoom = ( ) => {
 
+const userId = useUserStore(state => state.userId);
 const [inputHeight, setInputHeight] = useState(30); 
+const [socket, setSocket] = useState(null);
+const [selectedUserId,setSelectedUserId] = useState(null);
+const [messages, setMessages] = useState([]);
+
+const [onlinePeople,setOnlinePeople] = useState({});
+const [offlinePeople,setOfflinePeople] = useState({});
+const [typedMessage, setTypedMessage] = useState('');
+
+const { messages: fetchedMessages, loading: fetchingMessages } = useGetMessages();
+const { sendMessage, loading: sendingMessage } = useSendMessage();
 
 const params = useLocalSearchParams();
 const navigation = useNavigation();
+const msgRef = useRef();
 console.log("userId:", params);
 
 
@@ -23,6 +42,58 @@ console.log("userId:", params);
 const handleContentSizeChange = (event) => {
     setInputHeight(event.nativeEvent.contentSize.height);
   };
+
+  useEffect(() => {
+    const newSocket = io('http://localhost:5001'); 
+    setSocket(newSocket);
+
+    // Event listeners
+    newSocket.on('message', handleMessage);
+    newSocket.on('disconnect', () => {
+      setTimeout(() => {
+        console.log('Oh no it is disconnected. Trying to reconnect.');
+        // Reconnect logic
+        newSocket.connect();
+      }, 1000);
+  });
+
+  return () => newSocket.disconnect(); // Cleanup on component unmount
+  }, [selectedUserId]);
+
+  function showOnlinePeople(peopleArray) {
+    const people = {};
+    peopleArray.forEach(({userId,username}) => {
+      people[userId] = username;
+    });
+    setOnlinePeople(people);
+  }
+
+  // Function to handle messages from the server
+  function handleMessage(data) {
+    console.log('Received message:', data);
+    // Handle different types of messages (online status, text messages, etc.)
+    if ('online' in data) {
+      showOnlinePeople(data.online);
+    } else if ('text' in data) {
+      if (data.sender === selectedUserId) {
+        setMessages(prev => ([...prev, {...data}]));
+      }
+    }
+  }
+
+  const handleSendMessage = (message) => {
+    sendMessage(message);
+    setTypedMessage('');
+  };
+
+  useEffect(() => {
+    const div = msgRef.current;
+    if (div) {
+      div.scrollIntoView({behavior:'smooth', block:'end'});
+    }
+  }, [messages]);
+
+
   return (
     <KeyboardAvoidingView style={{backgroundColor:'white', flex:1}} behavior={Platform.OS === 'ios' ? 'padding'  : 'height'}>
 
@@ -45,14 +116,14 @@ const handleContentSizeChange = (event) => {
 
       <ScrollView contentContainerStyle={styles.messagesContainer}>
             {/* //render previous messages */}
-            <OtherMessageBubble  message={'Hi Annabelle'} time={'01:22'}/>
+            {/* <OtherMessageBubble  message={'Hi Annabelle'} time={'01:22'}/>
             <OtherMessageBubble  message={'Long mes ashfskdlhf sk fslfj klsdasdfhjksf ks fhsk hfskdh fskdjh fksdhf skldh  hjkhfskj fksdhf ksdjhf skjdhf ks djk hsjk fhjkash fksjhf ksj jdsk hfjska fhksjdhf kjsdhf ksj njk djksa fnjks fjskj fksda fjksjkajkjsfd'} time={'03:12'}/>
             <UserMessageBubble message={'hey'} time={'12:23'}/>
             <UserMessageBubble message={'long message asdhfuis ish ish fshf kshf ksjhfkshf kjshfkjshf kjs kfsa jkshf ksj hfjks fkds fhjksfhkds'} time={'12:23'}/>
             <UserMessageBubble message={'long message asdhfuis ish ish fshf kshf ksjhfkshf kjshfkjshf kjs kfsa jkshf ksj hfjks fkds fhjksfhkds'} time={'12:23'}/>
             <OtherMessageBubble  message={'Long mes ashfskdlhf sk fslfj klsdasdfhjksf ks fhsk hfskdh fskdjh fksdhf skldh  hjkhfskj fksdhf ksdjhf skjdhf ks djk hsjk fhjkash fksjhf ksj jdsk hfjska fhksjdhf kjsdhf ksj njk djksa fnjks fjskj fksda fjksjkajkjsfd'} time={'03:12'}/>
             <OtherMessageBubble  message={'Long mes ashfskdlhf sk fslfj klsdasdfhjksf ks fhsk hfskdh fskdjh fksdhf skldh  hjkhfskj fksdhf ksdjhf skjdhf ks djk hsjk fhjkash fksjhf ksj jdsk hfjska fhksjdhf kjsdhf ksj njk djksa fnjks fjskj fksda fjksjkajkjsfd'} time={'03:12'}/>
-            <OtherMessageBubble  message={'Long mes ashfskdlhf sk fslfj klsdasdfhjksf ks fhsk hfskdh fskdjh fksdhf skldh  hjkhfskj fksdhf ksdjhf skjdhf ks djk hsjk fhjkash fksjhf ksj jdsk hfjska fhksjdhf kjsdhf ksj njk djksa fnjks fjskj fksda fjksjkajkjsfd'} time={'03:12'}/>
+            <OtherMessageBubble  message={'Long mes ashfskdlhf sk fslfj klsdasdfhjksf ks fhsk hfskdh fskdjh fksdhf skldh  hjkhfskj fksdhf ksdjhf skjdhf ks djk hsjk fhjkash fksjhf ksj jdsk hfjska fhksjdhf kjsdhf ksj njk djksa fnjks fjskj fksda fjksjkajkjsfd'} time={'03:12'}/> */}
 
             {/* if next is other person's message, add a gap */}
       </ScrollView>
@@ -67,7 +138,7 @@ const handleContentSizeChange = (event) => {
           numberOfLines={1}
           onContentSizeChange={handleContentSizeChange}
         />
-        <TouchableOpacity style={styles.sendButton} onPress={() => {}}>
+        <TouchableOpacity style={styles.sendButton} onPress={() => handleSendMessage(typedMessage)}>
         <Ionicons name="send" size={18} color="white" style={{left:2}}/>       
          </TouchableOpacity>
       </View>

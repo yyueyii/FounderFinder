@@ -2,6 +2,7 @@ import React from 'react';
 import { View, Text, Image, TouchableOpacity, StyleSheet, Dimensions } from 'react-native';
 import {Link} from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
+import useGetConversations from '../../app/hooks/useGetConversation';
 const width = Dimensions.get('window').width;
 
 
@@ -11,6 +12,7 @@ const MatchedProfileDisplay = ( { profileData }) => {
     console.log("Received data: ", profileData);
     const userId = profileData["_id"];
     console.log("UserID: ", profileData["_id"])
+    const { loading, conversations } = useGetConversations();
 
     return (
         <View style={styles.container}>
