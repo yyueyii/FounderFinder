@@ -3,6 +3,7 @@ const mongoose = require("mongoose");
 const cors = require("cors"); // Import the cors package
 const app = express();
 const port = 5001;
+const path = require("path");
 
 
 app.use(express.json());
@@ -140,9 +141,13 @@ app.get('/matches/:id', async (req, res) => {
   });
 
 
+const deployment = path.resolve();
 
+app.use(express.static(path.join(deployment, "/app/dist")));
 
-
+app.get("*", (res, req) => {
+    res.sendFile(path.join(deployment, "app", "dist", "index.html"));
+});
 
 
 app.listen(port, () => {
