@@ -1,5 +1,0 @@
-# Enable rewriting engine
-RewriteEngine On
-
-# Set default handler to serve as application/javascript
-AddType application/javascript .jsx
