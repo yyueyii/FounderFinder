@@ -1,0 +1,13 @@
+{
+  "scripts": {
+  "start": "expo start",
+  "android": "expo start --android",
+  "ios": "expo start --ios",
+  "web": "expo start --web",
+  "build": "expo build",
+  "lint": "eslint . --ext js,jsx --report-unused-disable-directives --max-warnings 0"
+},
+  "dependencies": {
+    "founderfinder": "file:.."
+  }
+}
