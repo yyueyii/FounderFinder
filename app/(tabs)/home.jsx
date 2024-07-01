@@ -1,27 +1,34 @@
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity, ActivityIndicator} from 'react-native'
+import { View, Text, StyleSheet, ScrollView, ActivityIndicator, PanResponder, TouchableOpacity} from 'react-native'
 import React, {useState, useEffect} from 'react'
 import { LinearGradient } from 'expo-linear-gradient';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
+import { FlatList, GestureHandlerRootView} from 'react-native-gesture-handler'
 import ProfileCard from '../../components/Profile/profile-card';
 import useUserStore from '../store/userStore';
+import MatchedPopUp from '../successful-match';
+import { Ionicons } from '@expo/vector-icons';
+
 
 
 const Home = () => {
-  const userId = useUserStore(state => state.userId);
+  const userId = useUserStore((state) => state.userId);
 
-
-  const [profileData, setProfileData] = useState(null);
+  const [profiles, setProfiles] = useState([]);
+  const [currentIndex, setCurrentIndex] = useState(0);
   const [loading, setLoading] = useState(true);
+  const [isMatched, setIsMatched] = useState(false);
+  const [notifs, setNotifs] = useState([]);
 
 
   useEffect(() => {
+    console.log("set userId on Home: ", userId);
     const fetchProfileData = async () => {
-        try {
-            const response = await fetch('http://localhost:5001/profile/667040d88b96980d46246162'); 
+      try {
+            const response = await fetch(`http://192.168.0.100:5001/getProfiles`); 
             const json = await response.json();
-            setProfileData(json); 
-            console.log("profileData:", profileData);
-        } catch (error) {
+            setProfiles(json);
+        
+      } catch (error) {
             console.error('Error fetching profile data:', error);  
         } finally {
           setLoading(false);
@@ -29,7 +36,29 @@ const Home = () => {
     };
 
     fetchProfileData(); 
-}, []); 
+},[userId]);
+
+useEffect(() => {
+  if (userId) { 
+    fetchNotifs = async() => {
+      const notifResponse = await fetch(`http://192.168.0.100:5001/getNotification/${userId}`);
+      const notifjson = await notifResponse.json();
+      setNotifs(notifjson);
+    }
+
+    fetchNotifs();
+  }
+}, [profiles]);
+
+useEffect(() => {
+  console.log("profiles: ", profiles);
+}, [profiles]);
+
+useEffect(() => {
+  console.log("notifications: ", notifs);
+}, [notifs]);
+
+
 
 if (loading) {
   return (
@@ -40,19 +69,22 @@ if (loading) {
 }
 
 
-const handleMatchButtonPress = async () => {
+const handleMatchButtonPress = async (id) => {
   const fetchProfileData = async () => {
     try {
-      const response = await fetch(`http://localhost:5001/match/${userId}/667040d88b96980d46246162`, {
-        method: 'POST',
+      const response = await fetch(`http://192.168.0.100:5001/match/${userId}/${id}`, {
+        method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',
         },
       });
       const json = await response.json();
       if (json["matched"]) {
+        setIsMatched(true);
+        console.log(json);
         console.log("A matched is made");
-        return;
+        
+        // return handleMatchMade;
       }
       console.log("match status:", json.matched);
     } catch (error) {
@@ -64,18 +96,56 @@ const handleMatchButtonPress = async () => {
 };
 
 
+
+const handleNextProfile = () => {
+  if (currentIndex < profiles.length - 1) {
+    setCurrentIndex(currentIndex + 1);
+  } if (currentIndex == profiles.length - 1) {
+    setCurrentIndex(0);
+  }
+};
+
+
+
+
+const handleNotifPress = () => {
+  setNotifs(notifs.slice(1));
+};
+
   return (
     <View style={{flex:1}}>
       <LinearGradient colors={['#4A0AFF', '#5869ED', '#43B0FF']} style={styles.linearGradient}/>
-      <ScrollView contentContainerStyle={styles.cardContainer}>
-        <ProfileCard profileData={profileData}/>
+      
+      <ScrollView contentContainerStyle={styles.cardContainer} showsVerticalScrollIndicator={false}>
+        <ProfileCard profileData={profiles[currentIndex]}/>
         <View style={{height:30, backgroundColor:'transparent'}}/>
 
       </ScrollView>
       
-      <TouchableOpacity onPress={handleMatchButtonPress} style={styles.matchButton}>
+      <TouchableOpacity style={styles.matchButton} onPress={() =>{handleMatchButtonPress(profiles[currentIndex]["_id"]); handleNextProfile();}}>
         <MaterialIcons name="handshake" size={45} color={'#4A0AFF'}/>
       </TouchableOpacity>
+
+      <TouchableOpacity style={styles.nextButton} onPress={() => {handleNextProfile();}}>
+        <Ionicons name="close" size={45} color={'#4A0AFF'}/>
+      </TouchableOpacity>
+
+      {notifs.length != 0 && (
+        <FlatList
+          data={notifs}
+          renderItem={({ item }) => (
+              <TouchableOpacity onPress={handleNotifPress}>
+                  <MatchedPopUp profileData={item.user2} />
+              </TouchableOpacity>
+
+        )}
+        keyExtractor={(item) => item.user2._id.toString()}
+      />
+      )}
+      
+     
+
+      {isMatched && <MatchedPopUp onLater={() => setIsMatched(false)} profileData={profiles[currentIndex - 1]} />}
     </View>
 
    
@@ -84,7 +154,10 @@ const handleMatchButtonPress = async () => {
 
 export default Home
 
-const styles = StyleSheet.create({
+const styles = StyleSheet.create({  
+  contentContainer: {
+    paddingHorizontal: 16, 
+  },
   linearGradient: {
     width:'100%', 
     height:300,
@@ -123,6 +196,24 @@ const styles = StyleSheet.create({
     aspectRatio:1,
     backgroundColor:'gray', 
     borderRadius:25,
+    
+  }, 
+  nextButton: {
+    height:70,
+    width:70,
+    borderRadius:70/2,
+    backgroundColor:'white',
+    justifyContent:'center',
+    alignItems:'center',
+    shadowColor:'#000',
+    shadowOpacity: 0.5,
+    shadowOffset: { width: 0, height: 3 },
+    shadowRadius: 4,
+    position:'absolute',
+    right:20,
+    bottom:120,
+
+
   }
   
 })

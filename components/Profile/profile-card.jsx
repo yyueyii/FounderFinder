@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, FlatList, Image } from 'react-native'
+import { View, Text, StyleSheet, FlatList, Image, Dimensions} from 'react-native'
 import React from 'react'
 import EducationBadge from './education-badge'
 import SkillBubble from './skill-bubble'
@@ -14,6 +14,7 @@ const ProfileCard = ( {profileData, onSwipeLeft, onSwipeRight}) => {
         <Image
           source={{ uri: `data:image/jpeg;base64,${profileData["pic"]}` }}
           style={styles.image}
+          resizeMode="cover"
         />
       ) : (
         <View style={styles.image}>
@@ -53,7 +54,7 @@ const ProfileCard = ( {profileData, onSwipeLeft, onSwipeRight}) => {
             ))}
             <Text style={[styles.subheading,{paddingTop:15}]}>Let's Connect If...</Text>
             <Text style={styles.text}> {profileData["LCI"]} </Text>
-            <View style={{height:60}}/>
+            <View style={{height:120}}/>
         </View>
 
     </View>

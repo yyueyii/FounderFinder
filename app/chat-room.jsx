@@ -34,7 +34,7 @@ const handleContentSizeChange = (event) => {
                        id: new ObjectId(params)
                     }
                   }}
-                 style={styles.name}>MatchedPerson2
+                 style={styles.name}>Annabelle Faber
                 </Link>
             <Pressable onPress={()=>{navigation.goBack()}}>
                 <Ionicons name="chevron-back-outline" size={30} color="#4A0AFF"style={styles.back}/>   

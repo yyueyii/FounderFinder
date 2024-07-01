@@ -22,7 +22,7 @@ const LoginPage = () => {
         password,
       };
 
-      axios.post("http://localhost:5001/log-in", userData)
+      axios.post("http://192.168.0.100:5001/log-in", userData)
       .then(res => {console.log(res.data);
         if (res.data.status == "ok") {
           router.replace('/home');
@@ -39,7 +39,7 @@ const LoginPage = () => {
 
     const fetchUserId = async (email) => {
       try {
-        const response = await axios.get(`http://192.168.101.16:5001/getId/${email}`);
+        const response = await axios.get(`http://192.168.0.100:5001/getId/${email}`);
   
         console.log('User ID:', response.data.userId);
         setUser(response.data.userId);

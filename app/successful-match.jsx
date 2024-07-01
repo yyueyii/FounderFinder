@@ -1,33 +1,71 @@
-import React from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, Modal, Dimensions } from 'react-native';
+import React, {useState} from 'react';
+import { View, Text, TouchableOpacity, StyleSheet, Modal, Dimensions, Image } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
+import useUserStore from './store/userStore';
+import { Ionicons } from '@expo/vector-icons';
 
 const width = Dimensions.get('window').width;
 const height = Dimensions.get('window').height;
 
 
-const MatchedPopUp = ({ name, image, visible, onLater, onMessage }) => {
+const MatchedPopUp = ({  visible, onLater, onMessage, profileData}) => {
+  const userId = useUserStore(state => state.userId); //my userId
+  const [isVisible, setIsVisible] = useState(true);
+
   const navigation = useNavigation();
+
+  const handleLater = async() => {
+    const updateNotif = async () => {
+      try {
+        const response = await fetch(`http://192.168.0.100:5001/updateNotification/${userId}/${profileData["_id"]}`, {
+          method: 'PATCH',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        });
+        const json = await response.json();
+        
+          console.log(json);
+          console.log("notif status updated");
+          
+          // return handleMatchMade;
+      } catch (error) {
+        console.error('Error fetching profile data:', error);
+      }
+    };
+  
+    updateNotif();
+  }
+
+
 
   return (
     <Modal
       transparent={true}
       animationType="slide"
-      visible={visible}
-      onRequestClose={onLater}
+      visible={isVisible}
+      onRequestClose={() => {}}
     >
       <View style={styles.modalBackground}>
         <View style={styles.modalContainer}>
 
           <Text style={styles.messageText}>You matched with</Text>
 
-          <Text style={[styles.messageText, {fontSize: 24}]}>Annabelle Farber</Text>
+          <Text style={[styles.messageText, {fontSize: 24}]}> {profileData["name"]}</Text>
 
-          {/* temp image */}
-          <View style={styles.image}></View>
+          {profileData["pic"] ? (
+                <Image
+                    source={{ uri: `data:image/jpeg;base64,${profileData["pic"]}` }}
+                        style={styles.image}
+                />
+                ) : (
+                    <View style={styles.image}>
+                        <Ionicons name="person-circle" size={90} color="#b5b5b5" />                   
+                    </View>
+                    )}
 
           <View style={{flexDirection:'row'}}>
-          <TouchableOpacity onPress={()=>{navigation.goBack()}} style={styles.laterButton}>
+          <TouchableOpacity onPress={() => {setIsVisible(false); handleLater();}} style={styles.laterButton}>
             <Text style={[styles.buttonText, {color:'#4A0AFF'}]}>Later</Text>
           </TouchableOpacity>
           
@@ -59,15 +97,17 @@ const styles = StyleSheet.create({
   image: {
     width:height*0.4*0.4, 
     aspectRatio:1,    
-    backgroundColor:'gray', 
+    backgroundColor:'lightgray', 
     margin:10, 
-    marginVertical:30,
+    marginVertical:20,
     borderRadius:10,
+    justifyContent:'center',
+    alignItems:'center',
   },
   messageText: {
     fontSize: 20,
     fontWeight:'bold',
-    lineHeight:28,
+    lineHeight:35,
   },
   laterButton: {
     backgroundColor: 'white',

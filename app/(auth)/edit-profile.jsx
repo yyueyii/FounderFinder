@@ -45,6 +45,10 @@ const EditProfile = () => {
     {label: 'Finance', value: 'Finance'},
     {label: 'Semiconductors', value: 'Semiconductor'},
     {label: 'Sustainability', value: 'Sustainability'},
+    {label: 'Clean Energy', value: 'Clean Energy'},
+    {label: 'Healthcare', value: 'Healthcare'},
+    {label: 'Education', value: 'Education'},
+    {label: 'Non-profit', value: 'Non-profit'},
 
   ]);
 
@@ -54,6 +58,13 @@ const EditProfile = () => {
     { label: 'React Native', value: 'React Native' },
     { label: 'Data Analytics', value: 'Data Analytics' },
     { label: 'Software Development', value: 'Software Development' },
+    { label: 'Project Management', value: 'Project Management' },
+    { label: 'Business Development', value: 'Business Development' },
+    { label: 'Curriculum Development', value: 'Curriculum Development' },
+
+
+
+    
   ]);
   
 

@@ -33,7 +33,7 @@ const SignUpPage = () => {
       };
 
       try {
-        const res = await axios.post("http://localhost:5001/sign-up", userData);
+        const res = await axios.post("http://192.168.0.100:5001/sign-up", userData);
         console.log(res.data);
         console.log(res.data.status);
         

@@ -11,10 +11,10 @@ const Chat  = () => {
       <View style={{height:1, backgroundColor:'#E1E6E8', left: -20, width:'120%'}}/>
         <ScrollView contentContainerStyle={styles.scroll}>
           <View >
-          <ChatPreview/>
-          <ChatPreview/>
-          <ChatPreview/>
-           
+          <ChatPreview />
+
+          <ChatPreview />
+          <ChatPreview />
           </View>
           </ScrollView>
     </SafeAreaView>

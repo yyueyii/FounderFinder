@@ -13,7 +13,7 @@ const ViewProfile = () => {
   const [loading, setLoading] = useState(true);
   const [base64Pic, setBase64Pic] = useState(null);
   const navigation = useNavigation();
-  const params = useLocalSearchParams();
+  const params = useLocalSearchParams();  
   console.log("userId: ", params);
   const id = new ObjectId(params)
 
@@ -21,7 +21,7 @@ const ViewProfile = () => {
   useEffect(() => {
     const fetchProfileData = async () => {
         try {
-            const response = await fetch(`http://192.168.101.16:5001/profile/${id}`); 
+            const response = await fetch(`http://192.168.0.100:5001/profile/${id}`); 
             const json = await response.json();
             setBase64Pic(json["pic"]);
             const imageUri = `data:image/jpeg;base64,${json["pic"]}`; //converts str to URI

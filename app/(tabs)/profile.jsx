@@ -24,7 +24,7 @@ const Profile = ( ) => {
     const fetchProfileData = async () => {
         try {
           console.log(userId);
-            const response = await fetch(`http://localhost:5001/profile/${userId}`); 
+            const response = await fetch(`http://192.168.0.100:5001/profile/${userId}`); 
             const json = await response.json();
              
             const imageUri = `data:image/jpeg;base64,${json["pic"]}`; //converts str to URI
@@ -50,6 +50,35 @@ if (loading) {
       </View>
   );
 }
+
+const handleUnpublish = async() => {
+  try {
+    const response = await fetch(`http://192.168.0.100:5001/edit-profile/${userId}`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        "published" : false
+      }),
+    });
+    
+    if (!response.ok) {
+      throw new Error('Failed to update profile');
+    }
+    const updatedUser = await response.json();
+    console.log('Updated profileData:', updatedUser);
+    
+    
+    router.replace('/profile');    
+  } catch (error) {
+    console.error('Error updating profile:', error);
+    
+  }
+};
+
+
+
 
 
  
@@ -82,6 +111,10 @@ if (loading) {
               }
                 
             }} style={{color:'white'}}>Edit Profile</Link>
+        </TouchableOpacity>
+
+        <TouchableOpacity style = {styles.unpublishButton} onPress={handleUnpublish}>
+          <Text style={{color:'#4A0AFF'}}>Unpublish</Text>
         </TouchableOpacity>
 
       
@@ -127,6 +160,8 @@ const styles = StyleSheet.create({
   }, 
   blankProfilePicture: {
     backgroundColor: '#D9D9D9',
+    width:'90%',
+    aspectRatio:1
   },
   name: {
     fontSize:24,
@@ -171,6 +206,20 @@ const styles = StyleSheet.create({
     left:0,
     marginBottom:50,
     
+  },
+  unpublishButton: {
+    backgroundColor: 'transparent',
+    borderColor:'#4A0AFF',
+    borderWidth:1.5,
+    width: 100,
+    borderRadius:10,
+    height: 35,
+    alignItems:'center',
+    justifyContent:'center',
+    marginBottom:0,
+    marginTop:-85,
+    left: width - 150,
+    marginBottom:50,
   },
   buttonText: {
     color: 'white',

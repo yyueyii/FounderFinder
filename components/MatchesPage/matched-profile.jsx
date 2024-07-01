@@ -9,15 +9,15 @@ const width = Dimensions.get('window').width;
 const MatchedProfileDisplay = ( { profileData }) => {
     
     console.log("Received data: ", profileData);
-    const userId = profileData["_id"];
+    const userId = profileData["otherUser"]["_id"];
     console.log("UserID: ", profileData["_id"])
 
     return (
         <View style={styles.container}>
 
-            {profileData["pic"] ? (
+            {profileData["otherUser"]["pic"] ? (
                 <Image
-                    source={{ uri: `data:image/jpeg;base64,${profileData["pic"]}` }}
+                    source={{ uri: `data:image/jpeg;base64,${profileData["otherUser"]["pic"]}` }}
                         style={styles.picture}
                 />
                 ) : (
@@ -27,7 +27,7 @@ const MatchedProfileDisplay = ( { profileData }) => {
                     )}
            
             
-            <Text style={styles.name}>{profileData["name"]}</Text>
+            <Text style={styles.name}>{profileData["otherUser"].name}</Text>
 
             <TouchableOpacity onPress={() =>{}} style={styles.messageButton}>
             <Link

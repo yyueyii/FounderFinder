@@ -1,5 +1,5 @@
 
-import create from 'zustand';
+import {create} from 'zustand';
 
 const useUserStore = create((set) => ({
   userId: null, // Initial state
