@@ -15,35 +15,60 @@ const SignUpPage = () => {
 
   const [register, setRegister] = useState(false);
     const [email, setEmail] =  useState("");
+    const [verifyEmail, setVerifyEmail] = useState(false);
     const [password,setPassword] =  useState("");
+    const [verifyPassword, setVerifyPassword] = useState(false);
     const navigation = useNavigation();
 
-    function handleSubmit() {
+    async function handleSubmit() {
       const userData = {
         email,
         password,
+        pic: "https://icon-library.com/images/anonymous-avatar-icon/anonymous-avatar-icon-25.jpg", 
+        name: "",
+        description: "",
+        skills: [],
+        sectors: [],
+        education: "",
       };
-      axios.post("http://192.168.1.5:5001/sign-up", userData)
-      .then((res) => {console.log(res.data);
+
+      try {
+        const res = await axios.post("http://192.168.1.3:5001/sign-up", userData);
+        console.log(res.data);
         console.log(res.data.status);
+        
         if (res.data.status == "ok") {
           alert("Registered successfully!");
           Alert.alert("Registered successfully!");
-          // navigation.navigate('Login');
+          // navigation.navigate('/log-in');
         } else {
           alert(JSON.stringify(res.data));
           Alert.alert(JSON.stringify(res.data));
         }
-      })
-      .catch(e => console.log(e.message));
+      } catch {
+        console.log(error.message);
+      }
+
     }
 
     function handleEmail(e) {
+      var emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
       setEmail(e);
+      if (emailRegex.test(e)) {
+        setVerifyEmail(true);
+      } else {
+        setVerifyEmail(false);
+      }
     }
 
     function handlePassword(e) {
+      var passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d!@#$%^&*()_+}{":?><`~';,.=-]{8,}$/;
       setPassword(e);
+      if (passwordRegex.test(e)) {
+        setVerifyPassword(true);
+      } else {
+        setVerifyPassword(false);
+      }
     }
 
   return (
@@ -53,14 +78,16 @@ const SignUpPage = () => {
         <View style={styles.inputView}>
             <TextInput style={styles.input} placeholder='Email' value={email} onChangeText={e => handleEmail(e)} autoCorrect={false}
         autoCapitalize='none' />
+        {verifyEmail ? <Text style={styles.forgetText}>This is alright!</Text> : <Text style={styles.forgetText1}>This is not a valid email address :(</Text>}
             <TextInput style={styles.input} placeholder='Password' secureTextEntry value={password} onChangeText={e => handlePassword(e)} autoCorrect={false}
         autoCapitalize='none'/>
+        {verifyPassword ? <Text style={styles.forgetText}>This is alright!</Text> : <Text style={styles.forgetText1}>Password must contain at least 8 characters, 1 upper case letter, 1 lower case letter, a digit and a special character</Text>}
           {/* <TextInput style={styles.input} placeholder='Confirm Password' secureTextEntry value={password} onChange={e => handlePassword(e)} autoCorrect={false}
         autoCapitalize='none'/> */}
         </View>
 
         <View style={styles.buttonView}>
-        <Pressable style={styles.button} onPress={() => handleSubmit()}>
+        <Pressable style={[styles.button, (!verifyEmail || !verifyPassword) && styles.disabledButton]} onPress={() => handleSubmit()} disabled={!verifyEmail || !verifyPassword}>
               <Text style={styles.buttonText}>Register</Text>
           </Pressable>
         </View>
@@ -131,6 +158,9 @@ const styles = StyleSheet.create({
     fontSize : 11,
     color : "#4A0AFF"
   },
+  forgetText1 : {
+    fontSize : 11
+  },
   button : {
     backgroundColor : "#4A0AFF",
     height : 45,
@@ -139,6 +169,10 @@ const styles = StyleSheet.create({
     borderRadius : 5,
     alignItems : "center",
     justifyContent : "center"
+  },
+  disabledButton: {
+    backgroundColor: 'gray',
+    opacity: 0.6,
   },
   buttonText : {
     color : "white"  ,

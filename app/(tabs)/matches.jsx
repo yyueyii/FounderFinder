@@ -1,30 +1,58 @@
-import { View, Text, StyleSheet, Dimensions } from 'react-native'
-import React from 'react'
-import { ScrollView } from 'react-native-gesture-handler'
-import MatchedProfileDisplay from '../../components/MatchesPage/matched-profile'
+import { View, Text, StyleSheet, Dimensions, FlatList, ScrollView } from 'react-native'
+import React, {useState, useEffect} from 'react'
+import MatchedProfileDisplay from '../../components/MatchesPage/MatchesPage/matched-profile';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import useUserStore from '../store/userStore';
 
 const width = Dimensions.get('window').width;
 
 
-const Matches = () => {
-  return (
-    <ScrollView contentContainerStyle={{backgroundColor:'white'}}>
-      <View style={styles.container}>
-        <Text style={styles.title}>Successful Matches</Text>
-        <View style={{height:50, backgroundColor:'lightblue', alignItems:'center'}}>
-          <Text> insert search bar </Text>
-        </View>
-        <View style={{height:1, left:100, width: width, backgroundColor:'purple'}}></View>
-        <MatchedProfileDisplay/>
-        <MatchedProfileDisplay/>
 
-      <View style={styles.empty}></View>
-      </View>
-    </ScrollView>
+const Matches = () => {
+  const userId = useUserStore(state => state.userId);
+  const [matches, setMatches] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchMatches = async () => {
+      try {
+        const response = await fetch(`http://192.168.1.3:5001/successfulMatches/${userId}`);
+        const json = await response.json();
+          setMatches(json); 
+          console.log("matched profile datan fetched:", matches);
+      } catch (error) {
+        console.error('Error fetching matches:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchMatches();
+  }, []);
+  console.log(matches);
+
+  return (
+      <SafeAreaView style={styles.container}>
+        <Text style={styles.title}>Successful Matches</Text>
+        <View style={{height:20}}/>
+        <View style={{height:1, backgroundColor:'#E1E6E8', left: -20, width:'120%'}}/>
+
+        <ScrollView contentContainerStyle={{flexGrow:1}}>
+          <View>
+          <FlatList
+          data={matches}
+          renderItem={({ item }) => <MatchedProfileDisplay profileData={item} />}
+          keyExtractor={(item) => item._id.toString()}
+        />
+        
+        </View>
+        </ScrollView>
+
+      </SafeAreaView>
   )
 }
 
-export default Matches
+export default Matches;
 
 const styles = StyleSheet.create({
   container: {
@@ -32,7 +60,6 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-start',
     paddingTop: 30,
     paddingLeft: 20,
-    paddingRight:20,
     backgroundColor:'white',
   },
   title: {
@@ -43,6 +70,7 @@ const styles = StyleSheet.create({
   },
   empty: {
     height:100,
-  }
+  }, 
+  
 
 })

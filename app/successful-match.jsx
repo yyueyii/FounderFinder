@@ -1,35 +1,78 @@
-import React from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, Modal, Dimensions } from 'react-native';
+import React, {useState} from 'react';
+import { View, Text, TouchableOpacity, StyleSheet, Modal, Dimensions, Image } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
+import useUserStore from './store/userStore';
+import { Ionicons } from '@expo/vector-icons';
 
 const width = Dimensions.get('window').width;
 const height = Dimensions.get('window').height;
 
 
-const MatchedPopUp = ({ name, image, visible, onLater, onMessage }) => {
+const MatchedPopUp = ({  visible, onLater, onMessage, profileData}) => {
+  const userId = useUserStore(state => state.userId); //my userId
+  const [isVisible, setIsVisible] = useState(true);
+
+  const navigation = useNavigation();
+
+  const handleLater = async() => {
+    const updateNotif = async () => {
+      try {
+        const response = await fetch(`http://192.168.0.100:5001/updateNotification/${userId}/${profileData["_id"]}`, {
+          method: 'PATCH',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        });
+        const json = await response.json();
+        
+          console.log(json);
+          console.log("notif status updated");
+          
+          // return handleMatchMade;
+      } catch (error) {
+        console.error('Error fetching profile data:', error);
+      }
+    };
+  
+    updateNotif();
+  }
+
+
+
   return (
     <Modal
       transparent={true}
       animationType="slide"
-      visible={visible}
-      onRequestClose={onLater}
+      visible={isVisible}
+      onRequestClose={() => {}}
     >
       <View style={styles.modalBackground}>
         <View style={styles.modalContainer}>
 
           <Text style={styles.messageText}>You matched with</Text>
 
-          <Text style={[styles.messageText, {fontSize: 24}]}>Annabelle Farber</Text>
+          <Text style={[styles.messageText, {fontSize: 24}]}> {profileData["name"]}</Text>
 
-          {/* temp image */}
-          <View style={{width:styles.modalContainer.height*0.5, height:styles.modalContainer.height*0.5, backgroundColor:'gray', margin:10, marginBotton:30}}></View>
-          
-          <TouchableOpacity onPress={onLater} style={styles.laterButton}>
+          {profileData["pic"] ? (
+                <Image
+                    source={{ uri: `data:image/jpeg;base64,${profileData["pic"]}` }}
+                        style={styles.image}
+                />
+                ) : (
+                    <View style={styles.image}>
+                        <Ionicons name="person-circle" size={90} color="#b5b5b5" />                   
+                    </View>
+                    )}
+
+          <View style={{flexDirection:'row'}}>
+          <TouchableOpacity onPress={() => {setIsVisible(false); handleLater();}} style={styles.laterButton}>
             <Text style={[styles.buttonText, {color:'#4A0AFF'}]}>Later</Text>
           </TouchableOpacity>
           
-          <TouchableOpacity onPress={onMessage} style={styles.messageButton}>
+          <TouchableOpacity onPress={() => {navigation.navigate('/chat-room')}} style={styles.messageButton}>
             <Text style={[styles.buttonText, {color:'white'}]}>Message</Text>
           </TouchableOpacity>
+        </View>
         </View>
       </View>
     </Modal>
@@ -41,45 +84,53 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: 'rgba(255, 255, 255, 0.5)', 
+    backgroundColor: 'rgba(0, 0, 0, 0.5)', 
   },
   modalContainer: {
-    width: width*0.7,
-    height:height*0.8,
-    height:500,
-    paddingTop:50,
+   
+    paddingVertical:50,
+    paddingHorizontal:30,
     backgroundColor: 'white',
     borderRadius: 10,
     alignItems: 'center',
   },
+  image: {
+    width:height*0.4*0.4, 
+    aspectRatio:1,    
+    backgroundColor:'lightgray', 
+    margin:10, 
+    marginVertical:20,
+    borderRadius:10,
+    justifyContent:'center',
+    alignItems:'center',
+  },
   messageText: {
     fontSize: 20,
     fontWeight:'bold',
-    marginBottom: 20,
+    lineHeight:35,
   },
   laterButton: {
     backgroundColor: 'white',
-    paddingLeft:30,
-    paddingRight:30,
+    paddingHorizontal:20,
     height:35,
     borderRadius: 5,
     borderColor:'#4A0AFF',
     borderWidth:2,
     alignItems:'center',
     justifyContent:'center',
-    top:15,
-    left:80,
+    marginRight:5,
+
   },
   messageButton: {
     backgroundColor:'#4A0AFF',
-    paddingLeft: 30,
-    paddingRight: 30,
+    paddingHorizontal: 20,
     height:35,
     borderRadius: 5,
     alignItems:'center',
     justifyContent:'center',
-    top:-20,
-    left:-80,
+    top:0,
+    left:0,
+    marginLeft:5,
   },
   buttonText: {
     color: 'black',

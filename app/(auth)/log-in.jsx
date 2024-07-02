@@ -1,8 +1,9 @@
 import React, { useState } from 'react'
-import { Alert, Button, Image, Pressable, SafeAreaView, StyleSheet, Switch, Text, TextInput, View } from 'react-native'
+import { Alert, Button, Image, Pressable, KeyboardAvoidingView, SafeAreaView, StyleSheet, Switch, Text, TextInput, View } from 'react-native'
 import 'react-native-gesture-handler'
-import { Link } from 'expo-router';
+import { Link, router } from 'expo-router';
 import axios from 'axios';
+import useUserStore from '../store/userStore';
 
 
 // const facebook = require("../../assets/facebook.png")
@@ -10,7 +11,7 @@ import axios from 'axios';
 // const tiktok = require("../../assets/tiktok.png")
 
 const LoginPage = () => {
-
+  const setUser = useUserStore(state => state.setUserId); 
     const [click,setClick] = useState(false);
     const [email, setEmail] =  useState("");
     const [password,setPassword] =  useState("");
@@ -21,20 +22,34 @@ const LoginPage = () => {
         password,
       };
 
-      axios.post("http://192.168.1.5:5001/log-in", userData)
+      axios.post("http:/192.168.1.3:5001/log-in", userData)
       .then(res => {console.log(res.data);
         if (res.data.status == "ok") {
-          alert("Logged in successfully!");
-          Alert.alert("Logged in successfully!");
-          navigation.navigate('/home');
+          router.replace('/home');
+          return fetchUserId(email);
         } else {
           alert("Seems like the wrong email or password");
           alert(JSON.stringify(res.data));
           Alert.alert(JSON.stringify(res.data));
         }
       })
+     
       .catch(e => console.log(e.message));
     }
+
+    const fetchUserId = async (email) => {
+      try {
+        const response = await axios.get(`http://192.168.1.3:5001/getId/${email}`);
+  
+        console.log('User ID:', response.data.userId);
+        setUser(response.data.userId);
+        console.log('userId stored');
+  
+      } catch (error) {
+        console.error('Error fetching user ID:', error.message);
+        alert('Failed to fetch user ID. Please try again later.'); // Handle error in fetching user ID
+      }
+    };
 
   return (
     <SafeAreaView style={styles.container}>
@@ -51,11 +66,11 @@ const LoginPage = () => {
                 <Switch  value={click} onValueChange={setClick} trackColor={{true : "#4A0AFF" , false : "gray"}} />
                 <Text style={styles.rememberText}>Remember Me</Text>
             </View> */}
-            <View>
+            {/* <View>
                 <Pressable onPress={() => Alert.alert("Forget Password!")}>
                     <Text style={styles.forgetText}>Forgot Password?</Text>
                 </Pressable>
-            </View>
+            </View> */}
         </View>
 
         <View style={styles.buttonView}>
@@ -97,13 +112,15 @@ const styles = StyleSheet.create({
     textTransform : "uppercase",
     textAlign: "center",
     paddingVertical : 40,
-    color : "#4A0AFF"
+    color : "#4A0AFF",
+    top:-50,
   },
   inputView : {
     gap : 15,
     width : "100%",
     paddingHorizontal : 40,
-    marginBottom  :5
+    marginBottom  :5,
+    top:-50,
   },
   input : {
     height : 50,
@@ -118,14 +135,14 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     alignItems : "center",
     flexDirection : "row",
-    marginBottom : 8
+    marginBottom : 8,
+    top: -50,
   },
   switch :{
     flexDirection : "row",
     gap : 1,
     justifyContent : "center",
     alignItems : "center"
-    
   },
   rememberText : {
     fontSize: 13
@@ -141,7 +158,8 @@ const styles = StyleSheet.create({
     borderWidth  : 1,
     borderRadius : 5,
     alignItems : "center",
-    justifyContent : "center"
+    justifyContent : "center",
+    top:-50,
   },
   buttonText : {
     color : "white"  ,
@@ -173,6 +191,7 @@ const styles = StyleSheet.create({
   footerText : {
     textAlign: "center",
     color : "gray",
+    top:-45,
   },
   signup : {
     color : "#4A0AFF",

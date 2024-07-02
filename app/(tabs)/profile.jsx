@@ -1,77 +1,128 @@
-import { ScrollView, StyleSheet, Text, View, Button, TouchableOpacity, Dimensions} from 'react-native'
+import { ScrollView, StyleSheet, Text, View, Button, TouchableOpacity, Dimensions, ActivityIndicator} from 'react-native'
 import React, { useState, useEffect } from 'react';
 import { Link } from 'expo-router';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { useNavigation } from '@react-navigation/native';
+import ProfileCard from '../../components/Profile/profile-card';
+import axios from 'axios';
+import * as FileSystem from 'expo-file-system';
+import useUserStore from '../store/userStore';
+
+
                                                                                     
 const windowDimensions = Dimensions.get('window');
 const width = windowDimensions.width;
 
-const Profile = ( { navigation }) => {
-  const profileData = {
-    picture: null,
-    name: 'Your Name', 
-    description: 'insert description',
-    interestedSectors: 'int sectors',
-    skills:'skilsss',
-    education: {
-      institution:'nus',
-      duration:'2020-present',
-      description:'sch descr'
-    },
-    workExperience: {
-      organisation:'compName',
-      duration:'3030-present',
-      description:'idk',
-    },
-    LCI:'lci',
-  }  
+const Profile = ( ) => {
+  const [profileData, setProfileData] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [uri, setURI] = useState(null);
+  const userId = useUserStore(state => state.userId);
 
-  const handleEditProfile = () => {
-    navigation.navigate('EditProfile', {profileData});
-  };
+
+  useEffect(() => {
+    const fetchProfileData = async () => {
+        try {
+          console.log(userId);
+            const response = await fetch(`http://192.168.1.3:5001/profile/${userId}`); 
+            const json = await response.json();
+             
+            const imageUri = `data:image/jpeg;base64,${json["pic"]}`; //converts str to URI
+            setURI(imageUri);
+            setProfileData(json); 
+            console.log(profileData["pic"]);
+      
+            console.log("profileData:", profileData);
+        } catch (error) {
+            console.error('Error fetching profile data:', error);
+        } finally {
+          setLoading(false);
+        }
+    };
+
+    fetchProfileData(); 
+}, []); 
+
+if (loading) {
+  return (
+      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+          <ActivityIndicator size="large" color="#0000ff" />
+      </View>
+  );
+}
+
+const handleUnpublish = async() => {
+  try {
+    const response = await fetch(`http://192.168.1.3:5001/edit-profile/${userId}`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        "published" : false
+      }),
+    });
+    
+    if (!response.ok) {
+      throw new Error('Failed to update profile');
+    }
+    const updatedUser = await response.json();
+    console.log('Updated profileData:', updatedUser);
+    
+    
+    router.replace('/profile');    
+  } catch (error) {
+    console.error('Error updating profile:', error);
+    
+  }
+};
+
+
+
+
+
+ 
+  
+
 
   return (
+    <SafeAreaView style={styles.content}>
+
     <ScrollView contentContainerStyle={styles.container}>
-      <View style={styles.content}>
         <Text style={styles.title}>Your Profile</Text>
 
-        {profileData.picture ? (
-          <Image source={{ uri: profilePicture }} style={styles.profilePicture} resizeMode="cover"/>
-        ) : (
-          <View style={[styles.profilePicture, styles.blankProfilePicture]} />
-        )}
-        
-        <Text style={styles.name}> {profileData.name} </Text>
+        <ProfileCard profileData={profileData}/> 
 
-        <Text style={styles.description}>{profileData.description}</Text> 
+        <TouchableOpacity  style={styles.publishButton}>
+          <Link 
+            href={{
+              pathname:'/edit-profile',
+              params:{
+                  pictureBase64:profileData["pic"],  
+                  pictureURI:encodeURIComponent(uri),  // profileData["pic"] is a uri
+                  name:profileData["name"], 
+                  description:profileData["description"],
+                  sectors:JSON.stringify(profileData["sectors"]),
+                  skills:JSON.stringify(profileData["skills"]),
+                  aboutMe:profileData["aboutMe"],
+                  workExperience:JSON.stringify(profileData["workExperience"]),
+                  education:JSON.stringify(profileData["education"]),
+                  LCI:profileData["LCI"]
 
-        <Text style={styles.subheadings}>Interested Sectors</Text>
-        <Text style={styles.text}>{profileData.interestedSectors}</Text> 
-
-
-        <Text style={styles.subheadings}>Skills</Text>
-
-        <Text style={styles.subheadings}>Education</Text>
-        <View style={styles.educationContainer}>
-
-        </View>
-          
-
-        <Text style={styles.subheadings}>Work Experience</Text>
-
-        <Text style={styles.subheadings}>Let's Connect If...</Text>
-        <Text style={styles.text}> {profileData.LCI} </Text>
-        
-        <Link href="/edit-profile" style={[styles.text, {color: 'purple'}]}> click here to Edit Profile</Link>
-        <Link href="successful-match" style = {[styles.text, {color:'pink'}]}>successful match pop up</Link>
-
-        <TouchableOpacity onPress={() => {}} style={styles.button}>
-          <Text style={[styles.buttonText, {color:'white', textAlign:'center'}]}>Edit Profile</Text>
+              }
+                
+            }} style={{color:'white'}}>Edit Profile</Link>
         </TouchableOpacity>
-        
-        <View style={styles.empty}></View>
 
-      </View>
+        <TouchableOpacity style = {styles.unpublishButton} onPress={handleUnpublish}>
+          <Text style={{color:'#4A0AFF'}}>Unpublish</Text>
+        </TouchableOpacity>
+
+      
+        
     </ScrollView>
+    </SafeAreaView>
+
   );
 };
 
@@ -91,7 +142,7 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 24,
-    marginBottom: 5,
+    paddingBottom: 10,
     color:'#4A0AFF',
     fontWeight: 'bold',
   },
@@ -104,13 +155,15 @@ const styles = StyleSheet.create({
     left:15,
   },
   profilePicture: {
-    width: width * 0.9,
-    height: width * 0.9,
+    width: '100%' * 0.9,
+    aspectRatio: 1,    
     borderRadius: 20, 
     marginBottom: 20,
   }, 
   blankProfilePicture: {
     backgroundColor: '#D9D9D9',
+    width:'90%',
+    aspectRatio:1
   },
   name: {
     fontSize:24,
@@ -132,22 +185,46 @@ const styles = StyleSheet.create({
     fontWeight: 'bold', 
     marginBottom: 10,
   },
-  button: {
+  editButton: {
     backgroundColor: '#4A0AFF',
-    width: 120,
+    width: 110,
     borderRadius:10,
     top:10,
     height: 35,
     alignItems:'center',
     justifyContent:'center',
-    marginBottom: 20,
-    marginTop:50,
+    marginBottom:20,
+    marginTop:20,
+  },
+  publishButton: {
+    backgroundColor: '#4A0AFF',
+    width: 100,
+    borderRadius:10,
+    height: 35,
+    alignItems:'center',
+    justifyContent:'center',
+    marginBottom:0,
+    marginTop:30,
+    left:0,
+    marginBottom:50,
+    
+  },
+  unpublishButton: {
+    backgroundColor: 'transparent',
+    borderColor:'#4A0AFF',
+    borderWidth:1.5,
+    width: 100,
+    borderRadius:10,
+    height: 35,
+    alignItems:'center',
+    justifyContent:'center',
+    marginBottom:0,
+    marginTop:-85,
+    left: width - 150,
+    marginBottom:50,
   },
   buttonText: {
     color: 'white',
   },
-  empty: {
-    height:40, 
-  },
+ 
 });
-
