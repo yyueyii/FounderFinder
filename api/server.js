@@ -65,12 +65,11 @@ app.post("/log-in", async(req, res) => {
     if (await bcrypt.compare(password, oldUser.password)) {
         const token = jwt.sign({email:oldUser.email}, JWT_SECRET);
 
-        if (res.status(201)) {
-
-            return res.send({status: "ok", data: token});
-        } else {
-            return res.send({error: "error"});
-        }
+       
+         res.send({status: "ok", data: token});
+    } else {
+        res.send("Wrong password!");
+        
     }
     
 })
@@ -154,7 +153,7 @@ app.get('/profile/:id', async(req, res) => {
         }
     });
 
-    //get all successful matches
+    //get all successful matches todo:modify
     app.get('/successfulMatches/:id', async (req, res) => {
             const {id} = req.params;
             try {
@@ -200,7 +199,7 @@ app.get('/profile/:id', async(req, res) => {
   
     });
 
-    // find notif to be viewed by 'myId'
+    // find notif to be viewed by 'myId' todo:sort
     app.get('/getNotification/:id', async(req, res) => {
             const { id } = req.params;
             const objectId = new mongoose.Types.ObjectId(id);

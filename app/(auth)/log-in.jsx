@@ -21,25 +21,23 @@ const LoginPage = () => {
         email,
         password,
       };
-
-      axios.post("http:/192.168.1.3:5001/log-in", userData)
+      console.log('pressed');
+      axios.post("http:/192.168.1.5:5001/log-in", userData)
       .then(res => {console.log(res.data);
         if (res.data.status == "ok") {
           router.replace('/home');
           return fetchUserId(email);
         } else {
-          alert("Seems like the wrong email or password");
-          alert(JSON.stringify(res.data));
-          Alert.alert(JSON.stringify(res.data));
+          alert((res.data));
         }
       })
      
-      .catch(e => console.log(e.message));
+      .catch(e => console.error(e.message));
     }
 
     const fetchUserId = async (email) => {
       try {
-        const response = await axios.get(`http://192.168.1.3:5001/getId/${email}`);
+        const response = await axios.get(`http://192.168.1.5:5001/getId/${email}`);
   
         console.log('User ID:', response.data.userId);
         setUser(response.data.userId);

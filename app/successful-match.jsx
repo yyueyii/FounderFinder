@@ -17,7 +17,7 @@ const MatchedPopUp = ({  visible, onLater, onMessage, profileData}) => {
   const handleLater = async() => {
     const updateNotif = async () => {
       try {
-        const response = await fetch(`http://192.168.0.100:5001/updateNotification/${userId}/${profileData["_id"]}`, {
+        const response = await fetch(`http://192.168.1.5:5001/updateNotification/${userId}/${profileData["_id"]}`, {
           method: 'PATCH',
           headers: {
             'Content-Type': 'application/json',
