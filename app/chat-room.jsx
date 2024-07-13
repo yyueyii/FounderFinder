@@ -17,7 +17,7 @@ import useUserStore from './store/userStore';
 import useGetMessages from './hooks/useGetMessages';
 import useSendMessage from './hooks/useSendMessages';
 
-const ChatRoom = ( ) => {
+const ChatRoom = () => {
 
 const userId = useUserStore(state => state.userId);
 const [inputHeight, setInputHeight] = useState(30); 
@@ -43,12 +43,28 @@ const handleContentSizeChange = (event) => {
     setInputHeight(event.nativeEvent.contentSize.height);
   };
 
+  console.log("Right before useEffect in chat-room")
+
   useEffect(() => {
-    const newSocket = io('http://localhost:5001'); 
+
+    console.log("In useEffect in chat-room");
+    const newSocket = io('http://localhost:8000'); 
+
+    console.log("newSocket is instantiated")
+
     setSocket(newSocket);
+
+    console.log("setSocket works")
+
+    newSocket.on("connect", () => {
+      console.log("Connected to the Socket.IO server");
+    });
 
     // Event listeners
     newSocket.on('message', handleMessage);
+
+    console.log("newSocket on works")
+
     newSocket.on('disconnect', () => {
       setTimeout(() => {
         console.log('Oh no it is disconnected. Trying to reconnect.');
@@ -58,6 +74,7 @@ const handleContentSizeChange = (event) => {
   });
 
   return () => newSocket.disconnect(); // Cleanup on component unmount
+    
   }, [selectedUserId]);
 
   function showOnlinePeople(peopleArray) {

@@ -6,6 +6,16 @@ const cors = require("cors"); // Import the cors package
 const app = express();
 const port = 5001;
 
+const http = require('http').createServer(app);
+// const io = require("socket.io")(http);
+
+const io = require("socket.io")(http, {
+    cors: {
+        origin: "http://localhost:8081", // Adjust this to your frontend origin
+        methods: ["GET", "POST"],
+        credentials: true // Allow cookies and authorization headers
+    }
+});
 
 app.use(express.json());
 app.use(cors());
@@ -13,8 +23,8 @@ app.use(cookieParser());
 const bcrypt = require('bcrypt');
 
 const jwt = require('jsonwebtoken');
-const http = require('http');
-const Server = require('socket.io').Server;
+
+// const Server = require('socket.io').Server;
 const protectRoute = require("./middleware/protectRoute");
 const generate = require("./utils/generateToken");
 const mongoUrl = "mongodb+srv://gabriellegtw:Gabrielle1705!@cluster0.dek3rxf.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0";
@@ -218,14 +228,14 @@ app.get('/matches/:id', async (req, res) => {
     }
 })
 
-const server = http.createServer(app);
+// const server = http.createServer(app);
 
-const io = require("socket.io")(8800, {
-    cors: {
-      origin: "http://localhost:3000",
-      methods:["GET", "POST"]
-    },
-  });
+// const io = require("socket.io")(8800, {
+//     cors: {
+//       origin: "http://localhost:3000",
+//       methods:["GET", "POST"]
+//     },
+//   });
 
   io.on("connection", (socket) => {
     console.log("a user connected", socket.id);
@@ -236,7 +246,12 @@ const io = require("socket.io")(8800, {
   });
   
 
-server.listen(port, () => {
+app.listen(port, () => {
     console.log("NodeJS started");
 })
+
+http.listen(8000, () => {
+    console.log("Socket.IO server running on port 8000");
+  });
+  
 

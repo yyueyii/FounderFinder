@@ -20,10 +20,11 @@ const useGetConversations = () => {
                     return 
                 }
 
-                const res = await fetch(`/${userId}`);
+                // const res = await fetch(`/${userId}`);
+                const res = await fetch(`http://localhost:5001/api/6673ea5eb2cc17eca589fb0a`);
 
                 if (!res.ok) {
-                    throw new Error(`HTTP error! Status: ${res.status}`);
+                    throw new Error(`[in useGetConversations] HTTP error! Status: ${res.status}`);
                 }
 
                 const data = await res.json();

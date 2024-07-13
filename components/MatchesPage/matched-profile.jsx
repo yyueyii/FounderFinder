@@ -12,7 +12,7 @@ const MatchedProfileDisplay = ( { profileData }) => {
     console.log("Received data: ", profileData);
     const userId = profileData["_id"];
     console.log("UserID: ", profileData["_id"])
-    const { loading, conversations } = useGetConversations();
+    // const { loading, conversations } = useGetConversations();
 
     return (
         <View style={styles.container}>
