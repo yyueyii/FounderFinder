@@ -280,11 +280,11 @@ io.on("connection", (socket) => {
         }
 
         await Promise.all([chat.save(), newMessage.save()]);
-
-        // res.status(201).json(newMessage);
   
         //emit the message to the receiver
         io.to(receiverId).emit("receiveMessage", newMessage);
+
+        console.log("message emitted successfully")
       } catch (error) {
         console.log("Error handling the messages");
       }

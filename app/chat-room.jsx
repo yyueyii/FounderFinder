@@ -111,6 +111,11 @@ const handleContentSizeChange = (event) => {
     // Or maybe it is just messages instead of message: typedMessage
     socket.emit("sendMessage1", { senderId : userId, receiverId : params.id , message: typedMessage });
 
+    setMessages(prevMessages => [
+      ...prevMessages,
+      { senderId: userId, receiverId: params.id, message: typedMessage, timestamp: new Date() } // Assuming timestamp is added
+    ]);
+
     // setMessages("");
     setTypedMessage('');
 
@@ -154,6 +159,27 @@ const handleContentSizeChange = (event) => {
         
 
       <ScrollView contentContainerStyle={styles.messagesContainer}>
+      {messages?.map((item, index) => {
+        if (item.senderId === params.id) {
+          // Messages from the other person
+          return (
+            <OtherMessageBubble
+              key={index}
+              message={item.message}
+              // time={formatTime(item.timestamp)}
+            />
+          );
+        } else {
+          // Messages from the current user
+          return (
+            <UserMessageBubble
+              key={index}
+              message={item.message}
+              // time={formatTime(item.timestamp)}
+            />
+          );
+        }
+      })}
             {/* //render previous messages */}
             {/* <OtherMessageBubble  message={'Hi Annabelle'} time={'01:22'}/>
             <OtherMessageBubble  message={'Long mes ashfskdlhf sk fslfj klsdasdfhjksf ks fhsk hfskdh fskdjh fksdhf skldh  hjkhfskj fksdhf ksdjhf skjdhf ks djk hsjk fhjkash fksjhf ksj jdsk hfjska fhksjdhf kjsdhf ksj njk djksa fnjks fjskj fksda fjksjkajkjsfd'} time={'03:12'}/>
