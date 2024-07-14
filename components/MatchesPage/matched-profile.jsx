@@ -10,8 +10,8 @@ const width = Dimensions.get('window').width;
 const MatchedProfileDisplay = ( { profileData }) => {
     
     console.log("Received data: ", profileData);
-    const userId = profileData["_id"];
-    console.log("UserID: ", profileData["_id"])
+    const receiverId = profileData["_id"];
+    console.log("receiverID: ", profileData["_id"])
     // const { loading, conversations } = useGetConversations();
 
     return (
@@ -36,7 +36,7 @@ const MatchedProfileDisplay = ( { profileData }) => {
                 href={{
                     pathname:'/chat-room', 
                     params: {
-                        id:userId
+                        id:receiverId
                     }
                 }}
                  style={{color:'white'}}>Message
@@ -50,7 +50,7 @@ const MatchedProfileDisplay = ( { profileData }) => {
                 href={{
                     pathname:'/view-profile', 
                     params: {
-                        id:userId
+                        id:receiverId
                     }
                 }}
                  > ViewProfile

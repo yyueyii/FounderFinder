@@ -35,7 +35,6 @@ const { sendMessage, loading: sendingMessage } = useSendMessage();
 const params = useLocalSearchParams();
 const navigation = useNavigation();
 const msgRef = useRef();
-console.log("userId:", params);
 
 
 
@@ -60,8 +59,15 @@ const handleContentSizeChange = (event) => {
       console.log("Connected to the Socket.IO server");
     });
 
+    newSocket.on("receiveMessage", (newMessage) => {
+      console.log("new Message", newMessage);
+  
+      //update the state to include new message
+      setMessages((prevMessages) => [...prevMessages, newMessage]);
+    });
+
     // Event listeners
-    newSocket.on('message', handleMessage);
+    // newSocket.on('message', handleMessage);
 
     console.log("newSocket on works")
 
@@ -97,6 +103,22 @@ const handleContentSizeChange = (event) => {
       }
     }
   }
+
+  const sendMessage1 = async (senderId, receiverId) => {
+    console.log("button pressed")
+    if (!typedMessage.trim() || !params) return;
+    console.log("userId in chat-room:", params.id);
+    // Or maybe it is just messages instead of message: typedMessage
+    socket.emit("sendMessage1", { senderId : userId, receiverId : params.id , message: typedMessage });
+
+    // setMessages("");
+    setTypedMessage('');
+
+    // call the fetchMessages() function to see the UI update
+    // setTimeout(() => {
+    //     fetchMessages();
+    // },200)
+  };
 
   const handleSendMessage = (message) => {
     sendMessage(message);
@@ -148,6 +170,8 @@ const handleContentSizeChange = (event) => {
 
       <View style={styles.bottomBar}>
         <TextInput   
+          value={typedMessage}
+          onChangeText={(text) => setTypedMessage(text)}
           style={[styles.input, {height:Math.min(200, inputHeight)}]}
           placeholder="Type your message..."
           placeholderTextColor={'gray'}
@@ -155,7 +179,7 @@ const handleContentSizeChange = (event) => {
           numberOfLines={1}
           onContentSizeChange={handleContentSizeChange}
         />
-        <TouchableOpacity style={styles.sendButton} onPress={() => handleSendMessage(typedMessage)}>
+        <TouchableOpacity style={styles.sendButton} onPress={() => sendMessage1()}>
         <Ionicons name="send" size={18} color="white" style={{left:2}}/>       
          </TouchableOpacity>
       </View>

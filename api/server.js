@@ -11,7 +11,7 @@ const http = require('http').createServer(app);
 
 const io = require("socket.io")(http, {
     cors: {
-        origin: "http://localhost:8081", // Adjust this to your frontend origin
+        origin: "http://localhost:8081",
         methods: ["GET", "POST"],
         credentials: true // Allow cookies and authorization headers
     }
@@ -228,22 +228,79 @@ app.get('/matches/:id', async (req, res) => {
     }
 })
 
-// const server = http.createServer(app);
+io.on("connection", (socket) => {
+    console.log("a user is connected", socket.id);
+  
+    socket.on("sendMessage1", async (data) => {
+      try {
 
-// const io = require("socket.io")(8800, {
-//     cors: {
-//       origin: "http://localhost:3000",
-//       methods:["GET", "POST"]
-//     },
-//   });
+        console.log("In the sendMessage1 in server")
+        
+        const { senderId, receiverId, message } = data;
 
-  io.on("connection", (socket) => {
-    console.log("a user connected", socket.id);
+        if (!senderId) {
+            console.log("No sender id")
+        }
 
-    socket.on("disconnect", () => {
-        console.log("user disconnected", socket.id);
-    })
+        if (!receiverId) {
+            console.log("No receiver id")
+        }
+
+        if (!message) {
+            console.log("No message")
+        }
+        
+        console.log("data", data);
+  
+        // const newMessage = new Chat({ senderId, receiverId, message });
+        // await newMessage.save();
+
+        let chat = await Chat.findOne({
+            participants: {$all: [senderId, receiverId]},
+        })
+
+        if (!chat) {
+            chat = await Chat.create({
+                participants: [senderId, receiverId],
+            })
+        }
+
+        const newMessage = new Message({
+            senderId,
+            receiverId,
+            message,
+        })
+
+        console.log(newMessage)
+
+        if (newMessage) {
+            console.log("pushing message into mongodb...")
+            chat.messages.push(newMessage._id);
+            console.log("pushed successfully!")
+        }
+
+        await Promise.all([chat.save(), newMessage.save()]);
+
+        // res.status(201).json(newMessage);
+  
+        //emit the message to the receiver
+        io.to(receiverId).emit("receiveMessage", newMessage);
+      } catch (error) {
+        console.log("Error handling the messages");
+      }
+      socket.on("disconnect", () => {
+        console.log("user disconnected");
+      });
+    });
   });
+
+//   io.on("connection", (socket) => {
+//     console.log("a user connected", socket.id);
+
+//     socket.on("disconnect", () => {
+//         console.log("user disconnected", socket.id);
+//     })
+//   });
   
 
 app.listen(port, () => {
