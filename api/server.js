@@ -186,6 +186,25 @@ app.get('/matches/:id', async (req, res) => {
     }
   });
 
+  //Get name of the person
+  app.get("/getname", async (req, res) => {
+    try {
+        // const { id } = req.body;
+        const { id } = req.query;
+
+        const name = await User.findOne({ 
+            _id: id,
+        }, { name: 1, _id: 0 });
+
+        console.log("This is name from server:", name)
+
+        res.status(200).json(name);
+    } catch (error) {
+        console.log("Error in getting name in server: ", error.message);
+        res.status(500).json({error: "Internal server error"});
+    }
+})
+
   // Gets all messages in a conversation based on a userId
   app.get("/:id", protectRoute, async (req, res) => {
     try {

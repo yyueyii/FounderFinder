@@ -24,6 +24,7 @@ const [inputHeight, setInputHeight] = useState(30);
 const [socket, setSocket] = useState(null);
 const [selectedUserId,setSelectedUserId] = useState(null);
 const [messages, setMessages] = useState([]);
+const [receiverName, setReceiverName] = useState('');
 
 const [onlinePeople,setOnlinePeople] = useState({});
 const [offlinePeople,setOfflinePeople] = useState({});
@@ -138,6 +139,25 @@ const handleContentSizeChange = (event) => {
     }
   }, [messages]);
 
+  const fetchName = async () => {
+    try {
+
+      console.log("fetch Name...")
+
+      console.log("receiverid in fetchname", params.id)
+      const response = await axios.get(`http://localhost:5001/getname`, {
+        params: {
+          id: params.id,
+        }
+      });
+
+      console.log("response from fetch name :", response.data.name)
+      setReceiverName(response.data.name);
+    } catch (error) {
+      console.error('Error fetching messages in useEffect fetchName function:', error);
+    }
+  };
+
   const fetchMessages = async () => {
     try {
 
@@ -161,6 +181,7 @@ const handleContentSizeChange = (event) => {
 
   useEffect(() => {
     console.log("fetchmessages in useEffect")
+    fetchName();
     fetchMessages();
   }, []);
 
@@ -191,7 +212,7 @@ const handleContentSizeChange = (event) => {
                        id: new ObjectId(params)
                     }
                   }}
-                 style={styles.name}> name
+                 style={styles.name}> {receiverName}
                 </Link>
             <Pressable onPress={()=>{navigation.goBack()}}>
                 <Ionicons name="chevron-back-outline" size={30} color="#4A0AFF"style={styles.back}/>   
@@ -202,8 +223,8 @@ const handleContentSizeChange = (event) => {
 
       <ScrollView contentContainerStyle={styles.messagesContainer}>
       {messages?.map((item, index) => {
-        console.log(`Rendering message ${index}:`, item);
-        console.log(`text ${index}:`, item.message);
+        // console.log(`Rendering message ${index}:`, item);
+        // console.log(`text ${index}:`, item.message);
         if (item.senderId === params.id) {
           // Messages from the other person
           return (
