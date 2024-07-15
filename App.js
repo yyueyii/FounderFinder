@@ -9,6 +9,7 @@ import Profile from './app/(tabs)/profile';
 import EditProfile from './app/(auth)/edit-profile';
 import Matches from './app/(tabs)/matches';
 import ViewProfile from './app/view-profile';
+import { SocketContextProvider } from './api/context/SocketContext';
 
 const LogInStack = createNativeStackNavigator();
 const EditProfileStack = createNativeStackNavigator();
@@ -16,7 +17,8 @@ const ViewProfileStack = createNativeStackNavigator();
 
 const App = () => {
     return (
-        <NavigationContainer>
+        <SocketContextProvider>
+<NavigationContainer>
             <LogInStack.Navigator initialRouteName='Index'>
                 <Stack.Screen name="Index" component={Index} />
                 <Stack.Screen name="Login" component={LoginPage} />
@@ -36,6 +38,8 @@ const App = () => {
             </ViewProfileStack.Navigator>
 
         </NavigationContainer>
+        </SocketContextProvider>
+        
     );
 };
 
