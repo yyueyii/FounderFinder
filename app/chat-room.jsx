@@ -81,7 +81,7 @@ const handleContentSizeChange = (event) => {
 
   return () => newSocket.disconnect(); // Cleanup on component unmount
     
-  }, [selectedUserId]);
+  }, [params.id]);
 
   function showOnlinePeople(peopleArray) {
     const people = {};
@@ -92,17 +92,17 @@ const handleContentSizeChange = (event) => {
   }
 
   // Function to handle messages from the server
-  function handleMessage(data) {
-    console.log('Received message:', data);
-    // Handle different types of messages (online status, text messages, etc.)
-    if ('online' in data) {
-      showOnlinePeople(data.online);
-    } else if ('text' in data) {
-      if (data.sender === selectedUserId) {
-        setMessages(prev => ([...prev, {...data}]));
-      }
-    }
-  }
+  // function handleMessage(data) {
+  //   console.log('Received message:', data);
+  //   // Handle different types of messages (online status, text messages, etc.)
+  //   if ('online' in data) {
+  //     showOnlinePeople(data.online);
+  //   } else if ('text' in data) {
+  //     if (data.sender === selectedUserId) {
+  //       setMessages(prev => ([...prev, {...data}]));
+  //     }
+  //   }
+  // }
 
   const sendMessage1 = async (senderId, receiverId) => {
     console.log("button pressed")
@@ -113,16 +113,15 @@ const handleContentSizeChange = (event) => {
 
     setMessages(prevMessages => [
       ...prevMessages,
-      { senderId: userId, receiverId: params.id, message: typedMessage, timestamp: new Date() } // Assuming timestamp is added
+      { senderId: userId, receiverId: params.id, message: typedMessage, timestamp: new Date() }
     ]);
 
-    // setMessages("");
     setTypedMessage('');
 
     // call the fetchMessages() function to see the UI update
-    // setTimeout(() => {
-    //     fetchMessages();
-    // },200)
+    setTimeout(() => {
+        fetchMessages();
+    },200)
   };
 
   const handleSendMessage = (message) => {
@@ -137,6 +136,36 @@ const handleContentSizeChange = (event) => {
     }
   }, [messages]);
 
+  const fetchMessages = async () => {
+    try {
+
+      console.log("fetch Messages...")
+
+      console.log("senderid in fetchmsgs", userId)
+      console.log("receiverid in fetchmsgs", params.id)
+      const response = await axios.get(`http://localhost:5001/messages`, {
+        params: {
+          senderId: userId,
+          receiverId: params.id,
+        }
+      });
+
+      console.log("response from fetch msgs :", response)
+      setMessages(response.data.messages);
+    } catch (error) {
+      console.error('Error fetching messages in useEffect fetchMessages function:', error);
+    }
+  };
+
+  useEffect(() => {
+    console.log("fetchmessages in useEffect")
+    fetchMessages();
+  }, []);
+
+  const formatTime = (time) => {
+    const options = { hour: "numeric", minute: "numeric" };
+    return new Date(time).toLocaleString("en-US", options);
+  };
 
   return (
     <KeyboardAvoidingView style={{backgroundColor:'white', flex:1}} behavior={Platform.OS === 'ios' ? 'padding'  : 'height'}>
@@ -160,13 +189,15 @@ const handleContentSizeChange = (event) => {
 
       <ScrollView contentContainerStyle={styles.messagesContainer}>
       {messages?.map((item, index) => {
+        console.log(`Rendering message ${index}:`, item);
+        console.log(`text ${index}:`, item.message);
         if (item.senderId === params.id) {
           // Messages from the other person
           return (
             <OtherMessageBubble
               key={index}
               message={item.message}
-              // time={formatTime(item.timestamp)}
+              time={formatTime(item.timestamp)}
             />
           );
         } else {
@@ -175,7 +206,7 @@ const handleContentSizeChange = (event) => {
             <UserMessageBubble
               key={index}
               message={item.message}
-              // time={formatTime(item.timestamp)}
+              time={formatTime(item.timestamp)}
             />
           );
         }

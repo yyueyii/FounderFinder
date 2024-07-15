@@ -165,6 +165,31 @@ app.get('/matches/:id', async (req, res) => {
     }
   });
 
+  app.get("/messages", async (req, res) => {
+    try {
+    //   const { senderId, receiverId } = req.body;
+      const { senderId, receiverId } = req.query;
+      console.log("checking if id is defined in /messages in server: ")
+    
+      console.log(senderId);
+      console.log(receiverId);
+
+      const messages = await Chat.findOne({
+        participants: { $all: [senderId, receiverId] }
+      }, { messages: 1, _id: 0 }).populate("messages");
+
+    //   const messages = await Chat.findOne({
+    //     participants: { $all: [senderId, receiverId] }
+    //   }, { messages: 1, _id: 0 });
+
+    console.log(messages)
+  
+      res.status(200).json(messages);
+    } catch (error) {
+      res.status(500).json({ message: "Error in getting messages", error });
+    }
+  });
+
   // Gets all messages in a conversation based on a userId
   app.get("/:id", protectRoute, async (req, res) => {
     try {
