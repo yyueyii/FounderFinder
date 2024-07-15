@@ -21,7 +21,7 @@ const ChatPreview = ( { id, name, lastMessage, date }) => {
             <View style={styles.picture}></View>
             
             <Text style={styles.name}>{name}</Text>
-            <Text style={styles.date}> {date}</Text>
+            <Text style={styles.date}>{date}</Text>
             <View style={styles.messageContainer}>
               <Text style={styles.message} numberOfLines={2} ellipsizeMode="tail">
                 {lastMessage}
@@ -67,7 +67,7 @@ const styles = StyleSheet.create({
     name:{
         fontSize:18,
         fontWeight:'bold',
-        left: 70,
+        left: 90,
         top:12,
         position:'absolute',
     },
@@ -94,8 +94,8 @@ const styles = StyleSheet.create({
     },
     message:{
       fontSize:14,
-      left: 70,
-      top:-63,
+      left: 90,
+      top:-55,
       position:'absolute',
       paddingRight:15,
           

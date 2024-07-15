@@ -94,6 +94,11 @@ const Chat  = () => {
         // console.log("this is chatNames array: ", chatNames);
       }, []);
 
+      const formatDate = (dateString) => {
+        const date = new Date(dateString);
+        return `${date.toLocaleDateString()} ${date.toLocaleTimeString()}`;
+      };
+
   return (
     <SafeAreaView style={styles.container}>
       <Text style={styles.title}>Messages</Text>
@@ -109,7 +114,7 @@ const Chat  = () => {
             id={item.senderId !== userId ? item.senderId : item.receiverId}
             name={chatNamesMap[item.senderId !== userId ? item.senderId : item.receiverId]}
             lastMessage={item.message} 
-            date={item.createdAt}
+            date={formatDate(item.createdAt)}
           />
         ))}
 
