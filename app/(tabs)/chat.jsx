@@ -11,6 +11,7 @@ const Chat  = () => {
 
     const [message, setMessage] = useState([]);
     const [chatNames, setChatNames] = useState("");
+    const [chatNamesMap, setChatNamesMap] = useState({});
 
     const fetchChats = async () => {
         try {
@@ -48,6 +49,14 @@ const Chat  = () => {
         console.log("Last messages from fetch chats:", lastMessages);
         setMessage(lastMessages);
 
+        const uniqueParticipantIds = new Set([
+          ...lastMessages.map(item => item.senderId !== userId ? item.senderId : item.receiverId)
+        ]);
+  
+        uniqueParticipantIds.forEach(participantId => {
+          fetchName(participantId);
+        });
+
         } catch (error) {
           console.error('Error fetching messages in useEffect fetchChats function:', error);
         }
@@ -66,7 +75,13 @@ const Chat  = () => {
           });
     
           console.log("response from fetch name :", response.data.name)
-          setChatNames(response.data.name);
+          // setChatNames(response.data.name);
+
+          setChatNamesMap(prevMap => ({
+            ...prevMap,
+            [id]: response.data.name
+          }));
+
         } catch (error) {
           console.error('Error fetching messages in useEffect fetchName function:', error);
         }
@@ -76,7 +91,7 @@ const Chat  = () => {
         console.log("fetchChats in useEffect")
         fetchChats();
         
-        console.log("this is chatNames array: ", chatNames);
+        // console.log("this is chatNames array: ", chatNames);
       }, []);
 
   return (
@@ -91,7 +106,8 @@ const Chat  = () => {
             
           <ChatPreview
             key={index} 
-            name={item.senderId !== userId ? item.senderId : item.receiverId}
+            id={item.senderId !== userId ? item.senderId : item.receiverId}
+            name={chatNamesMap[item.senderId !== userId ? item.senderId : item.receiverId]}
             lastMessage={item.message} 
             date={item.createdAt}
           />

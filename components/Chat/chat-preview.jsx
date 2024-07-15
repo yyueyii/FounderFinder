@@ -1,14 +1,22 @@
 import React from 'react';
 import { View, Text, Image, TouchableOpacity, StyleSheet, Dimensions } from 'react-native';
 import Feather from '@expo/vector-icons/Feather';
+import { useNavigation } from '@react-navigation/native';
 
 
 const width = Dimensions.get('window').width;
 
-const ChatPreview = ( { name, lastMessage, date }) => {
+const ChatPreview = ( { id, name, lastMessage, date }) => {
+
+    const navigation = useNavigation();
+
+    const toChatRoom = () => {
+        navigation.navigate('ChatRoom', id);
+    };
+
     return (
         <View style={styles.container}>
-          <TouchableOpacity style={styles.box}>
+          <TouchableOpacity onPress={() => toChatRoom()} style={styles.box}>
             {/* <Image source={{ uri: image }} style={styles.picture} /> */}
             <View style={styles.picture}></View>
             
