@@ -5,18 +5,18 @@ import Feather from '@expo/vector-icons/Feather';
 
 const width = Dimensions.get('window').width;
 
-const ChatPreview = ( { name, image, onPressChat, lastMessage, date }) => {
+const ChatPreview = ( { name, lastMessage, date }) => {
     return (
         <View style={styles.container}>
           <TouchableOpacity style={styles.box}>
             {/* <Image source={{ uri: image }} style={styles.picture} /> */}
             <View style={styles.picture}></View>
             
-            <Text style={styles.name}>Annabelle Faber</Text>
-            <Text style={styles.date}> 10/06/24</Text>
+            <Text style={styles.name}>{name}</Text>
+            <Text style={styles.date}> {date}</Text>
             <View style={styles.messageContainer}>
               <Text style={styles.message} numberOfLines={2} ellipsizeMode="tail">
-                Hi Annabelle, lets collabbb aplsplsp lsplspl spsldfsjdgjks fhdsk jdksa; f sadf sdfashfuiaasdfsdfsshdfiash ashuflisahudfil
+                {lastMessage}
               </Text>
             </View>
 

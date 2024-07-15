@@ -165,6 +165,26 @@ app.get('/matches/:id', async (req, res) => {
     }
   });
 
+  app.get("/chats", async (req, res) => {
+    try {
+    //   const { senderId } = req.body;
+      const { senderId } = req.query;
+      console.log("checking if id is defined in /chats in server: ")
+    
+      console.log(senderId);
+
+      const chats = await Chat.find({
+        participants: { $all: [senderId] }
+      }, { messages: 1, _id: 0 }).populate("messages");
+
+    console.log(chats)
+  
+      res.status(200).json(chats);
+    } catch (error) {
+      res.status(500).json({ message: "Error in getting messages", error });
+    }
+  });
+
   app.get("/messages", async (req, res) => {
     try {
     //   const { senderId, receiverId } = req.body;
