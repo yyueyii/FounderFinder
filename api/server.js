@@ -178,10 +178,6 @@ app.get('/matches/:id', async (req, res) => {
         participants: { $all: [senderId, receiverId] }
       }, { messages: 1, _id: 0 }).populate("messages");
 
-    //   const messages = await Chat.findOne({
-    //     participants: { $all: [senderId, receiverId] }
-    //   }, { messages: 1, _id: 0 });
-
     console.log(messages)
   
       res.status(200).json(messages);

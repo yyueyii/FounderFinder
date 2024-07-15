@@ -116,6 +116,8 @@ const handleContentSizeChange = (event) => {
       { senderId: userId, receiverId: params.id, message: typedMessage, timestamp: new Date() }
     ]);
 
+    console.log("testing out date", new Date())
+
     setTypedMessage('');
 
     // call the fetchMessages() function to see the UI update
@@ -162,10 +164,21 @@ const handleContentSizeChange = (event) => {
     fetchMessages();
   }, []);
 
-  const formatTime = (time) => {
+  const formatTime = (timeString) => {
     const options = { hour: "numeric", minute: "numeric" };
-    return new Date(time).toLocaleString("en-US", options);
+    // Ensure timeString is a valid string format or Date object
+    const parsedDate = new Date(timeString);
+    if (isNaN(parsedDate.getTime())) {
+      // Handle invalid date
+      return "Invalid Date";
+    }
+    return parsedDate.toLocaleString("en-US", options);
   };
+
+  // const formatTime = (time) => {
+  //   const options = { hour: "numeric", minute: "numeric" };
+  //   return new Date(time).toLocaleString("en-US", options);
+  // };
 
   return (
     <KeyboardAvoidingView style={{backgroundColor:'white', flex:1}} behavior={Platform.OS === 'ios' ? 'padding'  : 'height'}>
@@ -197,7 +210,7 @@ const handleContentSizeChange = (event) => {
             <OtherMessageBubble
               key={index}
               message={item.message}
-              time={formatTime(item.timestamp)}
+              time={formatTime(item.createdAt)}
             />
           );
         } else {
@@ -206,7 +219,7 @@ const handleContentSizeChange = (event) => {
             <UserMessageBubble
               key={index}
               message={item.message}
-              time={formatTime(item.timestamp)}
+              time={formatTime(item.createdAt)}
             />
           );
         }
