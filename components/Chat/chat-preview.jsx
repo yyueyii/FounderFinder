@@ -3,6 +3,7 @@ import { View, Text, Image, TouchableOpacity, StyleSheet, Dimensions } from 'rea
 import Feather from '@expo/vector-icons/Feather';
 import { useNavigation } from '@react-navigation/native';
 import { Ionicons } from '@expo/vector-icons';
+import {Link} from 'expo-router';
 
 
 const width = Dimensions.get('window').width;
@@ -11,13 +12,9 @@ const ChatPreview = ( { pic, id, name, lastMessage, date }) => {
 
     const navigation = useNavigation();
 
-    const toChatRoom = () => {
-        navigation.navigate('ChatRoom', id);
-    };
-
     return (
         <View style={styles.container}>
-          <TouchableOpacity onPress={() => toChatRoom()} style={styles.box}>
+          <TouchableOpacity style={styles.box}>
 
             {pic ? (
                 <Image
@@ -37,6 +34,17 @@ const ChatPreview = ( { pic, id, name, lastMessage, date }) => {
                 {lastMessage}
               </Text>
             </View>
+            <TouchableOpacity onPress={() =>{}} style={styles.messageButton}>
+            <Link
+                href={{
+                    pathname:'/chat-room', 
+                    params: {
+                        id:id
+                    }
+                }}
+                 style={{color:'white'}}>Message
+                </Link>
+            </TouchableOpacity>
 
 
             <View style={styles.line}></View>
@@ -130,4 +138,19 @@ const styles = StyleSheet.create({
       alignItems: 'center',
       justifyContent: 'center',
     },
+    messageButton:{
+        left:30,
+        height:30,
+        width:90,
+        borderColor:'#4A0AFF',
+        borderWidth:1.5,
+        borderRadius:5, 
+        borderColor:'#4A0AFF',
+        backgroundColor:'#4A0AFF',   
+        justifyContent:'center',
+        alignItems:'center', 
+        top:35,
+        left: width - 140,
+        position:'absolute',
+    }, 
 });
