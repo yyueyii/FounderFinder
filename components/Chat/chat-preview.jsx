@@ -2,11 +2,12 @@ import React from 'react';
 import { View, Text, Image, TouchableOpacity, StyleSheet, Dimensions } from 'react-native';
 import Feather from '@expo/vector-icons/Feather';
 import { useNavigation } from '@react-navigation/native';
+import { Ionicons } from '@expo/vector-icons';
 
 
 const width = Dimensions.get('window').width;
 
-const ChatPreview = ( { id, name, lastMessage, date }) => {
+const ChatPreview = ( { pic, id, name, lastMessage, date }) => {
 
     const navigation = useNavigation();
 
@@ -17,8 +18,17 @@ const ChatPreview = ( { id, name, lastMessage, date }) => {
     return (
         <View style={styles.container}>
           <TouchableOpacity onPress={() => toChatRoom()} style={styles.box}>
-            {/* <Image source={{ uri: image }} style={styles.picture} /> */}
-            <View style={styles.picture}></View>
+
+            {pic ? (
+                <Image
+                    source={{ uri: `data:image/jpeg;base64,${pic}` }}
+                    style={styles.picture}
+                />
+                ) : (
+                    <View style={styles.anonymousIcon}>
+                        <Ionicons name="person-circle" size={59} color="#b5b5b5" />
+                    </View>
+                    )}
             
             <Text style={styles.name}>{name}</Text>
             <Text style={styles.date}>{date}</Text>
@@ -81,7 +91,7 @@ const styles = StyleSheet.create({
     picture: {
         height:50,
         width:50,
-        backgroundColor:'purple',
+        backgroundColor:'transparent',
         borderRadius:25,
         top:15,
         left:width*0.02,
@@ -111,5 +121,13 @@ const styles = StyleSheet.create({
         alignItems:'center',
         left: 120,
         top:-50,   
-    }, 
+    },
+    anonymousIcon: {
+      width: 59,
+      height: 59,
+      borderRadius: 29.5,
+      backgroundColor: 'transparent', 
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
 });

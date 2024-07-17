@@ -225,6 +225,30 @@ app.get('/matches/:id', async (req, res) => {
     }
 })
 
+  //Get pic of the person
+  app.get("/getpic", async (req, res) => {
+    try {
+        // const { id } = req.body;
+        const { id } = req.query;
+
+        const pic = await User.findOne({ 
+            _id: id,
+        }, { pic: 1, _id: 0 });
+
+        console.log("This is pic from server:", pic)
+
+        if (pic == null) {
+            res.status(200).json(null);
+        } else {
+            res.status(200).json(pic);
+        }
+
+    } catch (error) {
+        console.log("Error in getting pic in server: ", error.message);
+        res.status(500).json({error: "Internal server error"});
+    }
+})
+
   // Gets all messages in a conversation based on a userId
   app.get("/:id", protectRoute, async (req, res) => {
     try {

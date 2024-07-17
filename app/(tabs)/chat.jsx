@@ -12,6 +12,7 @@ const Chat  = () => {
     const [message, setMessage] = useState([]);
     const [chatNames, setChatNames] = useState("");
     const [chatNamesMap, setChatNamesMap] = useState({});
+    const [chatPicsMap, setChatPicsMap] = useState({});
 
     const fetchChats = async () => {
         try {
@@ -55,6 +56,7 @@ const Chat  = () => {
   
         uniqueParticipantIds.forEach(participantId => {
           fetchName(participantId);
+          fetchPic(participantId);
         });
 
         } catch (error) {
@@ -87,6 +89,31 @@ const Chat  = () => {
         }
       };
 
+      const fetchPic = async (id) => {
+        try {
+    
+          console.log("fetch Pic...")
+    
+          console.log("receiverid in fetchpic", id)
+          const response = await axios.get(`http://localhost:5001/getpic`, {
+            params: {
+              id: id,
+            }
+          });
+    
+          console.log("response from fetch pic :", response.data.pic)
+          // setChatNames(response.data.name);
+
+          setChatPicsMap(prevMap => ({
+            ...prevMap,
+            [id]: response.data.pic
+          }));
+
+        } catch (error) {
+          console.error('Error fetching messages in useEffect fetchPic function:', error);
+        }
+      };
+
       useEffect(() => {
         console.log("fetchChats in useEffect")
         fetchChats();
@@ -110,6 +137,7 @@ const Chat  = () => {
           {message.map((item, index) => (
             
           <ChatPreview
+            pic={chatPicsMap[item.senderId !== userId ? item.senderId : item.receiverId]}
             key={index} 
             id={item.senderId !== userId ? item.senderId : item.receiverId}
             name={chatNamesMap[item.senderId !== userId ? item.senderId : item.receiverId]}
