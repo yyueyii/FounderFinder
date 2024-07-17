@@ -165,6 +165,58 @@ app.get('/matches/:id', async (req, res) => {
     }
   });
 
+  app.get('/matchesnochats/:id', async (req, res) => {
+    try {
+        const {id} = req.params;
+        const user = await User.findById(id).populate('matches.userId').exec();
+  
+      if (!user) {
+        return res.status(404).json({ error: 'User not found' });
+      }
+  
+      const sortedMatches = user.matches.sort((a, b) => b.matchedAt - a.matchedAt);
+      const matchedProfiles = sortedMatches.map(match => match.userId);
+
+      const matchedProfilesWithoutChats = [];
+
+        for (const profile of matchedProfiles) {
+        const existingChat = await Chat.findOne({
+            participants: { $all: [id, profile._id] } 
+        });
+
+        if (!existingChat) {
+            matchedProfilesWithoutChats.push(profile);
+        }
+    }
+
+      res.status(200).json(matchedProfilesWithoutChats);
+
+    } catch (error) {
+      console.error('Error fetching matched profiles:', error);
+      res.status(500).json({ error: 'Failed to fetch matched profiles' });
+    }
+  });
+
+  app.get("/chats", async (req, res) => {
+    try {
+    //   const { senderId } = req.body;
+      const { senderId } = req.query;
+      console.log("checking if id is defined in /chats in server: ")
+    
+      console.log(senderId);
+
+      const chats = await Chat.find({
+        participants: { $all: [senderId] }
+      }, { messages: 1, _id: 0 }).populate("messages");
+
+    console.log(chats)
+  
+      res.status(200).json(chats);
+    } catch (error) {
+      res.status(500).json({ message: "Error in getting messages", error });
+    }
+  });
+
   app.get("/messages", async (req, res) => {
     try {
     //   const { senderId, receiverId } = req.body;
@@ -201,6 +253,30 @@ app.get('/matches/:id', async (req, res) => {
         res.status(200).json(name);
     } catch (error) {
         console.log("Error in getting name in server: ", error.message);
+        res.status(500).json({error: "Internal server error"});
+    }
+})
+
+  //Get pic of the person
+  app.get("/getpic", async (req, res) => {
+    try {
+        // const { id } = req.body;
+        const { id } = req.query;
+
+        const pic = await User.findOne({ 
+            _id: id,
+        }, { pic: 1, _id: 0 });
+
+        console.log("This is pic from server:", pic)
+
+        if (pic == null) {
+            res.status(200).json(null);
+        } else {
+            res.status(200).json(pic);
+        }
+
+    } catch (error) {
+        console.log("Error in getting pic in server: ", error.message);
         res.status(500).json({error: "Internal server error"});
     }
 })

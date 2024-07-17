@@ -10,6 +10,7 @@ import EditProfile from './app/(auth)/edit-profile';
 import Matches from './app/(tabs)/matches';
 import ViewProfile from './app/view-profile';
 import { SocketContextProvider } from './api/context/SocketContext';
+import ChatRoom from './app/chat-room';
 
 const LogInStack = createNativeStackNavigator();
 const EditProfileStack = createNativeStackNavigator();
@@ -22,6 +23,7 @@ const App = () => {
             <LogInStack.Navigator initialRouteName='Index'>
                 <Stack.Screen name="Index" component={Index} />
                 <Stack.Screen name="Login" component={LoginPage} />
+                <Stack.Screen name="ChatRoom" component={ChatRoom} />
             </LogInStack.Navigator>
 
             

@@ -1,24 +1,50 @@
 import React from 'react';
 import { View, Text, Image, TouchableOpacity, StyleSheet, Dimensions } from 'react-native';
 import Feather from '@expo/vector-icons/Feather';
+import { useNavigation } from '@react-navigation/native';
+import { Ionicons } from '@expo/vector-icons';
+import {Link} from 'expo-router';
 
 
 const width = Dimensions.get('window').width;
 
-const ChatPreview = ( { name, image, onPressChat, lastMessage, date }) => {
+const ChatPreview = ( { pic, id, name, lastMessage, date }) => {
+
+    const navigation = useNavigation();
+
     return (
         <View style={styles.container}>
           <TouchableOpacity style={styles.box}>
-            {/* <Image source={{ uri: image }} style={styles.picture} /> */}
-            <View style={styles.picture}></View>
+
+            {pic ? (
+                <Image
+                    source={{ uri: `data:image/jpeg;base64,${pic}` }}
+                    style={styles.picture}
+                />
+                ) : (
+                    <View style={styles.anonymousIcon}>
+                        <Ionicons name="person-circle" size={59} color="#b5b5b5" />
+                    </View>
+                    )}
             
-            <Text style={styles.name}>Annabelle Faber</Text>
-            <Text style={styles.date}> 10/06/24</Text>
+            <Text style={styles.name}>{name}</Text>
+            <Text style={styles.date}>{date}</Text>
             <View style={styles.messageContainer}>
               <Text style={styles.message} numberOfLines={2} ellipsizeMode="tail">
-                Hi Annabelle, lets collabbb aplsplsp lsplspl spsldfsjdgjks fhdsk jdksa; f sadf sdfashfuiaasdfsdfsshdfiash ashuflisahudfil
+                {lastMessage}
               </Text>
             </View>
+            <TouchableOpacity onPress={() =>{}} style={styles.messageButton}>
+            <Link
+                href={{
+                    pathname:'/chat-room', 
+                    params: {
+                        id:id
+                    }
+                }}
+                 style={{color:'white'}}>Message
+                </Link>
+            </TouchableOpacity>
 
 
             <View style={styles.line}></View>
@@ -59,7 +85,7 @@ const styles = StyleSheet.create({
     name:{
         fontSize:18,
         fontWeight:'bold',
-        left: 70,
+        left: 90,
         top:12,
         position:'absolute',
     },
@@ -68,12 +94,12 @@ const styles = StyleSheet.create({
         color:'gray',
         position:'absolute',
         right:20,
-        top: 16,
+        top: 10,
     },
     picture: {
         height:50,
         width:50,
-        backgroundColor:'purple',
+        backgroundColor:'transparent',
         borderRadius:25,
         top:15,
         left:width*0.02,
@@ -86,8 +112,8 @@ const styles = StyleSheet.create({
     },
     message:{
       fontSize:14,
-      left: 70,
-      top:-63,
+      left: 90,
+      top:-55,
       position:'absolute',
       paddingRight:15,
           
@@ -103,5 +129,28 @@ const styles = StyleSheet.create({
         alignItems:'center',
         left: 120,
         top:-50,   
+    },
+    anonymousIcon: {
+      width: 59,
+      height: 59,
+      borderRadius: 29.5,
+      backgroundColor: 'transparent', 
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+    messageButton:{
+        left:30,
+        height:30,
+        width:90,
+        borderColor:'#4A0AFF',
+        borderWidth:1.5,
+        borderRadius:5, 
+        borderColor:'#4A0AFF',
+        backgroundColor:'#4A0AFF',   
+        justifyContent:'center',
+        alignItems:'center', 
+        top:35,
+        left: width - 140,
+        position:'absolute',
     }, 
 });
