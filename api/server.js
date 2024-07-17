@@ -165,6 +165,38 @@ app.get('/matches/:id', async (req, res) => {
     }
   });
 
+  app.get('/matchesnochats/:id', async (req, res) => {
+    try {
+        const {id} = req.params;
+        const user = await User.findById(id).populate('matches.userId').exec();
+  
+      if (!user) {
+        return res.status(404).json({ error: 'User not found' });
+      }
+  
+      const sortedMatches = user.matches.sort((a, b) => b.matchedAt - a.matchedAt);
+      const matchedProfiles = sortedMatches.map(match => match.userId);
+
+      const matchedProfilesWithoutChats = [];
+
+        for (const profile of matchedProfiles) {
+        const existingChat = await Chat.findOne({
+            participants: { $all: [id, profile._id] } 
+        });
+
+        if (!existingChat) {
+            matchedProfilesWithoutChats.push(profile);
+        }
+    }
+
+      res.status(200).json(matchedProfilesWithoutChats);
+
+    } catch (error) {
+      console.error('Error fetching matched profiles:', error);
+      res.status(500).json({ error: 'Failed to fetch matched profiles' });
+    }
+  });
+
   app.get("/chats", async (req, res) => {
     try {
     //   const { senderId } = req.body;

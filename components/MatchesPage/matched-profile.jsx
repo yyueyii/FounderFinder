@@ -39,7 +39,7 @@ const MatchedProfileDisplay = ( { profileData }) => {
                         id:receiverId
                     }
                 }}
-                 style={{color:'white'}}>Message
+                 style={{color:'white'}}>Start Messaging
                 </Link>
             </TouchableOpacity>
 
@@ -105,9 +105,9 @@ const styles = StyleSheet.create({
 
     },
     messageButton:{
-        left:30,
+        // left:50,
         height:30,
-        width:90,
+        width:120,
         borderColor:'#4A0AFF',
         borderWidth:1.5,
         borderRadius:5, 
@@ -116,7 +116,7 @@ const styles = StyleSheet.create({
         justifyContent:'center',
         alignItems:'center', 
         top:35,
-        left: width - 140,
+        left: width - 170,
         position:'absolute',
     }, 
     viewProfileButton:{

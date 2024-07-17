@@ -94,7 +94,7 @@ const styles = StyleSheet.create({
         color:'gray',
         position:'absolute',
         right:20,
-        top: 16,
+        top: 10,
     },
     picture: {
         height:50,
