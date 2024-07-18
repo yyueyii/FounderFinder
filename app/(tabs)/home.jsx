@@ -53,9 +53,9 @@ useEffect(() => {
   }
 }, [profiles]);
 
-useEffect(() => {
-  console.log("profiles: ", profiles);
-}, [profiles]);
+// useEffect(() => {
+//   console.log("profiles: ", profiles);
+// }, [profiles]);
 
 useEffect(() => {
   console.log("notifications: ", notifs);

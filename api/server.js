@@ -235,11 +235,31 @@ app.get('/profile/:id', async(req, res) => {
     });
 
 
-    //get profiles for home page (temp)
+    //get profiles for home page - prioritises one-sided match & users with at least one common sector, exclude self and liked/matched
     app.get('/getProfiles/:id', async(req, res) => {
         const {id} = req.params;
 
         try {
+            const user = await User.findById(id);
+            const userSectors = user.sectors;
+
+            const prioritizedProfiles1 = await User.find({
+                _id: { $ne: id }, 
+                published: true,
+                sectors: { $in: userSectors }
+              }).exec();
+            const groupOneIds = prioritizedProfiles1.map(profile => profile._id);
+
+            const prioritizedMatches = await Match.find({
+                user2: id,
+                matched: false
+            }).exec();
+            const groupTwoIds = prioritizedMatches.map(match => match.user1);
+            const prioritizedProfiles2 = await User.find({
+                _id: { $in: groupTwoIds, $nin: [id, ...groupOneIds] }, 
+                published: true
+              }).exec();
+
             const remove = await Match.find({
                 $or: [
                     { user1: id },
@@ -252,10 +272,12 @@ app.get('/profile/:id', async(req, res) => {
             ));
 
             const profiles = await User.find({ 
-                _id: { $nin: [...removeUserIds, id] }, 
+                _id: { $nin: [...removeUserIds, ...groupOneIds, ...groupTwoIds, id] }, 
                 published:true 
             }).exec();
-            res.status(200).json(profiles);
+
+            const result = [...prioritizedProfiles2, ...prioritizedProfiles1, ...profiles]
+            res.status(200).json(result);
         }catch (err) {
             res.status(500).json({error: err});
         }
