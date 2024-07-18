@@ -1,4 +1,4 @@
-import { View, StyleSheet, ScrollView, ActivityIndicator, TouchableOpacity, FlatList} from 'react-native'
+import { View, StyleSheet, ScrollView,Text, ActivityIndicator, TouchableOpacity, FlatList} from 'react-native'
 import React, {useState, useEffect, useRef} from 'react'
 import { LinearGradient } from 'expo-linear-gradient';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
@@ -22,10 +22,11 @@ const Home = () => {
 
 
   useEffect(() => {
+    if (userId) {
     console.log("set userId on Home: ", userId);
     const fetchProfileData = async () => {
       try {
-            const response = await fetch(`http://192.168.1.5:5001/getProfiles`); 
+            const response = await fetch(`http://192.168.101.16:5001/getProfiles/${userId}`); 
             const json = await response.json();
             setProfiles(json);
         
@@ -37,12 +38,13 @@ const Home = () => {
     };
 
     fetchProfileData(); 
+  }
 },[userId]);
 
 useEffect(() => {
   if (userId) { 
     fetchNotifs = async() => {
-      const notifResponse = await fetch(`http://192.168.1.5:5001/getNotification/${userId}`);
+      const notifResponse = await fetch(`http://192.168.101.16:5001/getNotification/${userId}`);
       const notifjson = await notifResponse.json();
       setNotifs(notifjson);
     }
@@ -73,7 +75,7 @@ if (loading) {
 const handleMatchButtonPress = async (id) => {
   const fetchProfileData = async () => {
     try {
-      const response = await fetch(`http://192.168.1.5:5001/match/${userId}/${id}`, {
+      const response = await fetch(`http://192.168.101.16:5001/match/${userId}/${id}`, {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',
@@ -88,6 +90,9 @@ const handleMatchButtonPress = async (id) => {
         // return handleMatchMade;
       }
       console.log("match status:", json.matched);
+      setProfiles(prevProfiles => prevProfiles.filter(profile => profile._id !== id));
+      scrollViewRef.current?.scrollTo({ x: 0, y: 0, animated: true });
+
     } catch (error) {
       console.error('Error fetching profile data:', error);
     }
@@ -119,19 +124,32 @@ const handleNotifPress = () => {
       <SafeAreaView>
       <LinearGradient colors={['#4A0AFF', '#5869ED', '#43B0FF']} style={styles.linearGradient}/>
       
+      
       <ScrollView ref={scrollViewRef} contentContainerStyle={styles.cardContainer} showsVerticalScrollIndicator={false}>
-        <ProfileCard profileData={profiles[currentIndex]}/>
+          {profiles.length != 0 &&
+          <ProfileCard profileData={profiles[currentIndex]}/>
+          }
         <View style={{height:50, backgroundColor:'transparent'}}/>
-
       </ScrollView>
       
-      <TouchableOpacity style={styles.matchButton} onPress={() =>{handleMatchButtonPress(profiles[currentIndex]["_id"]); handleNextProfile();}}>
+      {profiles.length != 0 && (
+        <>
+      <TouchableOpacity style={styles.matchButton} onPress={() =>{handleMatchButtonPress(profiles[currentIndex]["_id"]); }}>
         <MaterialIcons name="handshake" size={45} color={'#4A0AFF'}/>
       </TouchableOpacity>
 
       <TouchableOpacity style={styles.nextButton} onPress={() => {handleNextProfile();}}>
         <Ionicons name="close" size={45} color={'#4A0AFF'}/>
       </TouchableOpacity>
+      </>
+      )}
+
+      {profiles.length == 0 &&
+        <View style={{paddingHorizontal:50, top: 120}}>
+          <Text>Wow you have liked all profiles, we'll let you know when someone matches with you!</Text>
+        </View>
+      }
+
 
       {notifs.length != 0 && (
         <FlatList

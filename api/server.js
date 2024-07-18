@@ -236,10 +236,25 @@ app.get('/profile/:id', async(req, res) => {
 
 
     //get profiles for home page (temp)
-    app.get('/getProfiles', async(req, res) => {
+    app.get('/getProfiles/:id', async(req, res) => {
         const {id} = req.params;
+
         try {
-            const profiles = await User.find({ _id: {$ne: id}, published:true }).exec();
+            const remove = await Match.find({
+                $or: [
+                    { user1: id },
+                    { user2: id, matched: true }
+                ]
+            }).exec();
+
+            const removeUserIds = remove.map(entry => (
+                entry.user1.equals(id) ? entry.user2 : entry.user1
+            ));
+
+            const profiles = await User.find({ 
+                _id: { $nin: [...removeUserIds, id] }, 
+                published:true 
+            }).exec();
             res.status(200).json(profiles);
         }catch (err) {
             res.status(500).json({error: err});

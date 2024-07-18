@@ -16,7 +16,7 @@ const Matches = () => {
   useEffect(() => {
     const fetchMatches = async () => {
       try {
-        const response = await fetch(`http://192.168.1.5:5001/successfulMatches/${userId}`);
+        const response = await fetch(`http://192.168.101.16:5001/successfulMatches/${userId}`);
         const json = await response.json();
           setMatches(json); 
           console.log("matched profile datan fetched:", matches);

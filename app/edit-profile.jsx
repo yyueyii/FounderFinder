@@ -5,7 +5,7 @@ import * as ImagePicker from 'expo-image-picker';
 import { useFocusEffect, useLocalSearchParams, router } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import * as FileSystem from 'expo-file-system';
-import useUserStore from '../store/userStore';
+import useUserStore from './store/userStore';
 
 
 
