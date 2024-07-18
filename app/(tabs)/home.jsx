@@ -1,41 +1,174 @@
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity} from 'react-native'
-import React, {useState} from 'react'
+import { View, StyleSheet, ScrollView,Text, ActivityIndicator, TouchableOpacity, FlatList} from 'react-native'
+import React, {useState, useEffect, useRef} from 'react'
 import { LinearGradient } from 'expo-linear-gradient';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
 import ProfileCard from '../../components/Profile/profile-card';
+import useUserStore from '../store/userStore';
+import MatchedPopUp from '../successful-match';
+import { Ionicons } from '@expo/vector-icons';
+import { SafeAreaView } from 'react-native-safe-area-context';
+
+
 
 const Home = () => {
+  const userId = useUserStore((state) => state.userId);
+  const scrollViewRef = useRef(null);
 
-  const [profileData, setProfileData] = useState({
-    //picture: //require placeholder
-    name: 'Your Name', 
-    description: 'Harvard Business School Graduate',
-    sectors: ['Finance', 'Susainability', 'Tech', 'Data Science'], 
-    skills: ['Communication', 'Business Analytics', 'ReactNative', 'Python', 'Teamwork','Java', 'C++'], 
-    aboutMe:'abtmeee',
-    education: 
-      [{institution: 'MBA, Harvard University', duration:'2021-2022', 
-          description:'Lorem ipsum ute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.    '},
-        {institution:'BBA', duration:'2017-2020', 
-          description:'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim oe dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidant in culpa qui officia deserunt mollit anim id est laborum.  '}
-      ],
-    workExperience:
-      [{organisation: 'Google', duration:'2020', description:'goooooooooooooooooooogle'}],
-    LCI: 'You are a technical co-founder in the FinTech space looking for a non-technical co-founder to handle all things business. You are a technical co-founder in the FinTech space looking for a non-technical co-founder to handle all things business', 
-  })
+  const [profiles, setProfiles] = useState([]);
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [loading, setLoading] = useState(true);
+  const [isMatched, setIsMatched] = useState(false);
+  const [notifs, setNotifs] = useState([]);
+
+
+  useEffect(() => {
+    if (userId) {
+    console.log("set userId on Home: ", userId);
+    const fetchProfileData = async () => {
+      try {
+            const response = await fetch(`http://192.168.101.16:5001/getProfiles/${userId}`); 
+            const json = await response.json();
+            setProfiles(json);
+        
+      } catch (error) {
+            console.error('Error fetching profile data:', error);  
+        } finally {
+          setLoading(false);
+        }
+    };
+
+    fetchProfileData(); 
+  }
+},[userId]);
+
+useEffect(() => {
+  if (userId) { 
+    fetchNotifs = async() => {
+      const notifResponse = await fetch(`http://192.168.101.16:5001/getNotification/${userId}`);
+      const notifjson = await notifResponse.json();
+      setNotifs(notifjson);
+    }
+
+    fetchNotifs();
+  }
+}, [profiles]);
+
+// useEffect(() => {
+//   console.log("profiles: ", profiles);
+// }, [profiles]);
+
+useEffect(() => {
+  console.log("notifications: ", notifs);
+}, [notifs]);
+
+
+
+if (loading) {
+  return (
+      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+          <ActivityIndicator size="large" color="#0000ff" />
+      </View>
+  );
+}
+
+
+const handleMatchButtonPress = async (id) => {
+  const fetchProfileData = async () => {
+    try {
+      const response = await fetch(`http://192.168.101.16:5001/match/${userId}/${id}`, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+      const json = await response.json();
+      if (json["matched"]) {
+        setIsMatched(true);
+        console.log(json);
+        console.log("A matched is made with: ", profiles[currentIndex]["name"]);
+        
+        // return handleMatchMade;
+      }
+      console.log("match status:", json.matched);
+      setProfiles(prevProfiles => prevProfiles.filter(profile => profile._id !== id));
+      scrollViewRef.current?.scrollTo({ x: 0, y: 0, animated: true });
+
+    } catch (error) {
+      console.error('Error fetching profile data:', error);
+    }
+  };
+
+  fetchProfileData();
+};
+
+const handleNextProfile = () => {
+  if (currentIndex < profiles.length - 1) {
+    setCurrentIndex(currentIndex + 1);
+  } if (currentIndex == profiles.length - 1) {
+    setCurrentIndex(0);
+  }
+  console.log("Skipped");
+  console.log("prev: ", profiles[currentIndex]["name"])
+  scrollViewRef.current?.scrollTo({ x: 0, y: 0, animated: true });
+
+};
+
+
+
+
+const handleNotifPress = () => {
+  setNotifs(notifs.slice(1));
+};
 
   return (
     <View style={{flex:1}}>
+      <SafeAreaView>
       <LinearGradient colors={['#4A0AFF', '#5869ED', '#43B0FF']} style={styles.linearGradient}/>
-      <ScrollView contentContainerStyle={styles.cardContainer}>
-        <ProfileCard profileData={profileData}/>
-        <View style={{height:30, backgroundColor:'transparent'}}/>
-
+      
+      
+      <ScrollView ref={scrollViewRef} contentContainerStyle={styles.cardContainer} showsVerticalScrollIndicator={false}>
+          {profiles.length != 0 &&
+          <ProfileCard profileData={profiles[currentIndex]}/>
+          }
+        <View style={{height:50, backgroundColor:'transparent'}}/>
       </ScrollView>
       
-      <TouchableOpacity style={styles.matchButton}>
+      {profiles.length != 0 && (
+        <>
+      <TouchableOpacity style={styles.matchButton} onPress={() => {handleMatchButtonPress(profiles[currentIndex]["_id"]);}}>
         <MaterialIcons name="handshake" size={45} color={'#4A0AFF'}/>
       </TouchableOpacity>
+
+      <TouchableOpacity style={styles.nextButton} onPress={() => {handleNextProfile();}}>
+        <Ionicons name="close" size={45} color={'#4A0AFF'}/>
+      </TouchableOpacity>
+      </>
+      )}
+
+      {profiles.length == 0 &&
+        <View style={{paddingHorizontal:50, top: 120}}>
+          <Text>Wow you have liked all profiles, we'll let you know when someone matches with you!</Text>
+        </View>
+      }
+
+
+      {notifs.length != 0 && (
+        <FlatList
+          data={notifs}
+          renderItem={({ item }) => (
+              <TouchableOpacity onPress={handleNotifPress}>
+                  <MatchedPopUp profileData={item.user2} />
+              </TouchableOpacity>
+
+        )}
+        keyExtractor={(item) => item.user2._id.toString()}
+      />
+      )}
+      
+     
+
+      {isMatched && <MatchedPopUp onLater={() => setIsMatched(false)} profileData={currentIndex} />}
+      </SafeAreaView>
     </View>
 
    
@@ -44,7 +177,10 @@ const Home = () => {
 
 export default Home
 
-const styles = StyleSheet.create({
+const styles = StyleSheet.create({  
+  contentContainer: {
+    paddingHorizontal: 16, 
+  },
   linearGradient: {
     width:'100%', 
     height:300,
@@ -57,7 +193,7 @@ const styles = StyleSheet.create({
     flexGrow:1,
     width:'100%',
     backgroundColor:'transparent',
-    top:40,
+    top:20,
     paddingLeft:'5%',
     paddingRight:'5%',
     alignItem:'center',
@@ -74,6 +210,7 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.5,
     shadowOffset: { width: 0, height: 3 },
     shadowRadius: 4,
+    elevation:5,
     justifyContent:'center',
     alignItems:'center',
 
@@ -83,6 +220,25 @@ const styles = StyleSheet.create({
     aspectRatio:1,
     backgroundColor:'gray', 
     borderRadius:25,
+    
+  }, 
+  nextButton: {
+    height:70,
+    width:70,
+    borderRadius:70/2,
+    backgroundColor:'white',
+    justifyContent:'center',
+    alignItems:'center',
+    shadowColor:'#000',
+    shadowOpacity: 0.5,
+    shadowOffset: { width: 0, height: 3 },
+    shadowRadius: 4,
+    elevation:5,
+    position:'absolute',
+    right:20,
+    bottom:120,
+
+
   }
   
 })

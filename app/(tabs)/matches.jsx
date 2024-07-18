@@ -14,12 +14,10 @@ const Matches = () => {
   const [matches, setMatches] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  const navigation = useNavigation();
-
   useEffect(() => {
     const fetchMatches = async () => {
       try {
-        const response = await fetch(`http://localhost:5001/matchesnochats/${userId}`);
+        const response = await fetch(`http://192.168.101.16:5001/successfulMatches/${userId}`);
         const json = await response.json();
           setMatches(json); 
           console.log("matched profile datan fetched:", matches);

@@ -1,10 +1,8 @@
 import {  Text, View, StyleSheet, Image, Button, Pressable, TouchableOpacity} from 'react-native'
-import { Slot } from 'expo-router';
 import { Link } from 'expo-router';
 import { StatusBar } from 'expo-status-bar' 
 import 'react-native-gesture-handler'
 import { LinearGradient } from 'expo-linear-gradient';
-import { useNavigation } from '@react-navigation/native';
 
 
 // import { NavigationContainer } from '@react-navigation/native'
@@ -13,19 +11,18 @@ import { useNavigation } from '@react-navigation/native';
 
 
 export default function Index() {
-  const navigation = useNavigation();
   return (
     
     <View style={styles.container}>
       <Image 
-        source={require('../assets/images/logo.png')}
+        source={require('../assets/images/favicon.png')}
         style={{width:200, height:25}}/> 
       <StatusBar style="auto"  />
       {/* <Link href="/log-in" style={{color: 'purple', top: 50, left: -5}}> Log in </Link> */}
       <TouchableOpacity style={styles.button}>
       <LinearGradient colors={['#4A0AFF', '#5869ED']} style={styles.linearGradient}/>
 
-        <Link href="/log-in" style={{color:'white', fontWeight:'bold', top:-28}}>Log In</Link>
+        <Link href="log-in" style={{color:'white', fontWeight:'bold', top:-28}}>Log In</Link>
 
       </TouchableOpacity>
     </View>

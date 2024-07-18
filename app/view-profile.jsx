@@ -13,7 +13,7 @@ const ViewProfile = () => {
   const [loading, setLoading] = useState(true);
   const [base64Pic, setBase64Pic] = useState(null);
   const navigation = useNavigation();
-  const params = useLocalSearchParams();
+  const params = useLocalSearchParams();  
   console.log("userId: ", params);
   const id = new ObjectId(params)
 

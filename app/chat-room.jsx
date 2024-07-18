@@ -1,5 +1,5 @@
 import React, { useState , useEffect, useRef } from 'react';
-import { Text, View, ScrollView, TextInput,Keyboard, Button, StyleSheet, TouchableOpacity, Platform, Dimensions, KeyboardAvoidingView, Pressable } from 'react-native';
+import { Text, View, Image, ScrollView, TextInput, StatusBar, Keyboard, Button, StyleSheet, TouchableOpacity, Platform, Dimensions, KeyboardAvoidingView, Pressable, SafeAreaView } from 'react-native';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import OtherMessageBubble from '../components/Chat/other-message-bubble';
 import UserMessageBubble from '../components/Chat/user-message-bubble';
@@ -8,7 +8,7 @@ const width = Dimensions.get('window').width;
 const mongoose = require('mongoose'); 
 const { ObjectId } = mongoose.Types;
 import { useNavigation } from '@react-navigation/native';
-import { SafeAreaView } from 'react-native-safe-area-context';
+
 
 import { uniqBy } from "lodash";
 import axios from "axios";
@@ -25,6 +25,7 @@ const [socket, setSocket] = useState(null);
 const [selectedUserId,setSelectedUserId] = useState(null);
 const [messages, setMessages] = useState([]);
 const [receiverName, setReceiverName] = useState('');
+const [receiverPic, setReceiverPic] = useState(null);
 
 const [onlinePeople,setOnlinePeople] = useState({});
 const [offlinePeople,setOfflinePeople] = useState({});
@@ -48,7 +49,7 @@ const handleContentSizeChange = (event) => {
   useEffect(() => {
 
     console.log("In useEffect in chat-room");
-    const newSocket = io('http://localhost:8000'); 
+    const newSocket = io('http://192.168.101.16:8000'); 
 
     console.log("newSocket is instantiated")
 
@@ -145,7 +146,7 @@ const handleContentSizeChange = (event) => {
       console.log("fetch Name...")
 
       console.log("receiverid in fetchname", params.id)
-      const response = await axios.get(`http://localhost:5001/getname`, {
+      const response = await axios.get(`http://192.168.101.16:5001/getname`, {
         params: {
           id: params.id,
         }
@@ -158,6 +159,31 @@ const handleContentSizeChange = (event) => {
     }
   };
 
+  const fetchPic = async () => {
+    try {
+
+      console.log("fetch Pic...")
+
+      console.log("receiverid in fetchPic", params.id)
+      const response = await axios.get(`http://192.168.101.16:5001/getpic`, {
+        params: {
+          id: params.id,
+        }
+      });
+      
+
+      console.log("response from fetch pic :", response.data.pic)
+      setReceiverPic(response.data.pic);
+    } catch (error) {
+      console.error('Error fetching messages in useEffect fetchName function:', error);
+    }
+  };
+
+
+
+
+
+
   const fetchMessages = async () => {
     try {
 
@@ -165,7 +191,7 @@ const handleContentSizeChange = (event) => {
 
       console.log("senderid in fetchmsgs", userId)
       console.log("receiverid in fetchmsgs", params.id)
-      const response = await axios.get(`http://localhost:5001/messages`, {
+      const response = await axios.get(`http://192.168.101.16:5001/messages`, {
         params: {
           senderId: userId,
           receiverId: params.id,
@@ -183,6 +209,7 @@ const handleContentSizeChange = (event) => {
     console.log("fetchmessages in useEffect")
     fetchName();
     fetchMessages();
+    fetchPic();
   }, []);
 
   const formatTime = (timeString) => {
@@ -202,8 +229,9 @@ const handleContentSizeChange = (event) => {
   // };
 
   return (
-    <KeyboardAvoidingView style={{backgroundColor:'white', flex:1}} behavior={Platform.OS === 'ios' ? 'padding'  : 'height'}>
-
+    <SafeAreaView style={{flex: 1, paddingTop: StatusBar.currentHeight, backgroundColor:'white'}}>
+    <KeyboardAvoidingView style={{backgroundColor:'white', flex: 1}} behavior={Platform.OS === 'ios' ? 'padding'  : 'height'}>
+        
         <Pressable style={styles.header} onPress={() =>{}}>
         <Link
                 href={{
@@ -217,7 +245,16 @@ const handleContentSizeChange = (event) => {
             <Pressable onPress={()=>{navigation.goBack()}}>
                 <Ionicons name="chevron-back-outline" size={30} color="#4A0AFF"style={styles.back}/>   
             </Pressable>
-            <View style={styles.image}/>
+            {receiverPic ? (
+                <Image
+                    source={{ uri: `data:image/jpeg;base64,${receiverPic}` }}
+                    style={styles.image}
+                />
+                ) : (
+                    <View style={styles.image}>
+                        <Ionicons name="person-circle" size={44} color="#b5b5b5" />
+                    </View>
+                    )}
         </Pressable>
         
 
@@ -245,17 +282,7 @@ const handleContentSizeChange = (event) => {
           );
         }
       })}
-            {/* //render previous messages */}
-            {/* <OtherMessageBubble  message={'Hi Annabelle'} time={'01:22'}/>
-            <OtherMessageBubble  message={'Long mes ashfskdlhf sk fslfj klsdasdfhjksf ks fhsk hfskdh fskdjh fksdhf skldh  hjkhfskj fksdhf ksdjhf skjdhf ks djk hsjk fhjkash fksjhf ksj jdsk hfjska fhksjdhf kjsdhf ksj njk djksa fnjks fjskj fksda fjksjkajkjsfd'} time={'03:12'}/>
-            <UserMessageBubble message={'hey'} time={'12:23'}/>
-            <UserMessageBubble message={'long message asdhfuis ish ish fshf kshf ksjhfkshf kjshfkjshf kjs kfsa jkshf ksj hfjks fkds fhjksfhkds'} time={'12:23'}/>
-            <UserMessageBubble message={'long message asdhfuis ish ish fshf kshf ksjhfkshf kjshfkjshf kjs kfsa jkshf ksj hfjks fkds fhjksfhkds'} time={'12:23'}/>
-            <OtherMessageBubble  message={'Long mes ashfskdlhf sk fslfj klsdasdfhjksf ks fhsk hfskdh fskdjh fksdhf skldh  hjkhfskj fksdhf ksdjhf skjdhf ks djk hsjk fhjkash fksjhf ksj jdsk hfjska fhksjdhf kjsdhf ksj njk djksa fnjks fjskj fksda fjksjkajkjsfd'} time={'03:12'}/>
-            <OtherMessageBubble  message={'Long mes ashfskdlhf sk fslfj klsdasdfhjksf ks fhsk hfskdh fskdjh fksdhf skldh  hjkhfskj fksdhf ksdjhf skjdhf ks djk hsjk fhjkash fksjhf ksj jdsk hfjska fhksjdhf kjsdhf ksj njk djksa fnjks fjskj fksda fjksjkajkjsfd'} time={'03:12'}/>
-            <OtherMessageBubble  message={'Long mes ashfskdlhf sk fslfj klsdasdfhjksf ks fhsk hfskdh fskdjh fksdhf skldh  hjkhfskj fksdhf ksdjhf skjdhf ks djk hsjk fhjkash fksjhf ksj jdsk hfjska fhksjdhf kjsdhf ksj njk djksa fnjks fjskj fksda fjksjkajkjsfd'} time={'03:12'}/> */}
-
-            {/* if next is other person's message, add a gap */}
+            
       </ScrollView>
 
 
@@ -274,7 +301,10 @@ const handleContentSizeChange = (event) => {
         <Ionicons name="send" size={18} color="white" style={{left:2}}/>       
          </TouchableOpacity>
       </View>
+
     </KeyboardAvoidingView>
+    </SafeAreaView>
+
   );
 };
 
@@ -308,8 +338,10 @@ const styles = StyleSheet.create({
     height:40,
     width:40,
     borderRadius:20,
-    backgroundColor:'purple',
+    backgroundColor:'white',
     left:40,
+    justifyContent:'center',
+    alignItems:'center'
   },
   messagesContainer: {
     flexGrow: 1,

@@ -37,7 +37,7 @@ const ChatPreview = ( { pic, id, name, lastMessage, date }) => {
             <TouchableOpacity onPress={() =>{}} style={styles.messageButton}>
             <Link
                 href={{
-                    pathname:'/chat-room', 
+                    pathname:'chat-room', 
                     params: {
                         id:id
                     }

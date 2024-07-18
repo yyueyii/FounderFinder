@@ -55,14 +55,8 @@ const UserDetailSchema = new mongoose.Schema({
         default:false,
 
       },
-      matches: [
-        {
-            userId: { type:mongoose.Schema.Types.ObjectId, ref: 'UserInfo'},
-            matchedAt: { type: Date, default: Date.now }
-        }
-      ]
-     
-}, 
+      
+    }, 
 {
     timestamps: true,
     collection: "UserInfo"

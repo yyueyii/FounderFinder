@@ -34,6 +34,7 @@ const styles = StyleSheet.create({
         borderRadius:15,
         padding:10,
         maxWidth:'100%',
+        paddingLeft:30,
         alignItems:'flex-start'
 
     }, 
@@ -71,6 +72,3 @@ const styles = StyleSheet.create({
         position:'absolute',
     }
 })
-
-
-

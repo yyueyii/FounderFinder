@@ -37,6 +37,7 @@ const styles = StyleSheet.create({
         backgroundColor:'#4A0AFF',
         borderRadius:15,
         padding:10,
+        paddingRight:30,
         maxWidth:'100%',
         alignItems:'flex-start'
     }, 
@@ -63,7 +64,7 @@ const styles = StyleSheet.create({
         padding:2,
         marginBottom:-10,
         lineHeight:17,
-        paddingBottom:20,
+        paddingBottom:25,
     }, 
     time: {
         fontSize: 11,
@@ -74,6 +75,3 @@ const styles = StyleSheet.create({
         position:'absolute',
     }
 })
-
-
-

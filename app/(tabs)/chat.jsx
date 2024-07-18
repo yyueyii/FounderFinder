@@ -20,7 +20,7 @@ const Chat  = () => {
           console.log("fetch Chats...")
     
           console.log("userid in fetchchat", userId)
-          const response = await axios.get(`http://localhost:5001/chats`, {
+          const response = await axios.get(`http://192.168.101.16:5001/chats`, {
             params: {
               senderId: userId,
             }
@@ -70,7 +70,7 @@ const Chat  = () => {
           console.log("fetch Name...")
     
           console.log("receiverid in fetchname", id)
-          const response = await axios.get(`http://localhost:5001/getname`, {
+          const response = await axios.get(`http://192.168.101.16:5001/getname`, {
             params: {
               id: id,
             }
@@ -95,7 +95,7 @@ const Chat  = () => {
           console.log("fetch Pic...")
     
           console.log("receiverid in fetchpic", id)
-          const response = await axios.get(`http://localhost:5001/getpic`, {
+          const response = await axios.get(`http://192.168.101.16:5001/getpic`, {
             params: {
               id: id,
             }
