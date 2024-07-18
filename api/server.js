@@ -151,46 +151,42 @@ app.get('/profile/:id', async(req, res) => {
             console.error('Error creating or updating match:', error);
             res.status(500).json({ error: 'Internal server error' });
         }
-    });
+    }); 
 
     //get all successful matches todo:modify
     app.get('/successfulMatches/:id', async (req, res) => {
             const {id} = req.params;
             try {
                 const objectId = new mongoose.Types.ObjectId(id);
-                const match =  await Match.aggregate([
-                {
-                    $match: { 
-                        $and: [
-                            {matched: true},
-                            {$or: [{ user1: objectId}, { user2: objectId }]}
-                        ]
-                    }
-                },
-                {
-                    $addFields: {
-                        otherUser: {
-                            $cond: {
-                                if: { $eq: ['$user1', objectId] },
-                                then: '$user2',
-                                else: '$user1'
-                            }
-                        }
-                    }
-                },
-                {
-                    $sort: { timestamp: -1 }
-                },
-                {
-                    $project: {
-                        _id: 1,
-                        otherUser: 1,
+                const match =  await Match.find({
+                    $or: [
+                        {user1: id, matched: true, notifViewed:true},
+                        {user2: id, matched: true} 
+                    ]
+                })
+                .sort({timestamp: -1})
+                .exec();
+
+                const matchIds = match.map(entry => entry.user1.equals(id) ? entry.user2 : entry.user1);
+
+                const matchedProfilesWithoutChats = [];
+                for (const item of matchedProfiles) {
+                    const existingChat = await Chat.findOne({
+                        participants: { $all: [id, item] } 
+                    });
+            
+                    if (!existingChat) {
+                        matchedProfilesWithoutChats.push(item);
                     }
                 }
-            ]);
-            const populatedMatches = await User.populate(match, { path: 'otherUser', select: 'name pic' });
 
-            res.status(200).json(populatedMatches);
+                
+              
+                const populatedMatches = await User.find({
+                    _id: { $in: matchedProfilesWithoutChats }
+                  }).select('name pic');
+
+                res.status(200).json(populatedMatches);
             
             } catch (err) {
                 res.status(500).json({ error: err.message });
@@ -283,17 +279,7 @@ app.get('/profile/:id', async(req, res) => {
         }
     });
 
-
              
-
-    
-
-
-
-
-
-
-
 
 app.listen(port, () => {
     console.log("NodeJS started");
