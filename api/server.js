@@ -151,7 +151,7 @@ app.patch('/match/:myId/:otherUserId', async (req, res) => {
           res.status(200).json(updatedMatch);
 
       } else if (userMatch) {  
-          res.status(200);
+          res.status(200).json(userMatch);
 
       } else {  
           match = new Match({
@@ -250,7 +250,7 @@ app.get('/getNotification/:id', async(req, res) => {
 
       const remove = await Match.find({
         $or: [
-            { user1: id, matched:true },
+            { user1: id },
             { user2: id, matched: true }
         ]
     }).exec();

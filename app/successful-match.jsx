@@ -9,11 +9,10 @@ const width = Dimensions.get('window').width;
 const height = Dimensions.get('window').height;
 
 
-const MatchedPopUp = ({  visible, onLater, onMessage, profileData}) => {
+const MatchedPopUp = ({  visible, onClose, onMessage, profileData, }) => {
   const userId = useUserStore(state => state.userId); //my userId
   const [isVisible, setIsVisible] = useState(true);
 
-  const navigation = useNavigation();
 
   const handleLater = async() => {
     const updateNotif = async () => {
@@ -44,8 +43,8 @@ const MatchedPopUp = ({  visible, onLater, onMessage, profileData}) => {
     <Modal
       transparent={true}
       animationType="slide"
-      visible={isVisible}
-      onRequestClose={() => {}}
+      visible={visible}
+      onRequestClose={onClose}
     >
       <View style={styles.modalBackground}>
         <View style={styles.modalContainer}>
@@ -66,14 +65,16 @@ const MatchedPopUp = ({  visible, onLater, onMessage, profileData}) => {
                     )}
 
           <View style={{flexDirection:'row'}}>
-          <TouchableOpacity onPress={() => {setIsVisible(false); handleLater();}} style={styles.laterButton}>
+          <TouchableOpacity onPress={() => {setIsVisible(false); handleLater(); onClose(); }} style={styles.laterButton}>
             <Text style={[styles.buttonText, {color:'#4A0AFF'}]}>Later</Text>
           </TouchableOpacity>
           
-          <TouchableOpacity onPress={() => {setIsVisible(false); handleLater();}} style={styles.messageButton}>
-          <Text>Message</Text>
+          <Link href={{pathname:'/chat-room', params:{ id: profileData["_id"]}}} asChild>
+          <TouchableOpacity onPress={() => {setIsVisible(false); handleLater(); onClose(); onMessage();}} style={styles.messageButton}>
+          <Text style={{color:'white'}}>Message</Text>
                 
           </TouchableOpacity>
+          </Link>
         </View>
         </View>
       </View>
@@ -86,7 +87,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: 'rgba(0, 0, 0, 0.5)', 
+    backgroundColor: 'rgba(0, 0, 0, 0)', 
   },
   modalContainer: {
    
@@ -95,6 +96,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
     borderRadius: 10,
     alignItems: 'center',
+    elevation:10
   },
   image: {
     width:height*0.4*0.4, 

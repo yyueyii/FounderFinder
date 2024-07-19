@@ -1,5 +1,5 @@
 import { View, StyleSheet, ScrollView,Text, ActivityIndicator, TouchableOpacity, FlatList} from 'react-native'
-import React, {useState, useEffect, useRef} from 'react'
+import React, {useState, useEffect, useRef, useCallback } from 'react'
 import { LinearGradient } from 'expo-linear-gradient';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
 import ProfileCard from '../../components/Profile/profile-card';
@@ -7,6 +7,7 @@ import useUserStore from '../store/userStore';
 import MatchedPopUp from '../successful-match';
 import { Ionicons } from '@expo/vector-icons';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { useFocusEffect } from 'expo-router';
 
 
 
@@ -19,12 +20,21 @@ const Home = () => {
   const [loading, setLoading] = useState(true);
   const [isMatched, setIsMatched] = useState(false);
   const [notifs, setNotifs] = useState([]);
+  const [isNotifVisible, setIsNotifVisible] = useState(true)
 
 
-  useEffect(() => {
-    if (userId) {
-    console.log("set userId on Home: ", userId);
-    const fetchProfileData = async () => {
+  const fetchNotifs = useCallback(async () => {
+    try {
+      const notifResponse = await fetch(`http://192.168.101.16:5001/getNotification/${userId}`);
+      const notifjson = await notifResponse.json();
+      setNotifs(notifjson);
+      setIsNotifVisible(true);
+    } catch (error) {
+      console.error('Error fetching notifications:', error);
+    }
+  }, []);
+
+  const fetchProfiles = useCallback(async () => {
       try {
             const response = await fetch(`http://192.168.101.16:5001/getProfiles/${userId}`); 
             const json = await response.json();
@@ -35,23 +45,20 @@ const Home = () => {
         } finally {
           setLoading(false);
         }
-    };
-
-    fetchProfileData(); 
-  }
-},[userId]);
-
-useEffect(() => {
-  if (userId) { 
-    fetchNotifs = async() => {
-      const notifResponse = await fetch(`http://192.168.101.16:5001/getNotification/${userId}`);
-      const notifjson = await notifResponse.json();
-      setNotifs(notifjson);
     }
+    ,[]);
 
-    fetchNotifs();
-  }
-}, [profiles]);
+  useFocusEffect(
+    useCallback(() => {
+      fetchNotifs();
+      fetchProfiles();
+    }, [fetchNotifs])
+  );
+
+ 
+    
+
+
 
 // useEffect(() => {
 //   console.log("profiles: ", profiles);
@@ -73,8 +80,11 @@ if (loading) {
 
 
 const handleMatchButtonPress = async (id) => {
-  const fetchProfileData = async () => {
+  console.log("Match button pressed")
+  const fetchProfileData = async() => {
     try {
+      console.log("patching... other Id: ", id)
+      console.log("userId: ", userId)
       const response = await fetch(`http://192.168.101.16:5001/match/${userId}/${id}`, {
         method: 'PATCH',
         headers: {
@@ -82,16 +92,20 @@ const handleMatchButtonPress = async (id) => {
         },
       });
       const json = await response.json();
+      console.log(json);
       if (json["matched"]) {
         setIsMatched(true);
+        console.log("show notif? ", isMatched);
         console.log(json);
-        console.log("A matched is made with: ", profiles[currentIndex]["name"]);
+        console.log("A matched is made!");
         
-        // return handleMatchMade;
-      }
-      console.log("match status:", json.matched);
-      setProfiles(prevProfiles => prevProfiles.filter(profile => profile._id !== id));
-      scrollViewRef.current?.scrollTo({ x: 0, y: 0, animated: true });
+       } else {
+      //isMatch shld be false
+        console.log("match status:", json.matched);
+      
+        setProfiles(prevProfiles => prevProfiles.filter(profile => profile._id !== id));
+        scrollViewRef.current?.scrollTo({ x: 0, y: 0, animated: true });
+       }
 
     } catch (error) {
       console.error('Error fetching profile data:', error);
@@ -114,17 +128,26 @@ const handleNextProfile = () => {
 };
 
 
-
+const handlePopUpClose = (id) => {
+  setProfiles(prevProfiles => prevProfiles.filter(profile => profile._id !== id));
+  scrollViewRef.current?.scrollTo({ x: 0, y: 0, animated: true });
+      
+}
 
 const handleNotifPress = () => {
   setNotifs(notifs.slice(1));
 };
 
+const onMessagePress = () => {
+  setIsNotifVisible(false);
+  setIsMatched(false);
+  console.log(isNotifVisible);
+}
+
   return (
     <View style={{flex:1}}>
       <SafeAreaView>
       <LinearGradient colors={['#4A0AFF', '#5869ED', '#43B0FF']} style={styles.linearGradient}/>
-      
       
       <ScrollView ref={scrollViewRef} contentContainerStyle={styles.cardContainer} showsVerticalScrollIndicator={false}>
           {profiles.length != 0 &&
@@ -132,6 +155,9 @@ const handleNotifPress = () => {
           }
         <View style={{height:50, backgroundColor:'transparent'}}/>
       </ScrollView>
+
+      {isMatched && <MatchedPopUp visible={isMatched} onClose={() => {setIsMatched(false); handlePopUpClose(profiles[currentIndex]["_id"]);}} onMessage={onMessagePress} profileData={profiles[currentIndex]} /> }
+
       
       {profiles.length != 0 && (
         <>
@@ -145,19 +171,19 @@ const handleNotifPress = () => {
       </>
       )}
 
-      {profiles.length == 0 &&
+      {(profiles.length == 0 || profiles == null)&& 
         <View style={{paddingHorizontal:50, top: 120}}>
           <Text>Wow you have liked all profiles, we'll let you know when someone matches with you!</Text>
         </View>
       }
 
 
-      {notifs.length != 0 && (
+      {notifs.length != 0 && isNotifVisible && (
         <FlatList
           data={notifs}
           renderItem={({ item }) => (
               <TouchableOpacity onPress={handleNotifPress}>
-                  <MatchedPopUp profileData={item.user2} />
+                  <MatchedPopUp profileData={item.user2} onMessage={onMessagePress} onClose={() => {setNotifs(notifs.slice(0, -1))}} />
               </TouchableOpacity>
 
         )}
@@ -167,7 +193,6 @@ const handleNotifPress = () => {
       
      
 
-      {isMatched && <MatchedPopUp onLater={() => setIsMatched(false)} profileData={currentIndex} />}
       </SafeAreaView>
     </View>
 
