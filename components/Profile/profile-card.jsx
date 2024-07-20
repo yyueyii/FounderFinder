@@ -7,6 +7,10 @@ import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
 
 const ProfileCard = ( {profileData, onSwipeLeft, onSwipeRight}) => {
 
+    if (!profileData) {
+        return null;
+      }
+
   return (
     <View style={styles.container}>
         <View style={styles.shadowContainer}>  
