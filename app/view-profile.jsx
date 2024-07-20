@@ -23,6 +23,11 @@ const ViewProfile = () => {
         try {
             const response = await fetch(`http://localhost:5001/profile/${id}`); 
             const json = await response.json();
+
+            if (!json || !json.pic) {
+              throw new Error('Profile data not found');
+            }
+            
             setBase64Pic(json["pic"]);
             const imageUri = `data:image/jpeg;base64,${json["pic"]}`; //converts str to URI
             setProfileData(json); 
