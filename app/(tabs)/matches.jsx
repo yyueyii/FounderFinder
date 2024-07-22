@@ -4,6 +4,7 @@ import MatchedProfileDisplay from '../../components/MatchesPage/matched-profile'
 import { SafeAreaView } from 'react-native-safe-area-context';
 import useUserStore from '../store/userStore';
 import { Link, useNavigation } from 'expo-router';
+import useNotificationStore from '../store/notificationStore';
 
 const width = Dimensions.get('window').width;
 
@@ -11,13 +12,14 @@ const width = Dimensions.get('window').width;
 
 const Matches = () => {
   const userId = useUserStore(state => state.userId);
+  const notif = useNotificationStore(state => state.notifications)
   const [matches, setMatches] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchMatches = async () => {
       try {
-        const response = await fetch(`http://localhost:5001/successfulMatches/${userId}`);
+        const response = await fetch(`http://192.168.1.5:5001/successfulMatches/${userId}`);
         const json = await response.json();
           setMatches(json); 
           console.log("matched profile datan fetched:", matches);
@@ -29,7 +31,7 @@ const Matches = () => {
     };
 
     fetchMatches();
-  }, []);
+  }, [notif]);
   console.log(matches);
 
   return (

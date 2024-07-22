@@ -11,7 +11,7 @@ const http = require('http').createServer(app);
 
 const io = require("socket.io")(http, {
     cors: {
-        origin: "http://localhost:8081",
+        origin: "http://192.168.1.5:8081",
         methods: ["GET", "POST"],
         credentials: true // Allow cookies and authorization headers
     }
@@ -154,7 +154,7 @@ app.patch('/match/:myId/:otherUserId', async (req, res) => {
           res.status(200).json(userMatch);
 
       } else {  
-          match = new Match({
+          let match = new Match({
               user1: myId,
               user2: otherUserId,
               matched: false
@@ -384,7 +384,7 @@ app.get('/getNotification/:id', async(req, res) => {
   //Get name of the person
   app.get("/getname", async (req, res) => {
     try {
-        // const { id } = req.body;
+        //const { id } = req.body;
         const { id } = req.query;
 
         const name = await User.findOne({ 

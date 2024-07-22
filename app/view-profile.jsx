@@ -21,7 +21,7 @@ const ViewProfile = () => {
   useEffect(() => {
     const fetchProfileData = async () => {
         try {
-            const response = await fetch(`http://localhost:5001/profile/${id}`); 
+            const response = await fetch(`http://192.168.1.5:5001/profile/${id}`); 
             const json = await response.json();
 
             if (!json || !json.pic) {
