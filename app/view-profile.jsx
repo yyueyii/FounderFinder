@@ -21,6 +21,7 @@ const ViewProfile = () => {
   useEffect(() => {
     const fetchProfileData = async () => {
         try {
+            console.log("Fetching profile data for ID:", id);
             const response = await fetch(`http://192.168.1.5:5001/profile/${id}`); 
             const json = await response.json();
 
