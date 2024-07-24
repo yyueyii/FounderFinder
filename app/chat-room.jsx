@@ -198,6 +198,11 @@ const handleContentSizeChange = (event) => {
         }
       });
 
+
+      if (!response.data) {
+        return ;
+      }
+
       console.log("response from fetch msgs :", response)
       setMessages(response.data.messages);
     } catch (error) {
