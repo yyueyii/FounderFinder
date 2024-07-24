@@ -30,11 +30,8 @@ const Profile = ( ) => {
             const imageUri = `data:image/jpeg;base64,${json["pic"]}`; //converts str to URI
             setURI(imageUri);
             setProfileData(json); 
-            console.log(profileData["pic"]);
-      
-            console.log("profileData:", profileData);
         } catch (error) {
-            console.error('Error fetching profile data:', error);
+            console.error('Error fetching profile data in profile:', error);
         } finally {
           setLoading(false);
         }

@@ -38,7 +38,7 @@ const ViewProfile = () => {
             setProfileData(json); 
             console.log("profileData:", profileData);
         } catch (error) {
-            console.error('Error fetching profile data:', error);
+            console.error('Error fetching profile data in view-profile:', error);
         } finally {
          
             setLoading(false);

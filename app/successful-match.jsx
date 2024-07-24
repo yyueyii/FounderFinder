@@ -30,7 +30,7 @@ const MatchedPopUp = ({  visible, onClose, onMessage, profileData, }) => {
           
           // return handleMatchMade;
       } catch (error) {
-        console.error('Error fetching profile data:', error);
+        console.error('Error fetching profile data in successful-match:', error);
       }
     };
   
