@@ -15,6 +15,8 @@ const width = windowDimensions.width;
 
 const Profile = ( ) => {
   const [profileData, setProfileData] = useState(null);
+  const [verified, setVerified] = useState(null);
+  const [verificationToken, setVerificationToken] = useState("");
   const [loading, setLoading] = useState(true);
   const [uri, setURI] = useState(null);
   const userId = useUserStore(state => state.userId);
@@ -26,10 +28,22 @@ const Profile = ( ) => {
           console.log(userId);
             const response = await fetch(`http://localhost:5001/profile/${userId}`); 
             const json = await response.json();
+
+            console.log("This is json in profile: " + JSON.stringify(json, null, 2))
              
             const imageUri = `data:image/jpeg;base64,${json["pic"]}`; //converts str to URI
             setURI(imageUri);
-            setProfileData(json); 
+            setProfileData(json);
+
+            if (json.verified) {
+              console.log("json verified: " + json.verified);
+              setVerified(json.verified);
+            }
+
+            if (json.verificationToken) {
+              console.log("json verificationToken: " + json.verificationToken);
+              setVerificationToken(json.verificationToken);
+            }
         } catch (error) {
             console.error('Error fetching profile data in profile:', error);
         } finally {
@@ -106,6 +120,14 @@ const handleUnpublish = async() => {
         <TouchableOpacity style = {styles.unpublishButton} onPress={handleUnpublish}>
           <Text style={{color:'#4A0AFF'}}>Unpublish</Text>
         </TouchableOpacity>
+        
+        {/* {!verified && (
+          <Text style={styles.verification}>
+            Please verify your email by clicking on this
+            <Link href={`http://localhost:5001/verify/${verificationToken}`}>link</Link>.
+          </Text>
+        )} */}
+
 
       
         
@@ -214,6 +236,11 @@ const styles = StyleSheet.create({
   },
   buttonText: {
     color: 'white',
-  },
+  }, 
+  verification: {
+    fontSize: 18,
+    paddingBottom: 50,
+    fontWeight: 'bold',
+  }
  
 });
