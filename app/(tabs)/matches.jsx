@@ -1,9 +1,9 @@
 import { View, Text, StyleSheet, Dimensions, FlatList, ScrollView } from 'react-native'
-import React, {useState, useEffect} from 'react'
+import React, {useState, useEffect, useCallback} from 'react'
 import MatchedProfileDisplay from '../../components/MatchesPage/matched-profile'
 import { SafeAreaView } from 'react-native-safe-area-context';
 import useUserStore from '../store/userStore';
-import { Link, useNavigation } from 'expo-router';
+import { Link, useNavigation, useFocusEffect } from 'expo-router';
 import useNotificationStore from '../store/notificationStore';
 
 const width = Dimensions.get('window').width;
@@ -16,23 +16,30 @@ const Matches = () => {
   const [matches, setMatches] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    const fetchMatches = async () => {
-      try {
-        const response = await fetch(`http://192.168.1.5:5001/successfulMatches/${userId}`);
-        const json = await response.json();
-          setMatches(json); 
-          console.log("matched profile datan fetched:", matches);
-      } catch (error) {
-        console.error('Error fetching matches:', error);
-      } finally {
-        setLoading(false);
-      }
-    };
+  const fetchMatches = useCallback(async () => {
+    try {
+      const response = await fetch(`http://192.168.1.5:5001/successfulMatches/${userId}`);
+      const json = await response.json();
+        setMatches(json); 
+        console.log("matched profile datan fetched:", matches);
+    } catch (error) {
+      console.error('Error fetching matches:', error);
+    } finally {
+      setLoading(false);
+    }
+  }, [userId]);
 
+  useEffect(() => {
     fetchMatches();
-  }, [notif]);
+  }, [userId]);
   console.log(matches);
+
+  useFocusEffect(
+    useCallback(() => {
+      console.log("Focused, fetching matches again...");
+      fetchMatches();
+    }, [fetchMatches])
+  );
 
   return (
       <SafeAreaView style={styles.container}>
