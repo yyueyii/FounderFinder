@@ -69,7 +69,7 @@ const EditProfile = () => {
 
     const handleUpdateProfile = async () => {
       try {
-        const response = await fetch(`http://localhost:5001/edit-profile/${userId}`, {
+        const response = await fetch(`http://192.168.1.5:5001/edit-profile/${userId}`, {
           method: 'PUT',
           headers: {
             'Content-Type': 'application/json',
@@ -92,16 +92,32 @@ const EditProfile = () => {
           }),
         });
         
+        // if (!response.ok) {
+        //   const errorData = await response.json();
+        //   const errorText = await response.text();
+        //   throw new Error(`Failed to update profile: ${response.status} - ${errorText}`);
+        //   // throw new Error('Failed to update profile');
+        // }
+
         if (!response.ok) {
-          throw new Error('Failed to update profile');
+          // Handle non-JSON responses
+          const contentType = response.headers.get('content-type');
+          if (contentType && contentType.includes('application/json')) {
+            const errorData = await response.json(); // Parse JSON error response
+            throw new Error(`Failed to update profile: ${response.status} - ${errorData.message}`);
+          } else {
+            const errorText = await response.text(); // Read error response as text
+            throw new Error(`Failed to update profile: ${response.status} - ${errorText}`);
+          }
         }
+        
         const updatedUser = await response.json();
         console.log('Updated profileData:', updatedUser);
         
         
         router.replace('/profile');    
       } catch (error) {
-        console.error('Error updating profile:', error);
+        console.error('Error updating profile in edit-profile:', error);
         Alert.alert('Error', 'Failed to update profile');
       }
     };

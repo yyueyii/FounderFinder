@@ -8,11 +8,14 @@ import MatchedPopUp from '../successful-match';
 import { Ionicons } from '@expo/vector-icons';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useFocusEffect } from 'expo-router';
+import useNotificationStore from '../store/notificationStore';
 
 
 
 const Home = () => {
   const userId = useUserStore((state) => state.userId);
+  const addNotification = useNotificationStore((state) => state.addNotification);
+  const notifications = useNotificationStore((state) => state.notifications);
 
   const scrollViewRef = useRef(null);
 
@@ -29,8 +32,17 @@ const Home = () => {
     try {
       // setUserId(useUserStore((state) => state.userId));
       console.log("userId in fetch notifs in home: ", userId)
-      const notifResponse = await fetch(`http://localhost:5001/getNotification/${userId}`);
+      const notifResponse = await fetch(`http://192.168.1.5:5001/getNotification/${userId}`);
       const notifjson = await notifResponse.json();
+
+      if (Array.isArray(notifjson)) {
+        notifjson.forEach((notif) => {
+          useNotificationStore.getState().addNotification(notif);
+        });
+  
+      }
+
+      
       setNotifs(notifjson);
       setIsNotifVisible(true);
     } catch (error) {
@@ -42,7 +54,7 @@ const Home = () => {
       try {
             // setUserId(useUserStore((state) => state.userId));
             console.log("userId in fetch profiles in home: ", userId)
-            const response = await fetch(`http://localhost:5001/getProfiles/${userId}`); 
+            const response = await fetch(`http://192.168.1.5:5001/getProfiles/${userId}`); 
             const json = await response.json();
             setProfiles(json);
         
@@ -58,7 +70,7 @@ const Home = () => {
     useCallback(() => {
       fetchNotifs();
       fetchProfiles();
-    }, [fetchNotifs])
+    }, [fetchNotifs, fetchProfiles, userId])
   );
 
 
@@ -93,7 +105,7 @@ const handleMatchButtonPress = async (id) => {
     try {
       console.log("patching... other Id: ", id)
       console.log("userId: ", userId)
-      const response = await fetch(`http://localhost:5001/match/${userId}/${id}`, {
+      const response = await fetch(`http://192.168.1.5:5001/match/${userId}/${id}`, {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',
@@ -231,6 +243,8 @@ const styles = StyleSheet.create({
   }, 
   cardContainer: {
     flexGrow:1,
+    paddingTop: 20,
+    paddingBottom: 20,
     width:'100%',
     backgroundColor:'transparent',
     top:20,
