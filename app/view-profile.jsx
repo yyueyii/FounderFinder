@@ -25,8 +25,12 @@ const ViewProfile = () => {
             const response = await fetch(`http://192.168.1.5:5001/profile/${id}`); 
             const json = await response.json();
 
-            if (!json || !json.pic) {
+            if (!json) {
               throw new Error('Profile data not found');
+            }
+
+            if (!json["pic"]) {
+              json["pic"] = '/9j/4AAQSkZJRgABAQAAZABkAAD/2wBDAAgGBgcGBQgHBwcJCQgKDBQNDAsLDBkSEw8UHRofHh0aHBwgJC4nICIsIxwcKDcpLDAxNDQ0Hyc5PTgyPC4zNDL/wgALCADIAMgBAREA/8QAGwABAAMAAwEAAAAAAAAAAAAAAAQFBgECAwf/2gAIAQEAAAAA+zAAAAAAAAAAAAAAAAAAIsDpMsAAAOtDWCTezQAAz9YDtpZgABGyoCRqwACpogDVyAAFLTAGplAAKugAdtf2AAQM2A508sAB4ZTgD11vIABm4AOb21AAHnlPMLa9AABT0gaSeAACNlQ0s4AAFbngtb4AAPDM+Ic6KwAAR6yp6gc2l16AHFRVeIAO1jaTAdM5CAACdofQZuAAABM03KvzgAABf2jO1wAABM0//8QAMxAAAgECAwYEBAUFAAAAAAAAAQIDBBEABSESMDFAQVEgIlJxECMyYRMUgZHBM2BictH/2gAIAQEAAT8A/u6ozGmprh5Lt6V1OHz4D+nBf/ZsDPnv5oFt9mxT5xTzEK942Pq4fvjjybusaFnICgXJOK7NnmJjgJSPhfqfDBmFTT2CSkr6TqMUOYR1i2PllHFe/tyWbVxnlMCH5aHW3U+NHaNw6EhhqCMZfWisgubCRdGH88hXz/l6OSQHzWsPc7mhqTS1SSX8vBvbANxcb/PXtBEndr/tuqFzJQwseOzv8+veDtrusuUrl8IPpvv88jLUqOB9Da/ruUXbdVHU2wihEVBwUW3+bymOgYAX2zs+25BIIINiMZa8klDG0pJY31Pbf1kAqaWSMjW1x74IsSDxG4poGqahIl4k6nsMKoRFUcALDkM0pGp6kuB8uQ3B+/bxgFiABcngBjKcveAmaXRiLBew5GaJZ4mjcXDC3tiaJoJmicaqbeLJKYPK07DRNF9+Tzumuq1CjUeVv48WTps5ep9RJ5PMVDZfMD6b+LKHDZeg9JIPJ5zOI6T8IHzSG36eLJakRzNAx0fVffkqqripI9qQ69F6nFTUvVTGR+vAdh4lJVgymxGoOMvzJKpAjkLMOI77+aupoPrlW/YanFTnjNdadLf5N/zEkjyuXkYsx6ncAkG4Njijzl47JUAuvRhxGIZ4qhNqJww+26ZgqlmIAHEnFXnQUlKZQx9Z4Ylqp5yTJKx+19N6kjxsGRipHUHEGdzR2EyiQd+BxT5nTVGgfYb0tp45ZUhjaSRrKOJxXZhJVuQLrEOC9/fkqPM5qVgrEvF6T09sQzR1EQkja6nw5pXGqm2EPykOn3PflMvrWpJtbmJvqH84BDKGBuDqD8c3qTBS7CmzSafp15bJakyQNCxuY+Ht8c6l263Y6IoHLZXP+BXJc+V/Kfh//9k=';
             }
             
             setBase64Pic(json["pic"]);
