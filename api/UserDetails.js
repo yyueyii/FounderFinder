@@ -55,6 +55,14 @@ const UserDetailSchema = new mongoose.Schema({
         default:false,
 
       },
+      verificationToken: {
+        type: "String",
+        default: "",
+      },
+      verified: {
+        type:"Boolean",
+        default: false,
+      },
       
     }, 
 {

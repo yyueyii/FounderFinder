@@ -15,10 +15,13 @@ const SignUpPage = () => {
 
   const [register, setRegister] = useState(false);
     const [email, setEmail] =  useState("");
+    // const [token, setToken] =  useState("");
     const [verifyEmail, setVerifyEmail] = useState(false);
     const [password,setPassword] =  useState("");
     const [verifyPassword, setVerifyPassword] = useState(false);
     const navigation = useNavigation();
+
+    // const token = useTokenStore(state => state.token);
 
     async function handleSubmit() {
       const userData = {
@@ -30,21 +33,23 @@ const SignUpPage = () => {
         skills: [],
         sectors: [],
         education: "",
+        verificationToken: "",
+        verified: false,
       };
 
       try {
-        const res = await axios.post("http://192.168.1.5:5001/sign-up", userData);
+        const res = await axios.post("http://localhost:5001/sign-up", userData);
         console.log(res.data);
         console.log(res.data.status);
         
         if (res.data.status == "ok") {
-          alert("Registered successfully!");
+          alert("Registered successfully! Please check your email for the verification email (Please check your spam too)");
           // navigation.navigate('/log-in');
         } else {
           alert(JSON.stringify(res.data));
           Alert.alert(JSON.stringify(res.data));
         }
-      } catch {
+      } catch (error) {
         console.log(error.message);
       }
 
