@@ -11,7 +11,7 @@ const http = require('http').createServer(app);
 
 const io = require("socket.io")(http, {
     cors: {
-        origin: "http://192.168.1.5:8081",
+        origin: "http://localhost:8081",
         methods: ["GET", "POST"],
         credentials: true // Allow cookies and authorization headers
     }
