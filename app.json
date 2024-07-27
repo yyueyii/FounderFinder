@@ -43,6 +43,10 @@
         "projectId": "e7d5cda8-4670-41e2-90b6-1a31e3168654"
       }
     },
-    "owner": "yyueyii"
+    "owner": "yyueyii",
+    "runtimeVersion": "1.0.0",
+    "updates": {
+      "url": "https://u.expo.dev/e7d5cda8-4670-41e2-90b6-1a31e3168654"
+    }
   }
 }
