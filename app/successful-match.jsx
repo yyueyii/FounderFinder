@@ -17,7 +17,7 @@ const MatchedPopUp = ({  visible, onClose, onMessage, profileData, }) => {
   const handleLater = async() => {
     const updateNotif = async () => {
       try {
-        const response = await fetch(`http://localhost:5001/updateNotification/${userId}/${profileData["_id"]}`, {
+        const response = await fetch(`https://founderfinder-prf9.onrender.com/updateNotification/${userId}/${profileData["_id"]}`, {
           method: 'PATCH',
           headers: {
             'Content-Type': 'application/json',

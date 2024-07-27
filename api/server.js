@@ -210,33 +210,15 @@ app.get('/successfulMatches/:id', async (req, res) => {
 
 app.get('/getNotification/:id', async(req, res) => {
   const { id } = req.params;
-  const { ObjectId } = mongoose.Types;
-
-  console.log("This is id in getNotif: ", id)
-
-  if (!id) {
-    return res.status(400).json({ error: 'ID parameter is missing or invalid' });
-  }
-
-  if (!ObjectId.isValid(id)) {
-    return res.status(400).json({ error: 'Invalid ObjectId format' });
-  }
-
-  const objectId = new ObjectId(id);
-
-  console.log("This is the object created by the id in get notif: ", objectId)
-
-//   const objectId = new mongoose.Types.ObjectId(id);
-
+  const objectId = new mongoose.Types.ObjectId(id);
   try {
       const notif = await Match.find({ user1: objectId, matched: true, notifViewed: false })
                                .populate({ path: 'user2', select: 'name pic' });
-    // Only get the user2's name and pic
       const transformed = notif.map(match => ({
                                   user2:  match.user2
 
                                }));
-      console.log("getNotif function in server worked!")
+
       res.status(200).json(transformed);
   } catch (err) {
       res.status(500).json({ error: err.message });

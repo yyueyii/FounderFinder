@@ -17,7 +17,7 @@ const Matches = () => {
   useEffect(() => {
     const fetchMatches = async () => {
       try {
-        const response = await fetch(`http://localhost:5001/successfulMatches/${userId}`);
+        const response = await fetch(`https://founderfinder-prf9.onrender.com/successfulMatches/${userId}`);
         const json = await response.json();
           setMatches(json); 
           console.log("matched profile datan fetched:", matches);

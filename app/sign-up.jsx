@@ -33,7 +33,7 @@ const SignUpPage = () => {
       };
 
       try {
-        const res = await axios.post("http://localhost:5001/sign-up", userData);
+        const res = await axios.post("https://founderfinder-prf9.onrender.com/sign-up", userData);
         console.log(res.data);
         console.log(res.data.status);
         
@@ -42,7 +42,7 @@ const SignUpPage = () => {
           // navigation.navigate('/log-in');
         } else {
           alert(JSON.stringify(res.data));
-          Alert.alert(JSON.stringify(res.data));
+          //Alert.alert(JSON.stringify(res.data));
         }
       } catch {
         console.log(error.message);

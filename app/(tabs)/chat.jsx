@@ -20,7 +20,7 @@ const Chat  = () => {
           console.log("fetch Chats...")
     
           console.log("userid in fetchchat", userId)
-          const response = await axios.get(`http://localhost:5001/chats`, {
+          const response = await axios.get(`https://founderfinder-prf9.onrender.com/chats`, {
             params: {
               senderId: userId,
             }
@@ -70,7 +70,7 @@ const Chat  = () => {
           console.log("fetch Name...")
     
           console.log("receiverid in fetchname", id)
-          const response = await axios.get(`http://localhost:5001/getname`, {
+          const response = await axios.get(`https://founderfinder-prf9.onrender.com/getname`, {
             params: {
               id: id,
             }
@@ -95,7 +95,7 @@ const Chat  = () => {
           console.log("fetch Pic...")
     
           console.log("receiverid in fetchpic", id)
-          const response = await axios.get(`http://localhost:5001/getpic`, {
+          const response = await axios.get(`https://founderfinder-prf9.onrender.com/getpic`, {
             params: {
               id: id,
             }
@@ -122,9 +122,27 @@ const Chat  = () => {
       }, []);
 
       const formatDate = (dateString) => {
+        const today = new Date();
         const date = new Date(dateString);
-        return `${date.toLocaleDateString()} ${date.toLocaleTimeString()}`;
-      };
+    
+        const formatDateOnly = (dateObj) => {
+            const options = { month: '2-digit', day: '2-digit' };
+            return dateObj.toLocaleDateString(undefined, options);
+        };
+    
+        const formatTimeOnly = (dateObj) => {
+            const options = { hour: '2-digit', minute: '2-digit' };
+            return dateObj.toLocaleTimeString(undefined, options);
+        };
+    
+        const isToday = today.toDateString() === date.toDateString();
+    
+        if (isToday) {
+            return formatTimeOnly(date);
+        } else {
+            return formatDateOnly(date);
+        }
+    };
 
   return (
     <SafeAreaView style={styles.container}>

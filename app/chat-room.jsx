@@ -146,7 +146,7 @@ const handleContentSizeChange = (event) => {
       console.log("fetch Name...")
 
       console.log("receiverid in fetchname", params.id)
-      const response = await axios.get(`http://localhost:5001/getname`, {
+      const response = await axios.get(`https://founderfinder-prf9.onrender.com/getname`, {
         params: {
           id: params.id,
         }
@@ -165,7 +165,7 @@ const handleContentSizeChange = (event) => {
       console.log("fetch Pic...")
 
       console.log("receiverid in fetchPic", params.id)
-      const response = await axios.get(`http://localhost:5001/getpic`, {
+      const response = await axios.get(`https://founderfinder-prf9.onrender.com/getpic`, {
         params: {
           id: params.id,
         }
@@ -191,7 +191,7 @@ const handleContentSizeChange = (event) => {
 
       console.log("senderid in fetchmsgs", userId)
       console.log("receiverid in fetchmsgs", params.id)
-      const response = await axios.get(`http://localhost:5001/messages`, {
+      const response = await axios.get(`https://founderfinder-prf9.onrender.com/messages`, {
         params: {
           senderId: userId,
           receiverId: params.id,

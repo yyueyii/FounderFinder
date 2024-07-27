@@ -29,20 +29,20 @@ const Home = () => {
     try {
       // setUserId(useUserStore((state) => state.userId));
       console.log("userId in fetch notifs in home: ", userId)
-      const notifResponse = await fetch(`http://localhost:5001/getNotification/${userId}`);
+      const notifResponse = await fetch(`https://founderfinder-prf9.onrender.com/getNotification/${userId}`);
       const notifjson = await notifResponse.json();
       setNotifs(notifjson);
       setIsNotifVisible(true);
     } catch (error) {
       console.error('Error fetching notifications:', error);
     }
-  }, [userId]);
+  }, []);
 
   const fetchProfiles = useCallback(async () => {
       try {
             // setUserId(useUserStore((state) => state.userId));
             console.log("userId in fetch profiles in home: ", userId)
-            const response = await fetch(`http://localhost:5001/getProfiles/${userId}`); 
+            const response = await fetch(`https://founderfinder-prf9.onrender.com/getProfiles/${userId}`); 
             const json = await response.json();
             setProfiles(json);
         
@@ -58,7 +58,7 @@ const Home = () => {
     useCallback(() => {
       fetchNotifs();
       fetchProfiles();
-    }, [fetchNotifs])
+    }, [fetchNotifs, fetchProfiles, userId])
   );
 
 
@@ -93,7 +93,7 @@ const handleMatchButtonPress = async (id) => {
     try {
       console.log("patching... other Id: ", id)
       console.log("userId: ", userId)
-      const response = await fetch(`http://localhost:5001/match/${userId}/${id}`, {
+      const response = await fetch(`https://founderfinder-prf9.onrender.com/match/${userId}/${id}`, {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',
@@ -155,14 +155,15 @@ const onMessagePress = () => {
   return (
     <View style={{flex:1}}>
       <SafeAreaView>
-      <LinearGradient colors={['#4A0AFF', '#5869ED', '#43B0FF']} style={styles.linearGradient}/>
-      
+        <LinearGradient colors={['#4A0AFF', '#5869ED', '#43B0FF']} style={styles.linearGradient}/>
+      <View>
       <ScrollView ref={scrollViewRef} contentContainerStyle={styles.cardContainer} showsVerticalScrollIndicator={false}>
           {profiles.length != 0 &&
           <ProfileCard profileData={profiles[currentIndex]}/>
           }
         <View style={{height:50, backgroundColor:'transparent'}}/>
       </ScrollView>
+      </View>
 
       {isMatched && <MatchedPopUp visible={isMatched} onClose={() => {setIsMatched(false); handlePopUpClose(profiles[currentIndex]["_id"]);}} onMessage={onMessagePress} profileData={profiles[currentIndex]} /> }
 
@@ -231,6 +232,7 @@ const styles = StyleSheet.create({
   }, 
   cardContainer: {
     flexGrow:1,
+    overflow:'auto',
     width:'100%',
     backgroundColor:'transparent',
     top:20,
@@ -253,7 +255,7 @@ const styles = StyleSheet.create({
     elevation:5,
     justifyContent:'center',
     alignItems:'center',
-
+    zIndex:10
   },
   image: {
     width:'100%', 

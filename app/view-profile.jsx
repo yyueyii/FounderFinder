@@ -14,14 +14,14 @@ const ViewProfile = () => {
   const [base64Pic, setBase64Pic] = useState(null);
   const navigation = useNavigation();
   const params = useLocalSearchParams();  
-  console.log("userId: ", params);
+  console.log("userId from params: ", params);
   const id = new ObjectId(params)
 
   
   useEffect(() => {
     const fetchProfileData = async () => {
         try {
-            const response = await fetch(`http://localhost:5001/profile/${id}`); 
+            const response = await fetch(`https://founderfinder-prf9.onrender.com/profile/${id}`); 
             const json = await response.json();
 
             if (!json || !json.pic) {
@@ -35,12 +35,9 @@ const ViewProfile = () => {
         } catch (error) {
             console.error('Error fetching profile data:', error);
         } finally {
-         
             setLoading(false);
-          
         }
     };
-
     fetchProfileData(); 
 }, []); 
 

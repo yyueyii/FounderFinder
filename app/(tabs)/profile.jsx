@@ -24,15 +24,15 @@ const Profile = ( ) => {
     const fetchProfileData = async () => {
         try {
           console.log(userId);
-            const response = await fetch(`http://localhost:5001/profile/${userId}`); 
+            const response = await fetch(`https://founderfinder-prf9.onrender.com/profile/${userId}`); 
             const json = await response.json();
              
             const imageUri = `data:image/jpeg;base64,${json["pic"]}`; //converts str to URI
             setURI(imageUri);
             setProfileData(json); 
-            console.log(profileData["pic"]);
+            //console.log(profileData["pic"]);
       
-            console.log("profileData:", profileData);
+            //console.log("profileData:", profileData);
         } catch (error) {
             console.error('Error fetching profile data:', error);
         } finally {
@@ -53,7 +53,7 @@ if (loading) {
 
 const handleUnpublish = async() => {
   try {
-    const response = await fetch(`http://192.168.1.5:5001/edit-profile/${userId}`, {
+    const response = await fetch(`https://founderfinder-prf9.onrender.com/edit-profile/${userId}`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
