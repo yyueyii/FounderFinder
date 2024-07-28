@@ -139,6 +139,7 @@ const handleNextProfile = () => {
   if (currentIndex < profiles.length - 1) {
     setCurrentIndex(currentIndex + 1);
   } if (currentIndex == profiles.length - 1) {
+    setProfiles([]);
     setCurrentIndex(0);
   }
   console.log("Skipped");
@@ -165,8 +166,8 @@ const onMessagePress = () => {
 }
 
   return (
-    <View style={{flex:1}}>
-      <SafeAreaView>
+    <SafeAreaView style={{flex:1}}>
+      {/* <SafeAreaView> */}
       <LinearGradient colors={['#4A0AFF', '#5869ED', '#43B0FF']} style={styles.linearGradient}/>
       
       <ScrollView ref={scrollViewRef} contentContainerStyle={styles.cardContainer} showsVerticalScrollIndicator={false}>
@@ -221,7 +222,7 @@ const onMessagePress = () => {
      
 
       </SafeAreaView>
-    </View>
+    // </View>
 
    
   )

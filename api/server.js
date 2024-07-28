@@ -13,14 +13,18 @@ const http = require('http').createServer(app);
 
 const io = require("socket.io")(http, {
     cors: {
-        origin: "http://localhost:8081",
+        origin: "*",
         methods: ["GET", "POST"],
         credentials: true // Allow cookies and authorization headers
     }
 });
 
 app.use(express.json());
-app.use(cors());
+app.use(cors({
+  origin: '*',
+  methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'],  
+  allowedHeaders: ['Content-Type', 'Authorization'],  
+}));
 app.use(cookieParser());
 const bcrypt = require('bcrypt');
 
@@ -122,6 +126,24 @@ app.post('/sign-up', async(req,res) => {
       res.send({status: "error", data: error});
   }
 });
+
+app.post("/send-email/:id", async (req,res) => {
+  try {
+    const {id} = req.params;
+    console.log("This is the id in send email", id)
+    const user = await User.findById(id);
+    if (!user) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+    console.log("This is the user in send email", user)
+    sendVerificationEmail(user.email, user.verificationToken);
+    console.log("email resent!")
+    return res.status(200).json({ message: 'Email sent successfully!' });
+  } catch (error) {
+    console.log("Error in send email link: ", error);
+  }
+  
+})
 
 app.post("/log-in", async(req, res) => {
   const {email, password} = req.body;

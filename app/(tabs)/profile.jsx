@@ -21,6 +21,15 @@ const Profile = ( ) => {
   const [uri, setURI] = useState(null);
   const userId = useUserStore(state => state.userId);
 
+  const handleSendEmail = async () => {
+    try {
+      const response = await axios.post(`http://localhost:5001/send-email/${userId}`);
+      console.log('Email sent successfully:', response.data);
+      alert("Email resent! Remember to check your spam folder too :)")
+    } catch (error) {
+      console.error('Error sending email:', error);
+    }
+  }
 
   useEffect(() => {
     const fetchProfileData = async () => {
@@ -121,12 +130,11 @@ const handleUnpublish = async() => {
           <Text style={{color:'#4A0AFF'}}>Unpublish</Text>
         </TouchableOpacity>
         
-        {/* {!verified && (
-          <Text style={styles.verification}>
-            Please verify your email by clicking on this
-            <Link href={`http://localhost:5001/verify/${verificationToken}`}>link</Link>.
-          </Text>
-        )} */}
+        {!verified && (
+          <TouchableOpacity style={styles.verifyButton} onPress={handleSendEmail}>
+            <Text style={{color:'white'}}>Click here to verify your email</Text>
+          </TouchableOpacity>
+        )}
 
 
       
@@ -214,10 +222,9 @@ const styles = StyleSheet.create({
     height: 35,
     alignItems:'center',
     justifyContent:'center',
-    marginBottom:0,
     marginTop:30,
     left:0,
-    marginBottom:50,
+    marginBottom:10,
     
   },
   unpublishButton: {
@@ -229,10 +236,20 @@ const styles = StyleSheet.create({
     height: 35,
     alignItems:'center',
     justifyContent:'center',
-    marginBottom:0,
-    marginTop:-85,
+    marginTop:-45,
     left: width - 150,
-    marginBottom:50,
+    marginBottom:10,
+  },
+  verifyButton: {
+    backgroundColor: '#4A0AFF',
+    width: 220,
+    borderRadius:10,
+    top:10,
+    height: 35,
+    alignItems:'center',
+    justifyContent:'center',
+    marginBottom:30,
+    marginTop:20,
   },
   buttonText: {
     color: 'white',
