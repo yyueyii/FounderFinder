@@ -49,7 +49,7 @@ const handleContentSizeChange = (event) => {
   useEffect(() => {
 
     console.log("In useEffect in chat-room");
-    const newSocket = io('http://192.168.101.16:8000'); 
+    const newSocket = io('http://192.168.1.5:8000'); 
 
     console.log("newSocket is instantiated")
 
@@ -146,7 +146,7 @@ const handleContentSizeChange = (event) => {
       console.log("fetch Name...")
 
       console.log("receiverid in fetchname", params.id)
-      const response = await axios.get(`http://192.168.101.16:5001/getname`, {
+      const response = await axios.get(`http://192.168.1.5:5001/getname`, {
         params: {
           id: params.id,
         }
@@ -165,7 +165,7 @@ const handleContentSizeChange = (event) => {
       console.log("fetch Pic...")
 
       console.log("receiverid in fetchPic", params.id)
-      const response = await axios.get(`http://192.168.101.16:5001/getpic`, {
+      const response = await axios.get(`http://192.168.1.5:5001/getpic`, {
         params: {
           id: params.id,
         }
@@ -191,12 +191,17 @@ const handleContentSizeChange = (event) => {
 
       console.log("senderid in fetchmsgs", userId)
       console.log("receiverid in fetchmsgs", params.id)
-      const response = await axios.get(`http://192.168.101.16:5001/messages`, {
+      const response = await axios.get(`http://192.168.1.5:5001/messages`, {
         params: {
           senderId: userId,
           receiverId: params.id,
         }
       });
+
+
+      if (!response.data) {
+        return ;
+      }
 
       console.log("response from fetch msgs :", response)
       setMessages(response.data.messages);

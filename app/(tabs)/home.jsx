@@ -8,11 +8,15 @@ import MatchedPopUp from '../successful-match';
 import { Ionicons } from '@expo/vector-icons';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useFocusEffect } from 'expo-router';
+import useNotificationStore from '../store/notificationStore';
 
 
 
 const Home = () => {
   const userId = useUserStore((state) => state.userId);
+  const addNotification = useNotificationStore((state) => state.addNotification);
+  const notifications = useNotificationStore((state) => state.notifications);
+
   const scrollViewRef = useRef(null);
 
   const [profiles, setProfiles] = useState([]);
@@ -22,21 +26,35 @@ const Home = () => {
   const [notifs, setNotifs] = useState([]);
   const [isNotifVisible, setIsNotifVisible] = useState(true)
 
+  console.log("userId in Home: ", userId);
 
   const fetchNotifs = useCallback(async () => {
     try {
-      const notifResponse = await fetch(`http://192.168.101.16:5001/getNotification/${userId}`);
+      // setUserId(useUserStore((state) => state.userId));
+      console.log("userId in fetch notifs in home: ", userId)
+      const notifResponse = await fetch(`http://192.168.1.5:5001/getNotification/${userId}`);
       const notifjson = await notifResponse.json();
+
+      if (Array.isArray(notifjson)) {
+        notifjson.forEach((notif) => {
+          useNotificationStore.getState().addNotification(notif);
+        });
+  
+      }
+
+      
       setNotifs(notifjson);
       setIsNotifVisible(true);
     } catch (error) {
       console.error('Error fetching notifications:', error);
     }
-  }, []);
+  }, [userId]);
 
   const fetchProfiles = useCallback(async () => {
       try {
-            const response = await fetch(`http://192.168.101.16:5001/getProfiles/${userId}`); 
+            // setUserId(useUserStore((state) => state.userId));
+            console.log("userId in fetch profiles in home: ", userId)
+            const response = await fetch(`http://192.168.1.5:5001/getProfiles/${userId}`); 
             const json = await response.json();
             setProfiles(json);
         
@@ -46,18 +64,14 @@ const Home = () => {
           setLoading(false);
         }
     }
-    ,[]);
+    ,[userId]);
 
   useFocusEffect(
     useCallback(() => {
       fetchNotifs();
       fetchProfiles();
-    }, [fetchNotifs])
+    }, [fetchNotifs, fetchProfiles, userId])
   );
-
- 
-    
-
 
 
 // useEffect(() => {
@@ -81,11 +95,17 @@ if (loading) {
 
 const handleMatchButtonPress = async (id) => {
   console.log("Match button pressed")
+
+  if (!id) {
+    console.log("No id found in home.jsx")
+    return;
+  }
+
   const fetchProfileData = async() => {
     try {
       console.log("patching... other Id: ", id)
       console.log("userId: ", userId)
-      const response = await fetch(`http://192.168.101.16:5001/match/${userId}/${id}`, {
+      const response = await fetch(`http://192.168.1.5:5001/match/${userId}/${id}`, {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',
@@ -161,7 +181,14 @@ const onMessagePress = () => {
       
       {profiles.length != 0 && (
         <>
-      <TouchableOpacity style={styles.matchButton} onPress={() => {handleMatchButtonPress(profiles[currentIndex]["_id"]);}}>
+      <TouchableOpacity style={styles.matchButton} onPress={() => {
+  const profileId = profiles[currentIndex]?.["_id"];
+  if (profileId) {
+    handleMatchButtonPress(profileId);
+  } else {
+    console.log("Profile _id is null or undefined");
+  }
+}}>
         <MaterialIcons name="handshake" size={45} color={'#4A0AFF'}/>
       </TouchableOpacity>
 
@@ -204,7 +231,7 @@ export default Home
 
 const styles = StyleSheet.create({  
   contentContainer: {
-    paddingHorizontal: 16, 
+    paddingHorizontal: 16,
   },
   linearGradient: {
     width:'100%', 
@@ -216,6 +243,8 @@ const styles = StyleSheet.create({
   }, 
   cardContainer: {
     flexGrow:1,
+    paddingTop: 20,
+    paddingBottom: 20,
     width:'100%',
     backgroundColor:'transparent',
     top:20,

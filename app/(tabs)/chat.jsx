@@ -1,5 +1,6 @@
-import { View, Text, StyleSheet, ScrollView } from 'react-native'
-import React, { useState , useEffect, useRef } from 'react';
+import { View, Text, StyleSheet, ScrollView } from 'react-native';
+import { useFocusEffect } from 'expo-router';
+import React, { useState , useEffect, useRef, useCallback } from 'react';
 import ChatPreview from '../../components/Chat/chat-preview'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import axios from "axios";
@@ -14,13 +15,13 @@ const Chat  = () => {
     const [chatNamesMap, setChatNamesMap] = useState({});
     const [chatPicsMap, setChatPicsMap] = useState({});
 
-    const fetchChats = async () => {
+    const fetchChats = useCallback(async () => {
         try {
     
           console.log("fetch Chats...")
     
           console.log("userid in fetchchat", userId)
-          const response = await axios.get(`http://192.168.101.16:5001/chats`, {
+          const response = await axios.get(`http://192.168.1.5:5001/chats`, {
             params: {
               senderId: userId,
             }
@@ -62,15 +63,15 @@ const Chat  = () => {
         } catch (error) {
           console.error('Error fetching messages in useEffect fetchChats function:', error);
         }
-      };
+      }, [userId]);
 
-      const fetchName = async (id) => {
+      const fetchName = useCallback(async (id) => {
         try {
     
           console.log("fetch Name...")
     
           console.log("receiverid in fetchname", id)
-          const response = await axios.get(`http://192.168.101.16:5001/getname`, {
+          const response = await axios.get(`http://192.168.1.5:5001/getname`, {
             params: {
               id: id,
             }
@@ -87,15 +88,15 @@ const Chat  = () => {
         } catch (error) {
           console.error('Error fetching messages in useEffect fetchName function:', error);
         }
-      };
+      }, [userId]);
 
-      const fetchPic = async (id) => {
+      const fetchPic = useCallback(async (id) => {
         try {
     
           console.log("fetch Pic...")
     
           console.log("receiverid in fetchpic", id)
-          const response = await axios.get(`http://192.168.101.16:5001/getpic`, {
+          const response = await axios.get(`http://192.168.1.5:5001/getpic`, {
             params: {
               id: id,
             }
@@ -112,14 +113,21 @@ const Chat  = () => {
         } catch (error) {
           console.error('Error fetching messages in useEffect fetchPic function:', error);
         }
-      };
+      }, [userId]);
 
       useEffect(() => {
         console.log("fetchChats in useEffect")
         fetchChats();
         
         // console.log("this is chatNames array: ", chatNames);
-      }, []);
+      }, [userId]);
+
+      useFocusEffect(
+        useCallback(() => {
+          console.log("Focused, fetching chats again...");
+          fetchChats();
+        }, [fetchChats])
+      );
 
       const formatDate = (dateString) => {
         const today = new Date();
