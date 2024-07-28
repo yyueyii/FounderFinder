@@ -113,9 +113,9 @@ const styles = StyleSheet.create({
     message:{
       fontSize:14,
       left: 90,
-      top:-55,
+      top:-60,
       position:'absolute',
-      paddingRight:15,
+      paddingRight:120,
           
     }, 
     viewProfileButton:{

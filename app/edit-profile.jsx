@@ -91,7 +91,7 @@ const EditProfile = () => {
 
     const handleUpdateProfile = async () => {
       try {
-        const response = await fetch(`http://192.168.1.5:5001/edit-profile/${userId}`, {
+        const response = await fetch(`http://192.168.101.16:5001/edit-profile/${userId}`, {
           method: 'PUT',
           headers: {
             'Content-Type': 'application/json',

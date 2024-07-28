@@ -22,7 +22,7 @@ const ViewProfile = () => {
     const fetchProfileData = async () => {
         try {
             console.log("Fetching profile data for ID:", id);
-            const response = await fetch(`http://192.168.1.5:5001/profile/${id}`); 
+            const response = await fetch(`http://192.168.101.16:5001/profile/${id}`); 
             const json = await response.json();
 
             if (!json) {
@@ -112,6 +112,7 @@ const styles = StyleSheet.create({
     justifyContent:'center',
     alignItems:'center',
     zIndex:150,
+    elevation: 5
 
   }, 
   header: {
