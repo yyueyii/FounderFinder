@@ -32,7 +32,7 @@ const Home = () => {
     try {
       // setUserId(useUserStore((state) => state.userId));
       console.log("userId in fetch notifs in home: ", userId)
-      const notifResponse = await fetch(`http://192.168.101.16:5001/getNotification/${userId}`);
+      const notifResponse = await fetch(`http://localhost:5001/getNotification/${userId}`);
       const notifjson = await notifResponse.json();
 
       if (Array.isArray(notifjson)) {
@@ -54,7 +54,7 @@ const Home = () => {
       try {
             // setUserId(useUserStore((state) => state.userId));
             console.log("userId in fetch profiles in home: ", userId)
-            const response = await fetch(`http://192.168.101.16:5001/getProfiles/${userId}`); 
+            const response = await fetch(`http://localhost:5001/getProfiles/${userId}`); 
             const json = await response.json();
             setProfiles(json);
         
@@ -105,7 +105,7 @@ const handleMatchButtonPress = async (id) => {
     try {
       console.log("patching... other Id: ", id)
       console.log("userId: ", userId)
-      const response = await fetch(`http://192.168.101.16:5001/match/${userId}/${id}`, {
+      const response = await fetch(`http://localhost:5001/match/${userId}/${id}`, {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',
@@ -165,8 +165,8 @@ const onMessagePress = () => {
 }
 
   return (
-    <View style={{flex:1}}>
-      <SafeAreaView>
+    <SafeAreaView style={{flex:1}}>
+      {/* <SafeAreaView> */}
       <LinearGradient colors={['#4A0AFF', '#5869ED', '#43B0FF']} style={styles.linearGradient}/>
       
       <ScrollView ref={scrollViewRef} contentContainerStyle={styles.cardContainer} showsVerticalScrollIndicator={false}>
@@ -221,7 +221,7 @@ const onMessagePress = () => {
      
 
       </SafeAreaView>
-    </View>
+    // </View>
 
    
   )
