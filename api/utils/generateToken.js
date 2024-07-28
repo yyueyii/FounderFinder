@@ -16,7 +16,7 @@ const generate = (userId, res) => {
         secure: process.env.NODE_ENV !== "development",
     });
 
-    return { userId, token };
+    return { token };
 };
 
 module.exports = generate;

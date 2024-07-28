@@ -15,10 +15,21 @@ const width = windowDimensions.width;
 
 const Profile = ( ) => {
   const [profileData, setProfileData] = useState(null);
+  const [verified, setVerified] = useState(null);
+  const [verificationToken, setVerificationToken] = useState("");
   const [loading, setLoading] = useState(true);
   const [uri, setURI] = useState(null);
   const userId = useUserStore(state => state.userId);
 
+  const handleSendEmail = async () => {
+    try {
+      const response = await axios.post(`http://localhost:5001/send-email/${userId}`);
+      console.log('Email sent successfully:', response.data);
+      alert("Email resent! Remember to check your spam folder too :)")
+    } catch (error) {
+      console.error('Error sending email:', error);
+    }
+  }
 
   useEffect(() => {
     const fetchProfileData = async () => {
@@ -26,10 +37,22 @@ const Profile = ( ) => {
           console.log(userId);
             const response = await fetch(`http://localhost:5001/profile/${userId}`); 
             const json = await response.json();
+
+            console.log("This is json in profile: " + JSON.stringify(json, null, 2))
              
             const imageUri = `data:image/jpeg;base64,${json["pic"]}`; //converts str to URI
             setURI(imageUri);
-            setProfileData(json); 
+            setProfileData(json);
+
+            if (json.verified) {
+              console.log("json verified: " + json.verified);
+              setVerified(json.verified);
+            }
+
+            if (json.verificationToken) {
+              console.log("json verificationToken: " + json.verificationToken);
+              setVerificationToken(json.verificationToken);
+            }
         } catch (error) {
             console.error('Error fetching profile data in profile:', error);
         } finally {
@@ -106,6 +129,13 @@ const handleUnpublish = async() => {
         <TouchableOpacity style = {styles.unpublishButton} onPress={handleUnpublish}>
           <Text style={{color:'#4A0AFF'}}>Unpublish</Text>
         </TouchableOpacity>
+        
+        {!verified && (
+          <TouchableOpacity style={styles.verifyButton} onPress={handleSendEmail}>
+            <Text style={{color:'white'}}>Click here to verify your email</Text>
+          </TouchableOpacity>
+        )}
+
 
       
         
@@ -192,10 +222,9 @@ const styles = StyleSheet.create({
     height: 35,
     alignItems:'center',
     justifyContent:'center',
-    marginBottom:0,
     marginTop:30,
     left:0,
-    marginBottom:50,
+    marginBottom:10,
     
   },
   unpublishButton: {
@@ -207,13 +236,28 @@ const styles = StyleSheet.create({
     height: 35,
     alignItems:'center',
     justifyContent:'center',
-    marginBottom:0,
-    marginTop:-85,
+    marginTop:-45,
     left: width - 150,
-    marginBottom:50,
+    marginBottom:10,
+  },
+  verifyButton: {
+    backgroundColor: '#4A0AFF',
+    width: 220,
+    borderRadius:10,
+    top:10,
+    height: 35,
+    alignItems:'center',
+    justifyContent:'center',
+    marginBottom:30,
+    marginTop:20,
   },
   buttonText: {
     color: 'white',
-  },
+  }, 
+  verification: {
+    fontSize: 18,
+    paddingBottom: 50,
+    fontWeight: 'bold',
+  }
  
 });

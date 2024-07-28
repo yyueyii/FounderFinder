@@ -1,6 +1,8 @@
 require('events').EventEmitter.defaultMaxListeners = 15;
 
-const cookieParser = require('cookie-parser');const express = require("express");
+const cookieParser = require('cookie-parser');
+const express = require("express");
+const nodemailer = require('nodemailer');
 const mongoose = require("mongoose");
 const cors = require("cors"); // Import the cors package
 const app = express();
@@ -11,14 +13,18 @@ const http = require('http').createServer(app);
 
 const io = require("socket.io")(http, {
     cors: {
-        origin: "http://localhost:8081",
+        origin: "*",
         methods: ["GET", "POST"],
         credentials: true // Allow cookies and authorization headers
     }
 });
 
 app.use(express.json());
-app.use(cors());
+app.use(cors({
+  origin: '*',
+  methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'],  
+  allowedHeaders: ['Content-Type', 'Authorization'],  
+}));
 app.use(cookieParser());
 const bcrypt = require('bcrypt');
 
@@ -51,6 +57,43 @@ app.get("/", (req, res) => {
     })
 })
 
+const sendVerificationEmail = async (email, verificationToken) => {
+
+  const sender = nodemailer.createTransport({
+    service: "gmail",
+    host: 'smtp.gmail.com',
+    port: 465,
+    secure: true,
+    auth: {
+      user: "founderfinderorbital@gmail.com",
+      pass: "wdxl sans txqe dcdj",
+    },
+  });
+
+  const mailOptions = {
+    from: "FounderFinder",
+    to: email,
+    subject: "[FounderFinder] Email verification",
+    text: `Hey there!
+    
+    Thanks so much for signing up with FounderFinder :)
+    
+    Please click on the following link to verify your email : http://localhost:5001/verify/${verificationToken}
+    
+    Happy connecting!
+    
+    From the FounderFinder Team`,
+  };
+
+  try {
+    await sender.sendMail(mailOptions);
+    console.log("Email sent!")
+  } catch (error) {
+    console.log("Error sending the verification email: ", error);
+  }
+};
+
+
 app.post('/sign-up', async(req,res) => {
   const {email, password} = req.body;
 
@@ -62,15 +105,45 @@ app.post('/sign-up', async(req,res) => {
   const encryptedPassword = await bcrypt.hash(password, 10);
 
   try {
-      await User.create({
+      const newUser = await User.create({
           email: email,
           password: encryptedPassword,
       });
+
+      console.log("we got til here", newUser)
+
+      const token = jwt.sign({email:newUser.email}, JWT_SECRET);
+
+      console.log("this is the token: ", token)
+
+      newUser.verificationToken = token;
+      console.log("This is our verification token: ", newUser.verificationToken)
+      await newUser.save();
+      sendVerificationEmail(newUser.email, newUser.verificationToken);
+
       res.send({status: "ok", data: "User Created"});
   } catch (error) {
       res.send({status: "error", data: error});
   }
 });
+
+app.post("/send-email/:id", async (req,res) => {
+  try {
+    const {id} = req.params;
+    console.log("This is the id in send email", id)
+    const user = await User.findById(id);
+    if (!user) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+    console.log("This is the user in send email", user)
+    sendVerificationEmail(user.email, user.verificationToken);
+    console.log("email resent!")
+    return res.status(200).json({ message: 'Email sent successfully!' });
+  } catch (error) {
+    console.log("Error in send email link: ", error);
+  }
+  
+})
 
 app.post("/log-in", async(req, res) => {
   const {email, password} = req.body;
@@ -90,6 +163,29 @@ app.post("/log-in", async(req, res) => {
       
   }
   
+});
+
+//This is so that we can verify the user
+app.get("/verify/:token", async (req, res) => {
+  try {
+    const token = req.params.token;
+
+    const user = await User.findOne({ verificationToken: token });
+
+    if (!user) {
+      return res.status(404).json({ message: "Invalid verification token" });
+    }
+
+    user.verified = true;
+    user.verificationToken = undefined;
+
+    await user.save();
+
+    res.status(200).json({ message: "Yay! Email verified successfully" });
+  } catch (error) {
+    console.log("errror", error);
+    res.status(500).json({ message: "Oh no! Email verification failed" });
+  }
 });
 
 app.get('/getId/:email', async(req, res) => {

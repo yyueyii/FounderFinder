@@ -139,6 +139,7 @@ const handleNextProfile = () => {
   if (currentIndex < profiles.length - 1) {
     setCurrentIndex(currentIndex + 1);
   } if (currentIndex == profiles.length - 1) {
+    setProfiles([]);
     setCurrentIndex(0);
   }
   console.log("Skipped");

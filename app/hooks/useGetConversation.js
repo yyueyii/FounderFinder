@@ -21,7 +21,7 @@ const useGetConversations = () => {
                 }
 
                 // const res = await fetch(`/${userId}`);
-                const res = await fetch(`http://192.168.1.5:5001/api/6673ea5eb2cc17eca589fb0a`);
+                const res = await fetch(`http://localhost:5001/api/6673ea5eb2cc17eca589fb0a`);
 
                 if (!res.ok) {
                     throw new Error(`[in useGetConversations] HTTP error! Status: ${res.status}`);
