@@ -24,7 +24,7 @@ const Profile = ( ) => {
     const fetchProfileData = async () => {
         try {
           console.log(userId);
-            const response = await fetch(`http://192.168.1.5:5001/profile/${userId}`); 
+            const response = await fetch(`http://192.168.101.16:5001/profile/${userId}`); 
             const json = await response.json();
              
             const imageUri = `data:image/jpeg;base64,${json["pic"]}`; //converts str to URI
@@ -50,7 +50,7 @@ if (loading) {
 
 const handleUnpublish = async() => {
   try {
-    const response = await fetch(`http://192.168.1.5:5001/edit-profile/${userId}`, {
+    const response = await fetch(`http://192.168.101.16:5001/edit-profile/${userId}`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
