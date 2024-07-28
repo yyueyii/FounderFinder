@@ -18,7 +18,7 @@ export const SocketContextProvider = ({ children }) => {
             return
         }
 
-        const socket = io("http://localhost:5001:5000");
+        const socket = io("https://founderfinder-1-cfmd.onrender.com:5000");
 
         setSocket(socket);
 

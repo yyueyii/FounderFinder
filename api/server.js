@@ -78,7 +78,7 @@ const sendVerificationEmail = async (email, verificationToken) => {
     
     Thanks so much for signing up with FounderFinder :)
     
-    Please click on the following link to verify your email : http://localhost:5001/verify/${verificationToken}
+    Please click on the following link to verify your email : https://founderfinder-1-cfmd.onrender.com/verify/${verificationToken}
     
     Happy connecting!
     

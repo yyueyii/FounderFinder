@@ -22,7 +22,7 @@ const LoginPage = () => {
         password,
       };
       console.log('pressed');
-      axios.post("http://localhost:5001/log-in", userData)
+      axios.post("https://founderfinder-1-cfmd.onrender.com/log-in", userData)
       .then(res => {console.log(res.data);
         if (res.data.status == "ok") {
           router.replace('/home');
@@ -37,7 +37,7 @@ const LoginPage = () => {
 
     const fetchUserId = async (email) => {
       try {
-        const response = await axios.get(`http://localhost:5001/getId/${email}`);
+        const response = await axios.get(`https://founderfinder-1-cfmd.onrender.com/getId/${email}`);
   
         console.log('User ID:', response.data.userId);
         setUser(response.data.userId);

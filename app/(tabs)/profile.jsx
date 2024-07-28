@@ -1,6 +1,6 @@
 import { ScrollView, StyleSheet, Text, View, Button, TouchableOpacity, Dimensions, ActivityIndicator} from 'react-native'
-import React, { useState, useEffect } from 'react';
-import { Link } from 'expo-router';
+import React, { useState, useEffect, useCallback } from 'react';
+import { Link, useFocusEffect } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useNavigation } from '@react-navigation/native';
 import ProfileCard from '../../components/Profile/profile-card';
@@ -23,7 +23,7 @@ const Profile = ( ) => {
 
   const handleSendEmail = async () => {
     try {
-      const response = await axios.post(`http://localhost:5001/send-email/${userId}`);
+      const response = await axios.post(`https://founderfinder-1-cfmd.onrender.com/send-email/${userId}`);
       console.log('Email sent successfully:', response.data);
       alert("Email resent! Remember to check your spam folder too :)")
     } catch (error) {
@@ -31,37 +31,43 @@ const Profile = ( ) => {
     }
   }
 
-  useEffect(() => {
-    const fetchProfileData = async () => {
-        try {
-          console.log(userId);
-            const response = await fetch(`http://localhost:5001/profile/${userId}`); 
-            const json = await response.json();
+  const fetchProfileData = useCallback(async () => {
+    try {
+      console.log(userId);
+        const response = await fetch(`https://founderfinder-1-cfmd.onrender.com/profile/${userId}`); 
+        const json = await response.json();
 
-            console.log("This is json in profile: " + JSON.stringify(json, null, 2))
-             
-            const imageUri = `data:image/jpeg;base64,${json["pic"]}`; //converts str to URI
-            setURI(imageUri);
-            setProfileData(json);
+        console.log("This is json in profile: " + JSON.stringify(json, null, 2))
+         
+        const imageUri = `data:image/jpeg;base64,${json["pic"]}`; //converts str to URI
+        setURI(imageUri);
+        setProfileData(json);
 
-            if (json.verified) {
-              console.log("json verified: " + json.verified);
-              setVerified(json.verified);
-            }
-
-            if (json.verificationToken) {
-              console.log("json verificationToken: " + json.verificationToken);
-              setVerificationToken(json.verificationToken);
-            }
-        } catch (error) {
-            console.error('Error fetching profile data in profile:', error);
-        } finally {
-          setLoading(false);
+        if (json.verified) {
+          console.log("json verified: " + json.verified);
+          setVerified(json.verified);
         }
-    };
 
+        if (json.verificationToken) {
+          console.log("json verificationToken: " + json.verificationToken);
+          setVerificationToken(json.verificationToken);
+        }
+    } catch (error) {
+        console.error('Error fetching profile data in profile:', error);
+    } finally {
+      setLoading(false);
+    }
+});
+
+  useEffect(() => {
     fetchProfileData(); 
 }, []); 
+
+useFocusEffect(
+  useCallback(() => {
+    fetchProfileData();
+  }, [])
+);
 
 if (loading) {
   return (
@@ -73,7 +79,7 @@ if (loading) {
 
 const handleUnpublish = async() => {
   try {
-    const response = await fetch(`http://localhost:5001/edit-profile/${userId}`, {
+    const response = await fetch(`https://founderfinder-1-cfmd.onrender.com/edit-profile/${userId}`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',

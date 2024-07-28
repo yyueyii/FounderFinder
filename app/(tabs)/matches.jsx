@@ -18,7 +18,7 @@ const Matches = () => {
 
   const fetchMatches = useCallback(async () => {
     try {
-      const response = await fetch(`http://localhost:5001/successfulMatches/${userId}`);
+      const response = await fetch(`https://founderfinder-1-cfmd.onrender.com/successfulMatches/${userId}`);
       const json = await response.json();
         setMatches(json); 
         console.log("matched profile datan fetched:", matches);
