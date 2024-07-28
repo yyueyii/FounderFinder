@@ -47,7 +47,7 @@ const SignUpPage = () => {
           // navigation.navigate('/log-in');
         } else {
           alert(JSON.stringify(res.data));
-          Alert.alert(JSON.stringify(res.data));
+          //Alert.alert(JSON.stringify(res.data));
         }
       } catch (error) {
         console.log(error.message);
