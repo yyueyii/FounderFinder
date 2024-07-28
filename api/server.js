@@ -275,7 +275,7 @@ app.get('/successfulMatches/:id', async (req, res) => {
               {user2: id, matched: true} 
           ]
       })
-      .sort({timestamp: -1})
+      .sort({updatedAt: -1})
       .exec();
 
       const matchIds = match.map(entry => entry.user1.equals(id) ? entry.user2 : entry.user1);
@@ -446,7 +446,7 @@ app.get('/getNotification/:id', async(req, res) => {
 
       const chats = await Chat.find({
         participants: { $all: [senderId] }
-      }, { messages: 1, _id: 0 }).populate("messages");
+      }, { messages: 1, _id: 0 }).sort({updatedAt:-1}).populate("messages");
 
     console.log(chats)
   

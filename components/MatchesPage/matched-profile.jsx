@@ -53,7 +53,7 @@ const MatchedProfileDisplay = ( { profileData }) => {
                         id:receiverId
                     }
                 }}
-                 > ViewProfile
+                 > View Profile
                 </Link>
             </TouchableOpacity>
             <View style={styles.line}></View>

@@ -112,6 +112,7 @@ const styles = StyleSheet.create({
     justifyContent:'center',
     alignItems:'center',
     zIndex:150,
+    elevation: 5
 
   }, 
   header: {
