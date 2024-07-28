@@ -39,29 +39,55 @@ const EditProfile = () => {
   const [open1, setOpen1] = useState(false);
   const [items1, setItems1] = useState([
    
-    {label: 'Tech', value: 'Tech'},
-    {label: 'Finance', value: 'Finance'},
-    {label: 'Semiconductors', value: 'Semiconductor'},
-    {label: 'Sustainability', value: 'Sustainability'},
+    {label: 'Agriculture', value: 'Agriculture'},
+    {label: 'Artificial Intelligence', value: 'Artificial Intelligence'},
     {label: 'Clean Energy', value: 'Clean Energy'},
-    {label: 'Healthcare', value: 'Healthcare'},
+    {label: 'Cybersecurity', value: 'Cybersecurity'},
+    {label: 'E-commerce', value: 'E-commerce'},
     {label: 'Education', value: 'Education'},
-    {label: 'Non-profit', value: 'Non-profit'},
+    {label: 'Environment & Sustainability', value: 'Environment & Sustainability'},
+    {label: 'Fashion & Apparel', value: 'Fashion & Apparel'},
+    {label: 'Finance', value: 'Finance'},
+    {label: 'Food & Beverage', value: 'Food & Beverage'},
+    {label: 'Healthcare', value: 'Healthcare'},
+    {label: 'HR & Recruitment', value: 'HR & Recruitment'},
+    {label: 'Logistics & Supply Chain', value: 'Logistics & Supply Chain'},
+    {label: 'Manufacturing', value: 'Manufacturing'},
+    {label: 'Media & Entertainment', value: 'Media & Entertainment'},
+    {label: 'Real Estate', value: 'Real Estate'},
+    {label: 'Social Media & Networking', value: 'Social Media & Networking'},
+    {label: 'Technology', value: 'Technology'},
+    {label: 'Telecommunications', value: 'Telecommunications'},
+    {label: 'Transportation', value: 'Transportation'},
+    {label: 'Travel & Hospitality', value: 'Travel & Hospitality'},
+
+
+
+
+
+
 
   ]);
 
   //dropdown picker - skills
   const [open2, setOpen2] = useState(false);
   const [items2, setItems2] = useState([
-    { label: 'React Native', value: 'React Native' },
-    { label: 'Data Analytics', value: 'Data Analytics' },
-    { label: 'Software Development', value: 'Software Development' },
+    { label: 'Business Strategy', value: 'Business Strategy' },
+    { label: 'Content Creation', value: 'Content Creation' },
+    { label: 'Customer Relationship Management', value: 'Customer Relationship Management' },
+    { label: 'Data Analysis', value: 'Data Analysis' },
+    { label: 'Financial Management', value: 'Financial Management' },
+    { label: 'Graphic Design', value: 'Graphic Design' },
+    { label: 'Marketing', value: 'Marketing' },
+    { label: 'Graphic Design', value: 'Graphic Design' },
+    { label: 'Product Management', value: 'Product Management' },
     { label: 'Project Management', value: 'Project Management' },
-    { label: 'Business Development', value: 'Business Development' },
-    { label: 'Curriculum Development', value: 'Curriculum Development' },
-
-
-
+    { label: 'Sales', value: 'Sales' },
+    { label: 'Social Media Management', value: 'Social Media Management' },
+    { label: 'Software Development', value: 'Software Development' },
+    { label: 'Team Leadership', value: 'Team Leadership' },
+    { label: 'UX/UI Design', value: 'UX/UI Design' },
+    { label: 'Web Development', value: 'Web Development' },
     
   ]);
   
@@ -228,11 +254,11 @@ const EditProfile = () => {
 
         <Text style={styles.subheadings}>Name</Text>
         <TextInput
-          style={[styles.input, {marginTop:0, borderColor:'black'}]}
+          style={[styles.input, {marginTop:0, borderColor:'black', height:40}]}
           value={profileData["name"]}
           placeholder="Name"
           onChangeText={text => setProfileData({...profileData, name:(text)})}
-
+          textAlignVertical="top"
         />
 
         <Text style={[styles.subheadings, {}]}>Description</Text>
@@ -244,6 +270,7 @@ const EditProfile = () => {
           maxHeight={90}
           onChangeText={text => setProfileData({...profileData, description:(text)})}
           returnKeyType="done"
+          textAlignVertical="top"
         />
 
         <Text style={[styles.subheadings, {}]}>Interested Sector(s)</Text>
@@ -291,6 +318,7 @@ const EditProfile = () => {
           placeholder="About Me"
           multiline={true} 
           maxHeight={110}
+          textAlignVertical="top"
           onChangeText={text => setProfileData({...profileData, aboutMe:(text)})}
         />
 
@@ -302,16 +330,18 @@ const EditProfile = () => {
         <View style={styles.educationContainer}> 
           <Text style={[{fontWeight:'bold', paddingBottom:5}]}>Institution:</Text>
           <TextInput
-            style={[styles.input, {}]}
+            style={[styles.input, {height:40}]}
             value={entry.institution}
             placeholder='Institution'
+            textAlignVertical="top"
             onChangeText={(text) => handleInputChange(index, 'institution', text)}
           />
           <Text style={[{fontWeight:'bold'}, {paddingTop:15, paddingBottom:5}]}>Duration:</Text>
           <TextInput
-              style={styles.input}
+              style={[styles.input, {height:40}]}
               value={entry.duration}
               placeholder='Duration'
+              textAlignVertical="top"
               onChangeText={(text) => handleInputChange(index, 'duration', text)}
           /> 
 
@@ -320,6 +350,7 @@ const EditProfile = () => {
             style={[styles.input, {height:120}]}
             value={entry.description}
             placeholder='Description'
+            textAlignVertical="top"
             multiline={true} 
             maxHeight={120}
             onChangeText={(text) => handleInputChange(index, 'description', text)}
@@ -345,18 +376,20 @@ const EditProfile = () => {
         <View style={styles.educationContainer}> 
           <Text style={[{fontWeight:'bold', paddingBottom:5}]}>Organisation:</Text>
           <TextInput
-            style={[styles.input, {}]}
+            style={[styles.input, {height:40}]}
             value={entry.organisation}
             placeholder='Organisation'
+            textAlignVertical="top"
             onChangeText={(text) => handleInputChangeWE(index, 'organisation', text)}
           />
         
 
         <Text style={[{fontWeight:'bold', paddingBottom:5, paddingTop:15}]}>Duration:</Text>
         <TextInput
-            style={[styles.input]}
+            style={[styles.input, {height:40}]}
             value={entry.duration}
             placeholder='Duration'
+            textAlignVertical="top"
             onChangeText={(text) => handleInputChangeWE(index, 'duration', text)}
           />
 
@@ -367,6 +400,7 @@ const EditProfile = () => {
             placeholder='Description'
             maxHeight={120}
             multiline={true}
+            textAlignVertical="top"
             onChangeText={(text) => handleInputChangeWE(index, 'description', text)}
           />
 
@@ -390,6 +424,7 @@ const EditProfile = () => {
           placeholder="Let's Connect If..."
           multiline={true} 
           maxHeight={110}
+          textAlignVertical="top"
           onChangeText={text => setProfileData({...profileData, LCI:(text)})}
       />
        
@@ -417,13 +452,12 @@ const styles = StyleSheet.create({
   },
   educationContainer: {
     backgroundColor:'#C9E8FF',
-    zIndex:-1,
     borderRadius:10,
     width:width * 0.9,
     paddingLeft:10,
     paddingRight:10,
     paddingTop:20,
-  
+    paddingBottom:30,
     height: 370,
     marginBottom: 15,
   },
@@ -474,6 +508,7 @@ const styles = StyleSheet.create({
     borderColor:'black', 
     borderWidth:1,
     borderRadius:5,
+    
   },
   sectors: {
     marginTop:5,
@@ -527,9 +562,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     borderRadius:10,
-    marginBottom:10,
-    top:15,
-
+    marginBottom:30,
+    top:12,
 
   }, 
   removeButtonText: {
