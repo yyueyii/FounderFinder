@@ -22,7 +22,7 @@ const ViewProfile = () => {
     const fetchProfileData = async () => {
         try {
             console.log("Fetching profile data for ID:", id);
-            const response = await fetch(`http://localhost:5001/profile/${id}`); 
+            const response = await fetch(`https://founderfinder-1-cfmd.onrender.com/profile/${id}`); 
             const json = await response.json();
 
             if (!json) {
