@@ -122,8 +122,26 @@ const Chat  = () => {
       }, []);
 
       const formatDate = (dateString) => {
+        const today = new Date();
         const date = new Date(dateString);
-        return `${date.toLocaleDateString()} ${date.toLocaleTimeString()}`;
+    
+        const formatDateOnly = (dateObj) => {
+            const options = { month: '2-digit', day: '2-digit' };
+            return dateObj.toLocaleDateString(undefined, options);
+        };
+    
+        const formatTimeOnly = (dateObj) => {
+            const options = { hour: '2-digit', minute: '2-digit' };
+            return dateObj.toLocaleTimeString(undefined, options);
+        };
+    
+        const isToday = today.toDateString() === date.toDateString();
+    
+        if (isToday) {
+            return formatTimeOnly(date);
+        } else {
+            return formatDateOnly(date);
+        }
       };
 
   return (
