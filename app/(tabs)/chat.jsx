@@ -126,7 +126,7 @@ const Chat  = () => {
         const date = new Date(dateString);
     
         const formatDateOnly = (dateObj) => {
-            const options = { month: '2-digit', day: '2-digit' };
+            const options = { year: '2-digit', month: '2-digit', day: '2-digit' };
             return dateObj.toLocaleDateString(undefined, options);
         };
     
@@ -160,7 +160,7 @@ const Chat  = () => {
             id={item.senderId !== userId ? item.senderId : item.receiverId}
             name={chatNamesMap[item.senderId !== userId ? item.senderId : item.receiverId]}
             lastMessage={item.message} 
-            date={formatDate(item.createdAt)}
+            date={formatDate(item.updatedAt)}
           />
         ))}
 

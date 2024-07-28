@@ -2,14 +2,13 @@
   "expo": {
     "name": "FounderFinder",
     "slug": "FounderFinder",
-    "entryPoint": "./app/index.jsx",
     "scheme": "myapp",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/images/favicon.png",
+    "icon": "./assets/images/square_logo.png",
     "userInterfaceStyle": "automatic",
     "splash": {
-      "image": "./assets/images/splash.png",
+      "image": "./assets/images/favicon.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
@@ -19,7 +18,7 @@
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/images/favicon.png",
+        "foregroundImage": "./assets/images/square_logo.png",
         "backgroundColor": "#ffffff"
       },
       "package": "com.yyueyii.FounderFinder"

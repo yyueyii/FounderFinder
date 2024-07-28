@@ -153,17 +153,15 @@ const onMessagePress = () => {
 }
 
   return (
-    <View style={{flex:1}}>
-      <SafeAreaView>
+    <SafeAreaView style={{flex:1}}>
+      {/* //<SafeAreaView> */}
         <LinearGradient colors={['#4A0AFF', '#5869ED', '#43B0FF']} style={styles.linearGradient}/>
-      <View>
       <ScrollView ref={scrollViewRef} contentContainerStyle={styles.cardContainer} showsVerticalScrollIndicator={false}>
           {profiles.length != 0 &&
-          <ProfileCard profileData={profiles[currentIndex]}/>
+            <ProfileCard profileData={profiles[currentIndex]}/>
           }
-        <View style={{height:50, backgroundColor:'transparent'}}/>
+        <View style={{height:50, backgroundColor:'transparent'}}/> 
       </ScrollView>
-      </View>
 
       {isMatched && <MatchedPopUp visible={isMatched} onClose={() => {setIsMatched(false); handlePopUpClose(profiles[currentIndex]["_id"]);}} onMessage={onMessagePress} profileData={profiles[currentIndex]} /> }
 
@@ -209,8 +207,8 @@ const onMessagePress = () => {
       
      
 
-      </SafeAreaView>
-    </View>
+      {/* //</SafeAreaView> */}
+    </SafeAreaView>
 
    
   )
