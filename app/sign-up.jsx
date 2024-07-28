@@ -43,7 +43,7 @@ const SignUpPage = () => {
         console.log(res.data.status);
         
         if (res.data.status == "ok") {
-          alert("Registered successfully! Please check your email for the verification email (Please check your spam too).If you have not received anything, go to the bottom of your profile to be resent an email.");
+          alert("Registered successfully! Please check your email for the verification email (Please check your spam too). If you have not received anything, go to the bottom of your profile to be resent an email.");
           // navigation.navigate('/log-in');
         } else {
           alert(JSON.stringify(res.data));
