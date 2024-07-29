@@ -1,6 +1,7 @@
 require('events').EventEmitter.defaultMaxListeners = 15;
 
 const cookieParser = require('cookie-parser');
+const { Server } = require("socket.io");
 const express = require("express");
 const nodemailer = require('nodemailer');
 const mongoose = require("mongoose");
@@ -12,7 +13,8 @@ const baseURL = process.env.BASE_URL || "https://founderfinder-1-cfmd.onrender.c
 const http = require('http').createServer(app);
 // const io = require("socket.io")(http);
 
-const io = require("socket.io")(http, {
+const io = new Server(http, {
+    addTrailingSlash: false,
     cors: {
         origin: "*",
         methods: ["GET", "POST"],
