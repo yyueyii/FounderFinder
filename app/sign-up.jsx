@@ -1,14 +1,9 @@
 import React, { useState } from 'react'
-import { Alert, Button, Image, Pressable, SafeAreaView, StyleSheet, Switch, Text, TextInput, View } from 'react-native'
+import { Alert, Pressable, SafeAreaView, StyleSheet, Text, TextInput, View } from 'react-native'
 import { useNavigation } from '@react-navigation/native';
 import 'react-native-gesture-handler'
 import { Link } from 'expo-router';
 import axios from 'axios';
-
-
-// const facebook = require("../../assets/facebook.png")
-// const linkedin = require("../../assets/linkedin.png")
-// const tiktok = require("../../assets/tiktok.png")
 
 
 const SignUpPage = () => {
@@ -86,8 +81,7 @@ const SignUpPage = () => {
             <TextInput style={styles.input} placeholder='Password' secureTextEntry value={password} onChangeText={e => handlePassword(e)} autoCorrect={false}
         autoCapitalize='none'/>
         {verifyPassword ? <Text style={styles.forgetText}>This is alright!</Text> : <Text style={styles.forgetText1}>Password must contain at least 8 characters, 1 upper case letter, 1 lower case letter, a digit and a special character</Text>}
-          {/* <TextInput style={styles.input} placeholder='Confirm Password' secureTextEntry value={password} onChange={e => handlePassword(e)} autoCorrect={false}
-        autoCapitalize='none'/> */}
+
         </View>
 
         <View style={styles.buttonView}>
@@ -95,12 +89,6 @@ const SignUpPage = () => {
               <Text style={styles.buttonText}>Register</Text>
           </Pressable>
         </View>
-        
-        {/* <View style={styles.mediaIcons}>
-                <Image source={facebook} style={styles.icons}   />
-                <Image source={tiktok} style={styles.icons}  />
-                <Image source={linkedin} style={styles.icons}  />
-        </View> */}
 
         <Text style={styles.footerText}>Already have an account?<Link style={styles.signup} href="/log-in">  Log in</Link></Text>
         
@@ -140,24 +128,6 @@ const styles = StyleSheet.create({
     borderWidth : 1,
     borderRadius: 7
   },
-  rememberView : {
-    width : "100%",
-    paddingHorizontal : 50,
-    justifyContent: "space-between",
-    alignItems : "center",
-    flexDirection : "row",
-    marginBottom : 8
-  },
-  switch :{
-    flexDirection : "row",
-    gap : 1,
-    justifyContent : "center",
-    alignItems : "center"
-    
-  },
-  rememberText : {
-    fontSize: 13
-  },
   forgetText : {
     fontSize : 11,
     color : "#4A0AFF"
@@ -186,24 +156,6 @@ const styles = StyleSheet.create({
   buttonView :{
     width :"100%",
     paddingHorizontal : 50
-  },
-  optionsText : {
-    textAlign : "center",
-    paddingVertical : 10,
-    color : "gray",
-    fontSize : 13,
-    marginBottom : 6
-  },
-  mediaIcons : {
-    flexDirection : "row",
-    gap : 15,
-    alignItems: "center",
-    justifyContent : "center",
-    marginBottom : 23
-  },
-  icons : {
-    width : 40,
-    height: 40,
   },
   footerText : {
     textAlign: "center",

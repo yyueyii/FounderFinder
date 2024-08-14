@@ -14,8 +14,7 @@ import { uniqBy } from "lodash";
 import axios from "axios";
 import io from "socket.io-client";
 import useUserStore from './store/userStore';
-import useGetMessages from './hooks/useGetMessages';
-import useSendMessage from './hooks/useSendMessages';
+// import useSendMessage from './hooks/useSendMessages';
 
 const ChatRoom = () => {
 
@@ -31,8 +30,7 @@ const [onlinePeople,setOnlinePeople] = useState({});
 const [offlinePeople,setOfflinePeople] = useState({});
 const [typedMessage, setTypedMessage] = useState('');
 
-const { messages: fetchedMessages, loading: fetchingMessages } = useGetMessages();
-const { sendMessage, loading: sendingMessage } = useSendMessage();
+// const { sendMessage, loading: sendingMessage } = useSendMessage();
 
 const params = useLocalSearchParams();
 const navigation = useNavigation();
