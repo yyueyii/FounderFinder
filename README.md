@@ -1,5 +1,6 @@
 # FounderFinder
 
+Link to demo app: https://founderfinder-1.vercel.app/
 
 ## Description
 FounderFinder is a dating-app style application that offers a convenient and efficient way for users to find their start-up partners. Through this app, users can view the profile cards of other users and express interest in collaborating. When both users are interested in working with each other, a successful match is made and the users can communicate via our chat feature.
@@ -16,7 +17,7 @@ FounderFinder is a dating-app style application that offers a convenient and eff
 9. Email verification for profile user to ensure legitimacy of user
 
 
-## Get started
+## Get started (if you would like to clone this repository
 
 1. Install dependencies
 
@@ -33,7 +34,7 @@ Change the directory to the backend
       ```bash
        npm install
       ```
-   Start the backend. It is alright if it crashes. Just proceed on to the next step 
+   Start the backend.
       ```bash
        npm start
       ```
